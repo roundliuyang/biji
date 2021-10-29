@@ -1187,11 +1187,11 @@ public class TypeSafetyDependencyLookupDemo {
 }
 ```
 
-![image-20210826013838630](spring 编程思想.assets/image-20210826013838630.png)
+![image-20210826013838630](spring编程思想.assets/image-20210826013838630.png)
 
-![image-20210826013950101](spring 编程思想.assets/image-20210826013950101.png)
+![image-20210826013950101](spring编程思想.assets/image-20210826013950101.png)
 
-![image-20210826014023004](spring 编程思想.assets/image-20210826014023004.png)
+![image-20210826014023004](spring编程思想.assets/image-20210826014023004.png)
 
 
 
@@ -1279,11 +1279,11 @@ arguments.
 
 #### 不自动绑定
 
-![image-20210730012814291](spring 编程思想.assets/image-20210730012814291-16299134576392.png)
+![image-20210730012814291](spring编程思想.assets/image-20210730012814291-16299134576392.png)
 
 #### 自动绑定
 
-![image-20210730012852021](spring 编程思想.assets/image-20210730012852021-16299134556131.png)
+![image-20210730012852021](spring编程思想.assets/image-20210730012852021-16299134556131.png)
 
 ## 自动绑定（ Autowiring） 模式
 
@@ -3089,7 +3089,7 @@ class MyInstantiationAwareBeanPostProcessor implements InstantiationAwareBeanPos
 
 下图是项目运行时执行顺序
 
-![image-20210709001312839](spring 编程思想.assets/image-20210709001312839.png)
+![image-20210709001312839](spring编程思想.assets/image-20210709001312839.png)
 
 BeanNameAware, BeanClassLoaderAware, BeanFactoryAware通过setter方式注入不同的对象，这个方式相当于接口注入，有别于传统我们所说的以来查找和依赖注入。
 
@@ -3830,7 +3830,7 @@ public class BeanConfigurationMetadataDemo {
 </bean>
 ```
 
-![image-20210814185247574](spring 编程思想.assets/image-20210814185247574.png)
+![image-20210814185247574](spring编程思想.assets/image-20210814185247574.png)
 
 ## 基于Properties文件装载Spring Bean配置元信息
 
@@ -3926,7 +3926,7 @@ public class BeanConfigurationMetadataDemo {
 ​	• BeanDefinition 解析 - API 内部实现
 ​	• BeanDefinition 注册 - BeanDefinitionRegistry  
 
-![image-20210814225728332](spring 编程思想.assets/image-20210814225728332.png)
+![image-20210814225728332](spring编程思想.assets/image-20210814225728332.png)
 
 ## 基于XML文件装载 Spring IoC 容器配置元信息
 
@@ -3969,15 +3969,15 @@ public class BeanConfigurationMetadataDemo {
 
 ## Extensible XML authoring扩展原理
 
-![image-20210815015151324](spring 编程思想.assets/image-20210815015151324.png)
+![image-20210815015151324](spring编程思想.assets/image-20210815015151324.png)
 
 ## 基于Properties文件装载外部化配置
 
-![image-20210815015214680](spring 编程思想.assets/image-20210815015214680.png)
+![image-20210815015214680](spring编程思想.assets/image-20210815015214680.png)
 
 ## 基于YAML文件装载外部化配置
 
-![image-20210815015233974](spring 编程思想.assets/image-20210815015233974.png)
+![image-20210815015233974](spring编程思想.assets/image-20210815015233974.png)
 
 ## 面试题
 
@@ -3999,15 +3999,15 @@ public class BeanConfigurationMetadataDemo {
 
 ## Java 标准资源管理
 
-![image-20210815114651656](spring 编程思想.assets/image-20210815114651656.png)
+![image-20210815114651656](spring编程思想.assets/image-20210815114651656.png)
 
-![image-20210815114748922](spring 编程思想.assets/image-20210815114748922.png)
+![image-20210815114748922](spring编程思想.assets/image-20210815114748922.png)
 
-![image-20210815114803106](spring 编程思想.assets/image-20210815114803106.png)
+![image-20210815114803106](spring编程思想.assets/image-20210815114803106.png)
 
-![image-20210815114831452](spring 编程思想.assets/image-20210815114831452.png)
+![image-20210815114831452](spring编程思想.assets/image-20210815114831452.png)
 
-![image-20210815114848286](spring 编程思想.assets/image-20210815114848286.png)
+![image-20210815114848286](spring编程思想.assets/image-20210815114848286.png)
 
 ## Spring 资源接口
 
@@ -4049,15 +4049,15 @@ public class BeanConfigurationMetadataDemo {
 
 ## Spring 资源加载器
 
-![image-20210815153444626](spring 编程思想.assets/image-20210815153444626.png)
+![image-20210815153444626](spring编程思想.assets/image-20210815153444626.png)
 
 ## Spring 通配路径资源加载器
 
-![image-20210815155817887](spring 编程思想.assets/image-20210815155817887.png)
+![image-20210815155817887](spring编程思想.assets/image-20210815155817887.png)
 
 ## Spring 通配路径资源扩展
 
-![image-20210815160350474](spring 编程思想.assets/image-20210815160350474.png)
+![image-20210815160350474](spring编程思想.assets/image-20210815160350474.png)
 
 ## 依赖注入Spring Resource
 
@@ -4110,7 +4110,7 @@ public class InjectingResourceDemo {
 }
 ```
 
-![image-20210826015014420](spring 编程思想.assets/image-20210826015014420.png)
+![image-20210826015014420](spring编程思想.assets/image-20210826015014420.png)
 
 ## 依赖注入 ResourceLoader
 
@@ -4179,7 +4179,7 @@ public class InjectingResourceLoaderDemo implements ResourceLoaderAware {
 
 ## Validator 接口设计
 
-![image-20210815182749393](spring 编程思想.assets/image-20210815182749393.png)
+![image-20210815182749393](spring编程思想.assets/image-20210815182749393.png)
 
 ## Errors 接口设计
 
@@ -4209,7 +4209,7 @@ ResourceBundleMessageSource）
 
 ## 自定义 Validator
 
-![image-20210815191408610](spring 编程思想.assets/image-20210815191408610.png)
+![image-20210815191408610](spring编程思想.assets/image-20210815191408610.png)
 
 ## Validator 的救赎
 
@@ -4351,7 +4351,7 @@ public class DataBinderDemo {
 
 ## Spring 底层 Java Beans 替换实现
 
-![image-20210820004710151](spring 编程思想.assets/image-20210820004710151.png)
+![image-20210820004710151](spring编程思想.assets/image-20210820004710151.png)
 
 ## BeanWrapper 的使用场景
 
@@ -4697,25 +4697,25 @@ Core Spring provides several stereotype annotations out of the box, including bu
 
 ## Spring 组合注解（ Composed Annotations）
 
-![image-20210822104802447](spring 编程思想.assets/image-20210822104802447.png)
+![image-20210822104802447](spring编程思想.assets/image-20210822104802447.png)
 
 ## Spring 注解属性别名（ Attribute Aliases）
 
-![image-20210822122150465](spring 编程思想.assets/image-20210822122150465.png)
+![image-20210822122150465](spring编程思想.assets/image-20210822122150465.png)
 
 ## Spring 注解属性覆盖（ Attribute Overrides）
 
-![image-20210822122211029](spring 编程思想.assets/image-20210822122211029.png)
+![image-20210822122211029](spring编程思想.assets/image-20210822122211029.png)
 
 ## Spring @Enable 模块驱动
 
-![image-20210822130959380](spring 编程思想.assets/image-20210822130959380.png)
+![image-20210822130959380](spring编程思想.assets/image-20210822130959380.png)
 
 ## Spring 条件注解
 
-![image-20210822135008137](spring 编程思想.assets/image-20210822135008137.png)
+![image-20210822135008137](spring编程思想.assets/image-20210822135008137.png)
 
-![image-20210822140753992](spring 编程思想.assets/image-20210822140753992.png)
+![image-20210822140753992](spring编程思想.assets/image-20210822140753992.png)
 
 ## 课外资料
 
