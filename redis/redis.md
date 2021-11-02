@@ -189,11 +189,45 @@ public void testStringGetKeyUserCache() {
 }
 ```
 
+胖友分别执行 **#testStringSetKeyUserCache()** 和 **#testStringGetKeyUserCache()** 方法，然后对着 Redis 的结果看看，比较简单，就不多哔哔了。
+
+我们在回过头来看看 @class 属性，它看似完美解决了反序列化后的对象类型，但是带来 JSON 字符串占用变大，所以实际项目中，我们也并不会采用 **Jackson2JsonRedisSerializer** 类。
+
+② **org.springframework.data.redis.serializer.GenericJackson2JsonRedisSerializer<T>** ，使用 Jackson 实现 JSON 的序列化方式，并且显示指定 <T> 类型。代码如下：
+
+```java
+// Jackson2JsonRedisSerializer.java
+public class Jackson2JsonRedisSerializer<T> implements RedisSerializer<T> {
+    // ... 省略不重要的代码
+
+    public static final Charset DEFAULT_CHARSET = StandardCharsets.UTF_8;
+
+    /**
+     * 指定类型，和 <T> 要一致。
+     */
+    private final JavaType javaType;
+
+    private ObjectMapper objectMapper = new ObjectMapper();
+
+}
+```
+
+因为 Jackson2JsonRedisSerializer 序列化类里已经声明了类型，所以序列化的 JSON 字符串，无需在存储一个 `@class` 属性，用于存储类型。
+
+但是，我们抠脚一想，如果使用 Jackson2JsonRedisSerializer 作为序列化实现类，那么如果我们类型比较多，岂不是每个类型都要定义一个 RedisTemplate Bean 了？！所以实际场景下，我们也并不会使用 Jackson2JsonRedisSerializer 类。
+
+③ **com.alibaba.fastjson.support.spring.GenericFastJsonRedisSerializer** ，使用 FastJSON 实现 JSON 的序列化方式，和 **GenericJackson2JsonRedisSerializer** 一致，就不重复赘述。
+
+> 注意，GenericFastJsonRedisSerializer 不是 Spring Data Redis 内置实现，而是由于 FastJSON 自己实现。
+
+④ com.alibaba.fastjson.support.spring.FastJsonRedisSerializer<T> ，使用 FastJSON 实现 JSON 的序列化方式，和 Jackson2JsonRedisSerializer 一致，就不重复赘述。
+
+> 注意，GenericFastJsonRedisSerializer 不是 Spring Data Redis 内置实现，而是由于 FastJSON 自己实现。
 
 
 
+#### 3.1.4 XML 序列化方式
 
+**org.springframework.data.redis.serializer.OxmSerializer** ，使用 Spring OXM 实现将对象和 String 的转换，从而 String 和二进制数组的转换。
 
-
-
-
+因为 XML 序列化方式，暂时没有这么干过，我自己也没有，所以就直接忽略它吧。
