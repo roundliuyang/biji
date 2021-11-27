@@ -1,0 +1,736 @@
+## @Configuration
+
+**Spring @Configuration 注解**有助于**基于 Spring 注解的配置**。**@Configuration**注解表示一个类声明了一个或多个`@Bean`方法，并且可以由[Spring 容器](https://howtodoinjava.com/spring-core/different-spring-ioc-containers/)处理以在运行时为这些 bean 生成 bean 定义和服务请求。
+
+从 spring 2 开始，我们将 bean 配置写入 xml 文件。但是 Spring 3 提供了将 bean 定义移出 xml 文件的自由。我们可以在 Java 文件本身中给出 bean 定义。这称为**Spring Java Config**功能（使用[`@Configuration`](https://docs.spring.io/spring-framework/docs/3.1.x/javadoc-api/org/springframework/context/annotation/Configuration.html)注解）。
+
+### Spring@Configuration注解用法
+
+`@Configuration`在任何类的顶部使用注解来声明该类提供一个或多个**@Bean**方法，并且可以由 Spring 容器处理以在运行时为这些 bean 生成 bean 定义和服务请求。
+
+```java
+应用程序配置文件
+@Configuration
+public class AppConfig {
+ 
+    @Bean(name="demoService")
+    public DemoClass service() 
+    {
+        
+    }
+}
+```
+
+#### 带有@Configuration注解的Spring配置类
+
+```java
+@Configuration
+public class ApplicationConfiguration {
+ 
+    @Bean(name="demoService")
+    public DemoManager helloWorld() 
+    {
+        return new DemoManagerImpl();
+    }
+}
+```
+
+#### 演示
+
+```java
+public class VerifySpringCoreFeature
+{
+    public static void main(String[] args)
+    {
+        ApplicationContext context = new AnnotationConfigApplicationContext(ApplicationConfiguration.class);
+ 
+        DemoManager  obj = (DemoManager) context.getBean("demoService");
+ 
+        System.out.println( obj.getServiceName() );
+    }
+}
+```
+
+
+
+## @Autowired, @Resource and @Inject
+
+### 概述
+
+三个注解中有两个属于 Java 扩展包：javax.annotation.Resource 和 javax.inject.Inject。 @Autowired 注解属于 org.springframework.beans.factory.annotation 包。
+
+这些注释中的每一个都可以通过字段注入或 setter 注入来解决依赖关系。我们将使用一个简化但实际的示例来演示三个注解之间的区别，但是根据每个注释所采用的执行路径来演示三个注释之间的区别的实际示例。
+
+这些例子将集中在如何在集成测试中使用三个注入注解。测试所需的依赖性可以是一个任意的文件或一个任意的类。
+
+### @Resource
+
+@Resource 注释是 JSR-250 注释集合的一部分，并与 Jakarta EE 打包在一起。此注解具有以下执行路径，按优先级列出：
+
+按名称匹配
+
+按类型匹配
+
+按 Qualifier匹配
+
+这些执行路径适用于 setter 和字段注入
+
+#### Field 注入
+
+我们可以通过给实例变量加上@Resource注解，通过字段注入来解决依赖关系。
+
+##### 按名称匹配
+
+我们将使用以下集成测试来演示按名称匹配字段注入：
+
+```java
+@RunWith(SpringJUnit4ClassRunner.class)
+@ContextConfiguration(
+  loader=AnnotationConfigContextLoader.class,
+  classes=ApplicationContextTestResourceNameType.class)
+public class FieldResourceInjectionIntegrationTest {
+
+    @Resource(name="namedFile")
+    private File defaultFile;
+
+    @Test
+    public void givenResourceAnnotation_WhenOnField_ThenDependencyValid(){
+        assertNotNull(defaultFile);
+        assertEquals("namedFile.txt", defaultFile.getName());
+    }
+}
+```
+
+让我们看一下代码。在FieldResourceInjectionTest集成测试的第7行，我们通过将Bean名称作为属性值传递给@Resource注解来解决依赖关系。
+
+```java
+@Resource(name="namedFile")
+private File defaultFile;
+```
+
+此配置将使用按名称匹配的执行路径解析依赖项。我们必须在 ApplicationContextTestResourceNameType 应用程序上下文中定义 bean namedFile。
+
+请注意，Bean的id和相应的引用属性值必须匹配。
+
+```java
+@Configuration
+public class ApplicationContextTestResourceNameType {
+
+    @Bean(name="namedFile")
+    public File namedFile() {
+        File namedFile = new File("namedFile.txt");
+        return namedFile;
+    }
+}
+```
+
+如果我们未能在应用上下文中定义Bean，将导致抛出org.springframework.beans.factory.NoSuchBeanDefinitionException。我们可以通过改变ApplicationContextTestResourceNameType应用上下文中传入@Bean注解的属性值，或改变FieldResourceInjectionTest集成测试中传入@Resource注解的属性值，来证明这点。
+
+##### 按类型匹配
+
+为了演示按类型匹配的执行路径，我们只需删除 FieldResourceInjectionTest 集成测试第 7 行的属性值：
+
+```java
+@Resource
+private File defaultFile;
+```
+
+然后我们再次运行测试。
+
+测试仍然会通过，因为如果 @Resource 注释没有接收 bean 名称作为属性值，Spring Framework 将继续下一级优先级，按类型匹配，以尝试解决依赖关系。
+
+>@Resource装配规则
+>
+>- @Resource设置name属性，则按name在IoC容器中将bean注入
+>- @Resource未设置name属性
+>  - 2.1 以属性名作为bean name在IoC容器中匹配bean,如有匹配则注入
+>  - 2.2 按属性名未匹配，则按类型进行匹配，同@Autowired,需加入@Primary解决类型冲突
+
+##### 按 Qualifier 匹配
+
+为了演示 match-by-qualifier (按限定符匹配)执行路径，将修改集成测试场景，以便在 ApplicationContextTestResourceQualifier 应用程序上下文中定义两个 bean
+
+```java
+@Configuration
+public class ApplicationContextTestResourceQualifier {
+
+    @Bean(name="defaultFile")
+    public File defaultFile() {
+        File defaultFile = new File("defaultFile.txt");
+        return defaultFile;
+    }
+
+    @Bean(name="namedFile")
+    public File namedFile() {
+        File namedFile = new File("namedFile.txt");
+        return namedFile;
+    }
+}
+```
+
+我们将使用 QualifierResourceInjectionTest 集成测试来演示按限定符匹配的依赖项解析。在这种情况下，需要将特定的 bean 依赖项注入到每个引用变量中：
+
+```java
+@RunWith(SpringJUnit4ClassRunner.class)
+@ContextConfiguration(
+  loader=AnnotationConfigContextLoader.class,
+  classes=ApplicationContextTestResourceQualifier.class)
+public class QualifierResourceInjectionIntegrationTest {
+
+    @Resource
+    private File dependency1;
+	
+    @Resource
+    private File dependency2;
+
+    @Test
+    public void givenResourceAnnotation_WhenField_ThenDependency1Valid(){
+        assertNotNull(dependency1);
+        assertEquals("defaultFile.txt", dependency1.getName());
+    }
+
+    @Test
+    public void givenResourceQualifier_WhenField_ThenDependency2Valid(){
+        assertNotNull(dependency2);
+        assertEquals("namedFile.txt", dependency2.getName());
+    }
+}
+```
+
+当我们运行集成测试时，将抛出org.springframework.beans.factory.NoUniqueBeanDefinitionException。这将发生，因为应用程序上下文将找到两个File类型的Bean定义，并且不知道哪个Bean应该解决这个依赖关系。
+
+为了解决这个问题，我们需要参考QualifierResourceInjectionTest集成测试的第7至第10行。
+
+```java
+@Resource
+private File dependency1;
+
+@Resource
+private File dependency2;
+```
+
+我们必须添加以下代码行：
+
+```java
+@Qualifier("defaultFile")
+
+@Qualifier("namedFile")
+```
+
+使代码块如下所示
+
+```java
+@Resource
+@Qualifier("defaultFile")
+private File dependency1;
+
+@Resource
+@Qualifier("namedFile")
+private File dependency2;
+```
+
+当我们再次运行集成测试时，它应该通过。我们的测试表明，即使我们在一个应用上下文中定义了多个Bean，我们也可以使用@Qualifier注解来清除任何混淆，允许我们将特定的依赖注入到一个类中。
+
+####  Setter 注入
+
+在字段上注入依赖关系时的执行路径也适用于基于setter的注入。
+
+##### 按名称匹配
+
+唯一的区别是 MethodResourceInjectionTest 集成测试有一个 setter 方法：
+
+```java
+@RunWith(SpringJUnit4ClassRunner.class)
+@ContextConfiguration(
+  loader=AnnotationConfigContextLoader.class,
+  classes=ApplicationContextTestResourceNameType.class)
+public class MethodResourceInjectionIntegrationTest {
+
+    private File defaultFile;
+
+    @Resource(name="namedFile")
+    protected void setDefaultFile(File defaultFile) {
+        this.defaultFile = defaultFile;
+    }
+
+    @Test
+    public void givenResourceAnnotation_WhenSetter_ThenDependencyValid(){
+        assertNotNull(defaultFile);
+        assertEquals("namedFile.txt", defaultFile.getName());
+    }
+}
+```
+
+我们通过注解引用变量对应的setter方法，通过setter注入来解决依赖关系。然后我们将 bean 依赖项的名称作为属性值传递给 @Resource 注解。
+
+```java
+private File defaultFile;
+
+@Resource(name="namedFile")
+protected void setDefaultFile(File defaultFile) {
+    this.defaultFile = defaultFile;
+}
+```
+
+我们将在此示例中重用 namedFile bean 依赖关系。 bean 名称和相应的属性值必须匹配。
+
+当我们运行集成测试时，它将通过。
+
+为了让我们验证逐名匹配的执行路径解决了依赖关系，我们需要将传递给@Resource注解的属性值改为我们选择的值，然后再次运行测试。这一次，测试将以NoSuchBeanDefinitionException失败。
+
+##### 按类型匹配
+
+为了演示基于 setter 的、按类型匹配的执行，我们将使用 MethodByTypeResourceTest 集成测试：
+
+```java
+@RunWith(SpringJUnit4ClassRunner.class)
+@ContextConfiguration(
+  loader=AnnotationConfigContextLoader.class,
+  classes=ApplicationContextTestResourceNameType.class)
+public class MethodByTypeResourceIntegrationTest {
+
+    private File defaultFile;
+
+    @Resource
+    protected void setDefaultFile(File defaultFile) {
+        this.defaultFile = defaultFile;
+    }
+
+    @Test
+    public void givenResourceAnnotation_WhenSetter_ThenValidDependency(){
+        assertNotNull(defaultFile);
+        assertEquals("namedFile.txt", defaultFile.getName());
+    }
+}
+```
+
+当我们运行这个测试时，它将通过。
+
+为了让我们验证match-by-type执行路径解决了File的依赖性，我们需要将defaultFile变量的类类型改为另一种类类型，如String。然后我们可以再次执行MethodByTypeResourceTest集成测试，这次将抛出NoSuchBeanDefinitionException。
+
+这个异常验证了match-by-type确实被用来解决File的依赖性。NoSuchBeanDefinitionException证实了引用变量名不需要与Bean名相匹配。相反，依赖关系的解决取决于 bean 的类类型是否与引用变量的类类型匹配。
+
+##### 按 Qualifier 匹配
+
+我们将使用 MethodByQualifierResourceTest 集成测试来演示 match-by-qualifier 执行路径：
+
+```java
+@RunWith(SpringJUnit4ClassRunner.class)
+@ContextConfiguration(
+  loader=AnnotationConfigContextLoader.class,
+  classes=ApplicationContextTestResourceQualifier.class)
+public class MethodByQualifierResourceIntegrationTest {
+
+    private File arbDependency;
+    private File anotherArbDependency;
+
+    @Test
+    public void givenResourceQualifier_WhenSetter_ThenValidDependencies(){
+      assertNotNull(arbDependency);
+        assertEquals("namedFile.txt", arbDependency.getName());
+        assertNotNull(anotherArbDependency);
+        assertEquals("defaultFile.txt", anotherArbDependency.getName());
+    }
+
+    @Resource
+    @Qualifier("namedFile")
+    public void setArbDependency(File arbDependency) {
+        this.arbDependency = arbDependency;
+    }
+
+    @Resource
+    @Qualifier("defaultFile")
+    public void setAnotherArbDependency(File anotherArbDependency) {
+        this.anotherArbDependency = anotherArbDependency;
+    }
+}
+```
+
+们的测试表明，即使我们在一个应用上下文中定义了多个特定类型的Bean实现，我们也可以使用@Qualifier注解和@Resource注解来解决依赖关系。
+
+与基于字段的依赖注入类似，如果我们在一个应用上下文中定义了多个Bean，我们必须使用@Qualifier注解来指定使用哪个Bean来解决依赖关系，否则将抛出NoUniqueBeanDefinitionException。
+
+### @Inject
+
+@Inject 注解属于 JSR-330 注解集合。此注解具有以下执行路径，按优先级列出：
+
+> 按类型匹配
+>
+> 按 Qualifier 匹配
+>
+> 按名称匹配
+
+这些执行路径适用于 setter 和字段注入。为了让我们访问 @Inject 注释，我们必须将 javax.inject 库声明为 Gradle 或 Maven 依赖项。
+
+```xml
+<dependency>
+    <groupId>javax.inject</groupId>
+    <artifactId>javax.inject</artifactId>
+    <version>1</version>
+</dependency>
+```
+
+#### Field 注入
+
+##### 按类型匹配
+
+我们将修改集成测试的例子，使用另一种类型的依赖，即ArbitraryDependency类。ArbitraryDependency类的依赖仅仅是作为一个简单的依赖，没有进一步的意义。
+
+```java
+@Component
+public class ArbitraryDependency {
+
+    private final String label = "Arbitrary Dependency";
+
+    public String toString() {
+        return label;
+    }
+}
+```
+
+这是有关的FieldInjectTest集成测试
+
+```java
+@RunWith(SpringJUnit4ClassRunner.class)
+@ContextConfiguration(
+  loader=AnnotationConfigContextLoader.class,
+  classes=ApplicationContextTestInjectType.class)
+public class FieldInjectIntegrationTest {
+
+    @Inject
+    private ArbitraryDependency fieldInjectDependency;
+
+    @Test
+    public void givenInjectAnnotation_WhenOnField_ThenValidDependency(){
+        assertNotNull(fieldInjectDependency);
+        assertEquals("Arbitrary Dependency",
+          fieldInjectDependency.toString());
+    }
+}
+```
+
+与首先按名称解析依赖项的@Resource 注解不同，@Inject 注解的默认行为是按类型解析依赖项。
+
+这意味着即使类的引用变量名与 bean 名不同，只要 bean 在应用程序上下文中被定义，该依赖关系仍将被解决。请注意下面的测试中的引用变量名是怎样的。
+
+```java
+@Inject
+private ArbitraryDependency fieldInjectDependency;
+```
+
+与应用程序上下文中配置的 bean 名称不同：
+
+```java
+Bean
+public ArbitraryDependency injectDependency() {
+    ArbitraryDependency injectDependency = new ArbitraryDependency();
+    return injectDependency;
+}
+```
+
+当我们执行测试时，我们能够解决这个依赖关系。
+
+##### 按 Qualifier 匹配
+
+  如果某个类的类型有多个实现，而某个类需要一个特定的Bean，怎么办？让我们修改一下集成测试的例子，使其需要另一个依赖关系。
+
+在此示例中，我们将在按类型匹配示例中使用的 ArbitraryDependency 类进行子类化，以创建 AnotherArbitraryDependency 类：
+
+```java
+public class AnotherArbitraryDependency extends ArbitraryDependency {
+
+    private final String label = "Another Arbitrary Dependency";
+
+    public String toString() {
+        return label;
+    }
+}
+```
+
+每个测试案例的目的是确保我们将每个依赖关系正确地注入到每个参考变量中。
+
+```java
+@Inject
+private ArbitraryDependency defaultDependency;
+
+@Inject
+private ArbitraryDependency namedDependency;
+```
+
+我们可以使用 FieldQualifierInjectTest 集成测试来演示按限定符的匹配
+
+```java
+@RunWith(SpringJUnit4ClassRunner.class)
+@ContextConfiguration(
+  loader=AnnotationConfigContextLoader.class,
+  classes=ApplicationContextTestInjectQualifier.class)
+public class FieldQualifierInjectIntegrationTest {
+
+    @Inject
+    private ArbitraryDependency defaultDependency;
+
+    @Inject
+    private ArbitraryDependency namedDependency;
+
+    @Test
+    public void givenInjectQualifier_WhenOnField_ThenDefaultFileValid(){
+        assertNotNull(defaultDependency);
+        assertEquals("Arbitrary Dependency",
+          defaultDependency.toString());
+    }
+
+    @Test
+    public void givenInjectQualifier_WhenOnField_ThenNamedFileValid(){
+        assertNotNull(defaultDependency);
+        assertEquals("Another Arbitrary Dependency",
+          namedDependency.toString());
+    }
+}
+```
+
+如果我们在应用程序上下文中具有特定类的多个实现，并且 FieldQualifierInjectTest 集成测试尝试以下面列出的方式注入依赖项，则会抛出 NoUniqueBeanDefinitionException 。
+
+```java
+@Inject 
+private ArbitraryDependency defaultDependency;
+
+@Inject 
+private ArbitraryDependency namedDependency;
+```
+
+抛出这个异常是Spring框架指出某个类有多种实现，它对使用哪一个感到困惑。为了澄清这个困惑，我们可以去看FieldQualifierInjectTest集成测试的第7和第10行。
+
+```java
+@Inject
+private ArbitraryDependency defaultDependency;
+
+@Inject
+private ArbitraryDependency namedDependency;
+```
+
+我们可以将所需的bean名称传递给@Qualifier注解，我们将其与@Inject注解一起使用。这就是现在的代码块的样子。
+
+```java
+@Inject
+@Qualifier("defaultFile")
+private ArbitraryDependency defaultDependency;
+
+@Inject
+@Qualifier("namedFile")
+private ArbitraryDependency namedDependency;
+```
+
+@Qualifier 注解期望在接收 bean 名称时进行严格匹配。我们必须确保Bean名称被正确地传递给Qualifier，否则将抛出NoUniqueBeanDefinitionException。如果我们再次运行该测试，它应该会通过。
+
+##### 按名称匹配
+
+用来演示按名称匹配的FieldByNameInjectTest集成测试与按类型匹配的执行路径相似。唯一的区别是现在我们需要一个特定的bean，而不是一个特定的类型。在这个例子中，我们再次对ArbitraryDependency类进行子类化，产生YetAnotherArbitraryDependency类。
+
+```java
+public class YetAnotherArbitraryDependency extends ArbitraryDependency {
+
+    private final String label = "Yet Another Arbitrary Dependency";
+
+    public String toString() {
+        return label;
+    }
+}
+```
+
+为了演示按名称匹配的执行路径，我们将使用以下集成测试：
+
+```java
+@RunWith(SpringJUnit4ClassRunner.class)
+@ContextConfiguration(
+  loader=AnnotationConfigContextLoader.class,
+  classes=ApplicationContextTestInjectName.class)
+public class FieldByNameInjectIntegrationTest {
+
+    @Inject
+    @Named("yetAnotherFieldInjectDependency")
+    private ArbitraryDependency yetAnotherFieldInjectDependency;
+
+    @Test
+    public void givenInjectQualifier_WhenSetOnField_ThenDependencyValid(){
+        assertNotNull(yetAnotherFieldInjectDependency);
+        assertEquals("Yet Another Arbitrary Dependency",
+          yetAnotherFieldInjectDependency.toString());
+    }
+}
+```
+
+我们列出应用程序上下文：
+
+```java
+@Configuration
+public class ApplicationContextTestInjectName {
+
+    @Bean
+    public ArbitraryDependency yetAnotherFieldInjectDependency() {
+        ArbitraryDependency yetAnotherFieldInjectDependency =
+          new YetAnotherArbitraryDependency();
+        return yetAnotherFieldInjectDependency;
+    }
+}
+```
+
+如果我们运行集成测试，它将通过。
+
+为了验证我们是否通过按名称匹配的执行路径注入了依赖项，我们需要将传递给 @Named 注释的值 YetAnotherFieldInjectDependency 更改为我们选择的另一个名称。当我们再次运行测试时，将抛出 NoSuchBeanDefinitionException。
+
+####  Setter 注入
+
+@Inject 注释的基于 Setter 的注入类似于用于基于 @Resource setter 的注入的方法。我们不是注释引用变量，而是注释相应的 setter 方法。基于字段的依赖注入所遵循的执行路径也适用于基于 setter 的注入。
+
+###  @Autowired
+
+@Autowired注解的行为与@Inject注解相似。唯一的区别是，@Autowired注解是Spring框架的一部分。这个注解的执行路径与@Inject注解相同，按优先级排列。
+
+按类型匹配
+
+按 Qualifier匹配
+
+按名称匹配
+这些执行路径适用于 setter 和字段注入。
+
+#### Field 注入
+
+##### 按类型匹配
+
+用于演示@Autowired match-by-type 执行路径的集成测试示例将类似于用于演示@Inject match-by-type 执行路径的测试。我们使用以下 FieldAutowiredTest 集成测试来演示使用 @Autowired 注解的按类型匹配：
+
+```java
+@RunWith(SpringJUnit4ClassRunner.class)
+@ContextConfiguration(
+  loader=AnnotationConfigContextLoader.class,
+  classes=ApplicationContextTestAutowiredType.class)
+public class FieldAutowiredIntegrationTest {
+
+    @Autowired
+    private ArbitraryDependency fieldDependency;
+
+    @Test
+    public void givenAutowired_WhenSetOnField_ThenDependencyResolved() {
+        assertNotNull(fieldDependency);
+        assertEquals("Arbitrary Dependency", fieldDependency.toString());
+    }
+}
+```
+
+我们列出了此集成测试的应用程序上下文：
+
+```java
+@Configuration
+public class ApplicationContextTestAutowiredType {
+
+    @Bean
+    public ArbitraryDependency autowiredFieldDependency() {
+        ArbitraryDependency autowiredFieldDependency =
+          new ArbitraryDependency();
+        return autowiredFieldDependency;
+    }
+}
+```
+
+我们使用此集成测试来证明按类型匹配优先于其他执行路径。注意 FieldAutowiredTest 集成测试第 8 行的引用变量名称：
+
+```java
+@Autowired
+private ArbitraryDependency fieldDependency;
+```
+
+这与应用程序上下文中的 bean 名称不同
+
+```java
+@Bean
+public ArbitraryDependency autowiredFieldDependency() {
+    ArbitraryDependency autowiredFieldDependency =
+      new ArbitraryDependency();
+    return autowiredFieldDependency;
+}
+```
+
+当我们运行测试时，它应该通过。
+
+为了确认确实使用 match-by-type 执行路径解决了依赖关系，我们需要更改 fieldDependency 引用变量的类型并再次运行集成测试。这一次，FieldAutowiredTest 集成测试将失败，并抛出 NoSuchBeanDefinitionException。这验证了我们使用 match-by-type 来解决依赖关系。
+
+##### 按 Qualifier 匹配
+
+如果我们面临在应用程序上下文中定义多个 bean 实现的情况，该怎么办：
+
+```java
+@Configuration
+public class ApplicationContextTestAutowiredQualifier {
+
+    @Bean
+    public ArbitraryDependency autowiredFieldDependency() {
+        ArbitraryDependency autowiredFieldDependency =
+          new ArbitraryDependency();
+        return autowiredFieldDependency;
+    }
+
+    @Bean
+    public ArbitraryDependency anotherAutowiredFieldDependency() {
+        ArbitraryDependency anotherAutowiredFieldDependency =
+          new AnotherArbitraryDependency();
+        return anotherAutowiredFieldDependency;
+    }
+}
+```
+
+如果我们执行以下 FieldQualifierAutowiredTest 集成测试，将抛出 NoUniqueBeanDefinitionException：
+
+```java
+@RunWith(SpringJUnit4ClassRunner.class)
+@ContextConfiguration(
+  loader=AnnotationConfigContextLoader.class,
+  classes=ApplicationContextTestAutowiredQualifier.class)
+public class FieldQualifierAutowiredIntegrationTest {
+
+    @Autowired
+    private ArbitraryDependency fieldDependency1;
+
+    @Autowired
+    private ArbitraryDependency fieldDependency2;
+
+    @Test
+    public void givenAutowiredQualifier_WhenOnField_ThenDep1Valid(){
+        assertNotNull(fieldDependency1);
+        assertEquals("Arbitrary Dependency", fieldDependency1.toString());
+    }
+
+    @Test
+    public void givenAutowiredQualifier_WhenOnField_ThenDep2Valid(){
+        assertNotNull(fieldDependency2);
+        assertEquals("Another Arbitrary Dependency",
+          fieldDependency2.toString());
+    }
+}
+```
+
+这个异常是由于应用上下文中定义的两个Bean引起的歧义。Spring框架不知道哪个Bean依赖应该被自动连接到哪个引用变量。我们可以通过在FieldQualifierAutowiredTest集成测试的第7和第10行添加@Qualifier注解来解决这个问题。
+
+```java
+@Autowired
+private FieldDependency fieldDependency1;
+
+@Autowired
+private FieldDependency fieldDependency2;
+```
+
+使代码块如下所示：
+
+```java
+@Autowired
+@Qualifier("autowiredFieldDependency")
+private FieldDependency fieldDependency1;
+
+@Autowired
+@Qualifier("anotherAutowiredFieldDependency")
+private FieldDependency fieldDependency2;
+```
+
+当我们再次运行测试时，它会通过。
+
+##### 按名称匹配
+

@@ -1146,3 +1146,141 @@ Introduction Schema-based 实现 - <aop:declare-parents/>
 作用域代理 Schema-based 实现 - <aop:scoped-proxy/>
 
 面试题精选
+
+
+
+# spring aop   实践场景
+
+日志场景
+
+```java
+/**
+ * 天火业务日志拦截器
+ * 
+ * @author zhuaiming
+ */
+@Slf4j
+@Aspect
+@Component
+public class BalefireBizInterceptor {
+
+    /**
+     * 短信/邮件等
+     */
+    @Pointcut("execution(* com.zhongan.balefire.api.impl.MessageSendApiServiceImpl.*(..))")
+    private void pointCutSms() {
+        // Do nothing because of ***
+    }
+
+    /**
+     * 语音呼叫
+     */
+    @Pointcut("execution(* com.zhongan.balefire.service.impl.voice.LTAtomServiceImpl.*(..))")
+    private void pointCutCall() {
+        // Do nothing because of ***
+    }
+
+    /**
+     * 安链云切面
+     */
+    @Pointcut("execution(* com.zhongan.balefire.service.impl.AnlinkMsgServiceImpl.*(..))")
+    private void pointCutAnlinkSms() {
+        // Do nothing because of ***
+    }
+
+    /**
+     * @param point
+     * @return
+     * @throws Throwable
+     */
+    @Around("pointCutSms() || pointCutCall() || pointCutAnlinkSms()")
+    public Object doExecute(ProceedingJoinPoint point) throws Throwable {
+        // 增加日志轨迹，方便ES和快速查询定位问题
+        long stratTime = System.currentTimeMillis();
+        MDC.put(CommonConstants.TRACE_ID, RandomUtil.uuidShort());
+        Signature signature = point.getSignature();
+        Object[] args = point.getArgs();
+        Object object = null;
+        LogMonitorBean logInfo = new LogMonitorBean();
+        logInfo.setTraceId(MDC.get(CommonConstants.TRACE_ID));
+        logInfo.setTime(DateUtil.DATE_FORMAT_ZONE.get().format(new Date()));
+        String respCode = StringUtils.EMPTY;
+        String respMsg = StringUtils.EMPTY;
+        try {
+            log.info("执行业务逻辑,方法{}.{}， 参数为{}", signature.getDeclaringTypeName(), signature.getName(), args);
+            logInfo.setMethod(signature.getName());
+            logInfo.setMethodName(signature.getName());
+            // 1.参数校验
+
+            // 2.执行业务逻辑
+            object = point.proceed();
+
+            // 去掉大量查询类日志
+            long costTime = System.currentTimeMillis() - stratTime;
+            if (signature.getName().contains(CommonConstants.DEL_QUERY_LOG)) {
+                log.info(" 目标方法为{}.{}执行完成 ，耗时:{}ms", signature.getDeclaringTypeName(), signature.getName(), costTime);
+            } else {
+                log.info(" 目标方法为{}.{}执行完成  结果{}，耗时:{}ms", signature.getDeclaringTypeName(), signature.getName(), object,
+                        costTime);
+            }
+            if (object instanceof BalefireMessageResDto) {
+                BalefireMessageResDto<?> resultBase = (BalefireMessageResDto<?>) object;
+                respCode = resultBase.getResultCode();
+                respMsg = resultBase.getResultMsg();
+            }
+        } catch (BaleFireBizException e) {
+            log.info("执行业务逻辑失败,args={}", args, e);
+            respCode = e.getResultCode();
+            respMsg = e.getResultMsg();
+            return BalefireMessageResDto.fail(e.getResultCode(), e.getResultMsg());
+        } catch (Exception ex) {
+            log.error("执行业务逻辑异常,args={}", args, ex);
+            ResultCodeEnum respEnum = ResultCodeEnum.SYSTEM_ERROR;
+            respCode = respEnum.getCode();
+            respMsg = respEnum.getDesc();
+            return BalefireMessageResDto.fail(respEnum.getCode(), respEnum.getDesc());
+        } finally {
+            logInfo.setCostTime(System.currentTimeMillis() - stratTime);
+            logInfo.setRespCode(respCode);
+            logInfo.setRespMsg(respMsg);
+            MonitorLogUtil.writeClearMonitorLog(logInfo);
+            MDC.remove(CommonConstants.TRACE_ID);
+        }
+        return object;
+    }
+}
+```
+
+*ProceedingJoinPoint*是*JoinPoint*的扩展，它公开了额外的*proceed()*方法。调用时，代码执行跳转到下一个通知或目标方法。**它使我们能够控制代码流**并决定是否继续进行进一步的调用。
+
+它可以只使用*@Around*建议，它围绕整个方法调用：
+
+```java
+@Around("articleListPointcut()")
+public Object aroundAdvice(ProceedingJoinPoint pjp) {
+    Object articles = cache.get(pjp.getArgs());
+    if (articles == null) {
+        articles = pjp.proceed(pjp.getArgs());
+    }
+    return articles;
+}
+```
+
+在上面的例子中，我们说明了*@Around*建议最流行的用法之一。仅当缓存不返回结果时才会调用实际方法。**这是Spring Cache Annotations的确切工作方式。**
+
+我们还可以使用 *ProceedingJoinPoint*和 *@Around*建议在出现任何异常时重试操作：
+
+```java
+@Around("articleListPointcut()")
+public Object aroundAdvice(ProceedingJoinPoint pjp) {
+    try {
+        return pjp.proceed(pjp.getArgs());
+    } catch (Throwable) {
+        log.error(e.getMessage(), e);
+        log.info("Retrying operation");
+        return pjp.proceed(pjp.getArgs());
+    }
+}
+```
+
+例如，此解决方案可用于在网络中断的情况下重试 HTTP 调用。
