@@ -734,3 +734,100 @@ private FieldDependency fieldDependency2;
 
 ##### 按名称匹配
 
+我们将使用相同的集成测试场景来使用@autowired注释来演示按名称匹配的执行路径去注入字段依赖项。当按名称自动依赖项时，必须与应用程序上下文，ApplicationContextTestaUtowiredName一起使用@ComponentsCan注释：
+
+```java
+@Configuration
+@ComponentScan(basePackages={"com.baeldung.dependency"})
+    public class ApplicationContextTestAutowiredName {
+}
+```
+
+我们使用@ComponentScan注解来搜索包中已经被@Component注解的Java类。例如，在应用上下文中，com.baeldung.dependency包将被扫描，以寻找已被@Component注解的类。在这种情况下，Spring框架必须检测到ArbitraryDependency类，它有@Component注解。	
+
+```java
+@Component(value="autowiredFieldDependency")
+public class ArbitraryDependency {
+
+    private final String label = "Arbitrary Dependency";
+
+    public String toString() {
+        return label;
+    }
+}
+```
+
+传递到@Component注解中的属性值autowiredFieldDependency告诉Spring框架，ArbitraryDependency类是一个名为autowiredFieldDependency的组件。为了让@Autowired注解按名称解析依赖关系，组件名称必须与FieldAutowiredNameTest集成测试中定义的字段名称一致；请参考第8行
+
+```java
+@RunWith(SpringJUnit4ClassRunner.class)
+@ContextConfiguration(
+  loader=AnnotationConfigContextLoader.class,
+  classes=ApplicationContextTestAutowiredName.class)
+public class FieldAutowiredNameIntegrationTest {
+
+    @Autowired
+    private ArbitraryDependency autowiredFieldDependency;
+
+    @Test
+    public void givenAutowiredAnnotation_WhenOnField_ThenDepValid(){
+        assertNotNull(autowiredFieldDependency);
+        assertEquals("Arbitrary Dependency",
+          autowiredFieldDependency.toString());
+	}
+}
+```
+
+当我们运行FieldAutowiredNameTest集成测试时，它将通过。
+
+但是我们怎么知道@Autowired注解真的调用了按名字匹配的执行路径呢？我们可以把引用变量autowiredFieldDependency的名字改为我们选择的另一个名字，然后再次运行测试。
+
+这一次，测试将失败并抛出*NoUniqueBeanDefinitionException*。类似的检查是将*@Component*属性值*autowiredFieldDependency*更改为我们选择的另一个值并再次运行测试。一个*NoUniqueBeanDefinitionException*也将被抛出。
+
+这个异常证明如果我们使用不正确的 bean 名称，将找不到有效的 bean。这就是我们如何知道调用了按名称匹配的执行路径。
+
+#### setter 注入
+
+@Autowired注解的基于设置器的注入与@Resource基于设置器的注入所展示的方法类似。我们没有用@Inject注解来注解引用变量，而是注解了相应的设置器。基于字段的依赖注入所遵循的执行路径也适用于基于设置器的注入。
+
+### 应用这些注解
+
+这就提出了应该使用哪个注解以及在什么情况下使用的问题。这些问题的答案取决于相关应用程序面临的设计场景，以及开发人员希望如何基于每个注解的默认执行路径利用多态性。
+
+#### Application-Wide Use of Singletons Through Polymorphism
+
+如果设计是这样的：应用程序的行为是基于接口或抽象类的实现，并且这些行为在整个应用程序中使用，那么我们可以使用@Inject或@Autowired注释。
+
+这种方法的好处是，当我们升级应用程序，或者为了修复一个错误而应用一个补丁时，类可以被替换，而对整个应用程序的行为产生最小的负面影响。在这种情况下，主要的默认执行路径是按类型匹配。
+
+#### 通过多态进行细粒度的应用行为配置
+
+如果设计是应用程序具有复杂的行为，每个行为都基于不同的接口/抽象类，并且这些实现中的每一个的用法因应用程序而异，那么我们可以使用*@Resource*注解。在这种情况下，主要的默认执行路径是按名称匹配。
+
+#### 依赖注入应该由 Jakarta EE 平台单独处理
+
+如果 Jakarta EE 平台（而不是 Spring）注入所有依赖项的设计要求，那么选择是在*@Resource*注释和*@Inject*注释之间。我们应该根据需要哪个默认执行路径来缩小两个注释之间的最终决定范围。
+
+#### 依赖注入应该由 Spring 框架单独处理
+
+如果要求 Spring 框架处理所有依赖项，则唯一的选择是*@Autowired*注释
+
+#### 讨论总结
+
+| Scenario                                                     | @Resource | @Inject | @Autowired |
+| :----------------------------------------------------------- | --------- | ------- | ---------- |
+| Application-wide use of singletons through polymorphism      | ✗         | ✔       | ✔          |
+| Fine-grained application behavior configuration through polymorphism | ✔         | ✗       | ✗          |
+| Dependency injection should be handled solely by the Jakarta EE platform | ✔         | ✔       | ✗          |
+| Dependency injection should be handled solely by the Spring Framework | ✗         | ✗       | ✔          |
+
+
+
+
+
+
+
+
+
+
+
