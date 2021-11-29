@@ -1058,3 +1058,128 @@ SELECT ROUND(37.25,1)，运行结果 37.3。
 
 ![1638191438480](sql.assets/1638191438480.png)
 
+这两个函数不像其他函数，看一眼函数名就知道代表什么、如何使用。下面举了这两个函数的例子，你需要自己运行下：
+
+`SELECT CAST(123.123 AS INT)`，运行结果会报错。
+
+`SELECT CAST(123.123 AS DECIMAL(8,2))`，运行结果为 123.12。
+
+`SELECT COALESCE(null,1,2)`，运行结果为 1。
+
+CAST 函数在转换数据类型的时候，不会四舍五入，如果原数值有小数，那么转换为整数类型的时候就会报错。不过你可以指定转化的小数类型，在 MySQL 和 SQL Server 中，你可以用`DECIMAL(a,b)`来指定，其中 a 代表整数部分和小数部分加起来最大的位数，b 代表小数位数，比如`DECIMAL(8,2)`代表的是精度为 8 位（整数加小数位数最多为 8 位），小数位数为 2 位的数据类型。所以`SELECT CAST(123.123 AS DECIMAL(8,2))`的转换结果为 123.12。
+
+#### 用 SQL 函数对王者荣耀英雄数据做处理
+
+显示英雄以及他的物攻成长，对应字段为`attack_growth`。我们让这个字段精确到小数点后一位，需要使用的是算术函数里的 ROUND 函数。
+
+```sql
+SELECT name, ROUND(attack_growth,1) FROM heros
+```
+
+代码中，`ROUND(attack_growth,1)`中的`attack_growth`代表想要处理的数据，“1”代表四舍五入的位数，也就是我们这里需要精确到的位数。
+
+运行结果为：
+
+![1638208428544](sql.assets/1638208428544.png)
+
+假设我们想显示英雄最大生命值的最大值，就需要用到 MAX 函数。在数据中，“最大生命值”对应的列数为`hp_max`，在代码中的格式为`MAX(hp_max)`。
+
+```sql
+SELECT MAX(hp_max) FROM heros
+```
+
+运行结果为 9328。
+
+假如我们想要知道最大生命值最大的是哪个英雄，以及对应的数值，就需要分成两个步骤来处理：首先找到英雄的最大生命值的最大值，即`SELECT MAX(hp_max) FROM heros`，然后再筛选最大生命值等于这个最大值的英雄，如下所示。
+
+```sql
+SELECT name, hp_max FROM heros WHERE hp_max = (SELECT MAX(hp_max) FROM heros)
+```
+
+运行结果：
+
+![1638208563968](sql.assets/1638208563968.png)
+
+假如我们想显示英雄的名字，以及他们的名字字数，需要用到`CHAR_LENGTH`函数。
+
+```sql
+SELECT CHAR_LENGTH(name), name FROM heros
+```
+
+运行结果为：
+
+![1638208636493](sql.assets/1638208636493.png)
+
+假如想要提取英雄上线日期（对应字段 birthdate）的年份，只显示有上线日期的英雄即可（有些英雄没有上线日期的数据，不需要显示），这里我们需要使用 EXTRACT 函数，提取某一个时间元素。所以我们需要筛选上线日期不为空的英雄，即`WHERE birthdate is not null`，然后再显示他们的名字和上线日期的年份，即：
+
+```sql
+SELECT name, EXTRACT(YEAR FROM birthdate) AS birthdate FROM heros WHERE birthdate is NOT NULL
+```
+
+或者使用如下形式：
+
+```sql
+SELECT name, YEAR(birthdate) AS birthdate FROM heros WHERE birthdate is NOT NULL
+```
+
+运行结果为：
+
+![1638208754885](sql.assets/1638208754885.png)
+
+假设我们需要找出在 2016 年 10 月 1 日之后上线的所有英雄。这里我们可以采用 DATE
+函数来判断 birthdate 的日期是否大于 2016-10-01，即WHERE
+DATE(birthdate)>'2016-10-01'，然后再显示符合要求的全部字段信息，即： 
+
+```sql
+SELECT * FROM heros WHERE DATE(birthdate)>'2016-10-01'
+```
+
+需要注意的是下面这种写法是不安全的 
+
+```sql
+SELECT * FROM heros WHERE birthdate>'2016-10-01
+```
+
+因为很多时候你无法确认 birthdate 的数据类型是字符串，还是 datetime 类型，如果你想
+对日期部分进行比较，那么使用DATE(birthdate)来进行比较是更安全的。 
+
+运行结果为 
+
+![1638208866009](sql.assets/1638208866009.png)
+
+假设我们需要知道在 2016 年 10 月 1 日之后上线英雄的平均最大生命值、平均最大法力和最高物攻最大值。同样我们需要先筛选日期条件，即`WHERE DATE(birthdate)>'2016-10-01'`，然后再选择`AVG(hp_max), AVG(mp_max), MAX(attack_max)`字段进行显示。
+
+```sql
+SELECT AVG(hp_max), AVG(mp_max), MAX(attack_max) FROM heros WHERE DATE(birthdate)>'2016-10-01'
+```
+
+运行结果为：
+
+![1638209093733](sql.assets/1638209093733.png)
+
+#### 为什么使用 SQL 函数会带来问题 
+
+尽管 SQL 函数使用起来会很方便，但我们使用的时候还是要谨慎，因为你使用的函数很可能在运行环境中无法工作，这是为什么呢？
+
+如果你学习过编程语言，就会知道语言是有不同版本的，比如 Python 会有 2.7 版本和 3.x 版本，不过它们之间的函数差异不大，也就在 10% 左右。但我们在使用 SQL 语言的时候，不是直接和这门语言打交道，而是通过它使用不同的数据库软件，即 DBMS。DBMS 之间的差异性很大，远大于同一个语言不同版本之间的差异。实际上，只有很少的函数是被 DBMS 同时支持的。比如，大多数 DBMS 使用（||）或者（+）来做拼接符，而在 MySQL 中的字符串拼接函数为`Concat()`。大部分 DBMS 会有自己特定的函数，这就意味着采用 SQL 函数的代码可移植性是很差的，因此在使用函数的时候需要特别注意。
+
+#### 关于大小写的规范
+
+细心的人可能会发现，我在写 SELECT 语句的时候用的是大写，而你在网上很多地方，包括你自己写的时候可能用的是小写。实际上在 SQL 中，关键字和函数名是不用区分字母大小写的，比如 SELECT、WHERE、ORDER、GROUP BY 等关键字，以及 ABS、MOD、ROUND、MAX 等函数名。
+
+不过在 SQL 中，你还是要确定大小写的规范，因为在 Linux 和 Windows 环境下，你可能会遇到不同的大小写问题。
+
+比如 MySQL 在 Linux 的环境下，数据库名、表名、变量名是严格区分大小写的，而字段名是忽略大小写的。
+
+而 MySQL 在 Windows 的环境下全部不区分大小写。
+
+这就意味着如果你的变量名命名规范没有统一，就可能产生错误。这里有一个有关命名规范的建议：
+
+1. 关键字和函数名称全部大写；
+2. 数据库名、表名、字段名称全部小写；
+3. SQL 语句必须以分号结尾。
+
+虽然关键字和函数名称在 SQL 中不区分大小写，也就是如果小写的话同样可以执行，但是数据库名、表名和字段名在 Linux MySQL 环境下是区分大小写的，因此建议你统一这些字段的命名规则，比如全部采用小写的方式。同时将关键词和函数名称全部大写，以便于区分数据库名、表名、字段名。
+
+
+
