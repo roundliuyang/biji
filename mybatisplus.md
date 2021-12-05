@@ -1984,19 +1984,203 @@ Map<String, Object> user = userInfoService.getMap(queryWrapper);
 
 ##### 5、getObj（使用查询构造器，查询一条记录，返回这条记录的第一个字段值）
 
+**getObj** 的用法和上面的 **getOne** 很像，都是传入一个查询构造器进行查询。不同的是 **getObj** 返回的是一个字段值（该方法第二个参数是转换函数，必填）：
+
+```java
+// 查询条件：名字中包含'ha'并且年龄小于40
+LambdaQueryWrapper<UserInfo> queryWrapper = new LambdaQueryWrapper<>();
+queryWrapper.like(UserInfo::getUserName,"ha").lt(UserInfo::getAge,40);
+// 开始查询符合的单条记录的第一个字段值
+Integer id = userInfoService.getObj(queryWrapper, (o) -> {
+    return Integer.parseInt(o.toString());
+});
+System.out.println(id);
+```
+
+![原文:SpringBoot - MyBatis-Plus使用详解9（Service的CRUD接口1：基本查询）](mybatisplus.assets/2020051317182851276.png)
 
 
-### ？？？？？？？？？？？？？？？？？？？？？？？？？？
+
+##### 6、listByIds（根据 ID 批量查询，返回一个 List）
+
+```java
+List<UserInfo> users = userInfoService.listByIds(Arrays.asList(1,2,3));
+```
+
+##### 7、listByMap（通过 Map 封装的条件查询，返回一个 List）
+
+>**注意**：**map** 写的是数据表中的列名，而非实体类的属性名。比如属性名为 **userName**，数据表中字段为 **user_name**，这里应该写的是 **user_name**。
+
+```java
+Map<String,Object> columnMap = new HashMap<>();
+columnMap.put("user_name", "hangge");
+columnMap.put("age", 22);
+List<UserInfo> users = userInfoService.listByMap(columnMap);
+
+```
+
+##### 8、list（使用查询构造器，返回一个 List）
+
+（1）**list** 方法如果参数为空，则查询所有的数据：
+
+```java
+// 查询所有数据
+List<UserInfo> users = userInfoService.list();
+```
+
+（2）**list** 方法也可以传入查询条件构造器进行查询：
+
+```java
+// 查询条件：名字中包含'ha'并且年龄小于40
+LambdaQueryWrapper<UserInfo> queryWrapper = new LambdaQueryWrapper<>();
+queryWrapper.like(UserInfo::getUserName,"ha").lt(UserInfo::getAge,40);
+// 开始查询
+List<UserInfo> users = userInfoService.list(queryWrapper);
+```
+
+- 前面编写完条件构造语句后需要要将对象传递给 **service** 的 **list** 方法，比较麻烦。我们同样可以通过链式的方式进行调用：
+
+```java
+List<UserInfo> users = userInfoService.lambdaQuery()
+        .like(UserInfo::getUserName,"ha")
+        .lt(UserInfo::getAge,40)
+        .list();
+```
 
 
 
+##### 9、listMaps（使用查询构造器，返回一个 List）
+
+>**listMaps** 的用法和上面的 **list** 很像，都是传入一个查询构造器进行查询，然后返回一个 **List**。不同在于 **listMaps** 返回的 **List** 里面是 **Map**。
+>    **注意**： **Map** 里的 **key** 为表字段名，而不是对应实体类的属性名。
+
+（1）**listMaps** 方法如果参数为空，则查询所有的数据：
+
+```java
+List<Map<String, Object>> users = userInfoService.listMaps();
+System.out.println(users);
+```
+
+![原文:SpringBoot - MyBatis-Plus使用详解9（Service的CRUD接口1：基本查询）](mybatisplus.assets/2020051410211253687.jpg)
+
+（2）**listMaps** 方法也可以传入查询条件构造器进行查询：
+
+```java
+// 查询条件：名字中包含'ha'并且年龄小于40
+LambdaQueryWrapper<UserInfo> queryWrapper = new LambdaQueryWrapper<>();
+queryWrapper.like(UserInfo::getUserName,"ha").lt(UserInfo::getAge,40);
+// 开始查询
+List<Map<String, Object>> users = userInfoService.listMaps(queryWrapper);
+```
+
+##### 10，listObjs（使用查询构造器，返回一个 List<object>）
+
+**listObjs** 的用法和前面的 **list** 很像，都是传入一个查询构造器进行查询，然后返回一个 **List**。不同在于 **listObjs** 返回的 **List** 里面只有返每条结果的第一个字段值。
+
+（1）**listObjs** 方法如果参数为空，则查询所有的数据：
+
+```java
+List<Object> users = userInfoService.listObjs();
+System.out.println(users);
+```
+
+![原文:SpringBoot - MyBatis-Plus使用详解9（Service的CRUD接口1：基本查询）](mybatisplus.assets/2020051410521246467.jpg)
+
+- 我们还可以传入个自定义的转换函数：
+
+```
+List<Object> users = userInfoService.listObjs((o) -> {
+    ``return` `"用户"` `+ o.toString();
+});
+```
+
+![原文:SpringBoot - MyBatis-Plus使用详解9（Service的CRUD接口1：基本查询）](mybatisplus.assets/2020051413583583803.jpg)
+
+（2）**listObjs** 方法也可以传入查询条件构造器进行查询：
+
+```java
+// 查询条件：名字中包含'ha'并且年龄小于40
+LambdaQueryWrapper<UserInfo> queryWrapper = new LambdaQueryWrapper<>();
+queryWrapper.like(UserInfo::getUserName,"ha").lt(UserInfo::getAge,40);
+// 开始查询
+List<Object> users = userInfoService.listObjs(queryWrapper);
+```
+
+- 我们同样可以再传入个自定义的转换函数：
+
+```java
+// 查询条件：名字中包含'ha'并且年龄小于40
+LambdaQueryWrapper<UserInfo> queryWrapper = new LambdaQueryWrapper<>();
+queryWrapper.like(UserInfo::getUserName,"ha").lt(UserInfo::getAge,40);
+// 开始查询
+List<String> users = userInfoService.listObjs(queryWrapper,(o) -> {
+    return "用户" + o.toString();
+});
+```
+
+##### 11，count（使用查询构造器，查询总记录数）
+
+（1）**count** 方法如果参数为空，则查询所有数据的记录数：
+
+```java
+Integer count = userInfoService.count();
+System.out.println(count);
+```
+
+（2）**count** 方法也可以传入查询条件构造器进行查询：
+
+```java
+// 查询条件：名字中包含'ha'并且年龄小于40
+LambdaQueryWrapper<UserInfo> queryWrapper = new LambdaQueryWrapper<>();
+queryWrapper.like(UserInfo::getUserName,"ha").lt(UserInfo::getAge,40);
+//开始根据条件查询总记录
+Integer count = userInfoService.count(queryWrapper);
+System.out.println(count);
+```
 
 
 
+#### 添加自己定义的方法
 
+（1）假设我们 **UserInfoService** 接口中需要增加一个返回所有年轻人的方法：
 
+```java
+public interface UserInfoService extends IService<UserInfo> {
+    List<UserInfo> getAllYoungPeople();
+}
+```
 
+（2）对应的实现类 **UserInfoServiceImpl** 中内容如下。**注意**：由于该 **Service** 本身对应的 **Mapper** 就是 **UserInfoMapper**，我们直接使用 **baseMapper** 接口进行查询即可：
 
+```java
+@Service("userInfoService")
+public class UserInfoServiceImpl extends ServiceImpl<UserInfoMapper, UserInfo>
+        implements UserInfoService {
+    public List<UserInfo> getAllYoungPeople() {
+        return new LambdaQueryChainWrapper<>(baseMapper)
+                .lt(UserInfo::getAge,40)
+                .list();
+    }
+}
+```
+
+​	（3）如果需要使用其他的 **Mapper** 的话，我们就需要先注入在使用了：
+
+```java
+@Service("bookService")
+public class UserInfoServiceImpl extends ServiceImpl<UserInfoMapper, UserInfo>
+        implements UserInfoService {
+ 
+    @Resource
+    private AreaMapper areaMapper;
+ 
+    public List<UserInfo> getAllYoungPeople() {
+        return new LambdaQueryChainWrapper<>(baseMapper)
+                .lt(UserInfo::getAge,40)
+                .list();
+    }
+}
+```
 
 
 
