@@ -709,7 +709,7 @@ public class LogExample {
 }
 ```
 
-### 13、@Buinder
+##### 13、@Buinder
 
 （1）**builder** 是现在比较推崇的一种构建值对象的方式。该描述符用于将类改造成 **builder**（建造者）模式，用在类、方法或者构造函数上。
 
@@ -828,7 +828,7 @@ return be.toString();
 
 ![原文:SpringBoot - Lombok使用详解5（@log、@Buinder、@SneakyThrows、@Synchronized）](Lombok.assets/2019062715292140983.png)
 
-### 14、@SneakyThrows
+##### 14、@SneakyThrows
 
 （1）该注解用在方法上，可以将方法中的代码用 **try-catch** 语句包裹起来，捕获异常并在 **catch** 中用 **Lombok.sneakyThrow(e)** 把异常抛出。
 
@@ -868,7 +868,7 @@ public class SneakyThrows implements Runnable {
 }
 ```
 
-### 15、@Synchronized
+##### 15、@Synchronized
 
 该注解用在类方法或者实例方法上，效果和 
 
