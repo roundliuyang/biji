@@ -1369,5 +1369,136 @@ SELECT ... FROM ... WHERE ... GROUP BY ... HAVING ... ORDER BY ...
 2. 子查询中有一些关键词，可以方便我们对子查询的结果进行比较。比如存在性检测子查询，也就是 EXISTS 子查询，以及集合比较子查询，其中集合比较子查询关键词有 IN、SOME、 ANY 和 ALL，这些关键词在子查询中的作用是什么；
 3. 子查询也可以作为主查询的列，我们如何使用子查询作为计算字段出现在 SELECT 查询中呢？
 
+#### 什么是关联子查询，什么是非关联子查询
+
+子查询虽然是一种嵌套查询的形式，不过我们依然可以依据子查询是否执行多次，从而将子查询划分为关联子查询和非关联子查询。
+
+子查询从数据表中查询了数据结果，如果这个数据结果只执行一次，然后这个数据结果作为主查询的条件进行执行，那么这样的子查询叫做非关联子查询。
+
+ 同样，如果子查询需要执行多次，即采用循环的方式，先从外部查询开始，每次都传入子查询进行查询，然后再将结果反馈给外部，这种嵌套的执行方式就称为关联子查询。
+
+单说概念有点抽象，我们用数据表举例说明一下。这里我创建了 NBA 球员数据库，SQL 文件你可以从[GitHub](https://github.com/cystanford/sql_nba_data)上下载。
+
+文件中一共包括了 5 张表，player 表为球员表，team 为球队表，team_score 为球队比赛表，player_score 为球员比赛成绩表，height_grades 为球员身高对应的等级表。
+
+其中 player 表，也就是球员表，一共有 37 个球员，如下所示：
+
+![1638933379951](sql.assets/1638933379951.png)
+
+team 表为球队表，一共有 3 支球队，如下所示：
+
+ 	![1638933403726](sql.assets/1638933403726.png)
+
+team_score 表为球队比赛成绩表，一共记录了两场比赛的成绩，如下所示： 
+
+![1638933448566](sql.assets/1638933448566.png)
+
+player_score 表为球员比赛成绩表，记录了一场比赛中球员的表现。这张表一共包括 19 个字段，代表的含义如下：
+
+ 		![1638933489308](sql.assets/1638933489308.png)
+
+其中 shoot_attempts 代表总出手的次数，它等于二分球出手和三分球出手次数的总和。比如 2019 年 4 月 1 日，韦恩·艾灵顿在底特律活塞和印第安纳步行者的比赛中，总出手次数为 19，总命中 10，三分球 13 投 4 中，罚球 4 罚 2 中，因此总分 score=(10-4)×2+4×3+2=26，也就是二分球得分 12+ 三分球得分 12+ 罚球得分 2=26。
+
+需要说明的是，通常在工作中，数据表的字段比较多，一开始创建的时候会知道每个字段的定义，过了一段时间再回过头来看，对当初的定义就不那么确定了，容易混淆字段，解决这一问题最好的方式就是做个说明文档，用实例举例。
+
+比如 shoot_attempts 是总出手次数（这里的总出手次数 = 二分球出手次数 + 三分球出手次数，不包括罚球的次数），用上面提到的韦恩·艾灵顿的例子做补充说明，再回过头来看这张表的时候，就可以很容易理解每个字段的定义了。
+
+我们以 NBA 球员数据表为例，假设我们想要知道哪个球员的身高最高，最高身高是多少，就可以采用子查询的方式：
+
+```sql
+SQL: SELECT player_name, height FROM player WHERE height = (SELECT max(height) FROM player)
+```
+
+运行结果：（1 条记录）
+
+![1638933774676](sql.assets/1638933774676.png)
+
+你能看到，通过`SELECT max(height) FROM player`可以得到最高身高这个数值，结果为 2.16，然后我们再通过 player 这个表，看谁具有这个身高，再进行输出，这样的子查询就是非关联子查询。
+
+如果子查询的执行依赖于外部查询，通常情况下都是因为子查询中的表用到了外部的表，并进行了条件关联，因此每执行一次外部查询，子查询都要重新计算一次，这样的子查询就称之为关联子查询。比如我们想要查找每个球队中大于平均身高的球员有哪些，并显示他们的球员姓名、身高以及所在球队 ID。
+
+首先我们需要统计球队的平均身高，即`SELECT avg(height) FROM player AS b WHERE a.team_id = b.team_id`，然后筛选身高大于这个数值的球员姓名、身高和球队 ID，即：
+
+```sql
+SELECT player_name, height, team_id FROM player AS a WHERE height > (SELECT avg(height) FROM player AS b WHERE a.team_id = b.team_id)
+```
+
+运行结果：（18 条记录）
+
+![1638935754533](sql.assets/1638935754533.png)
+
+#### EXISTS 子查询
+
+关联子查询通常也会和 EXISTS 一起来使用，EXISTS 子查询用来判断条件是否满足，满足的话为 True，不满足为 False。
+
+比如我们想要看出场过的球员都有哪些，并且显示他们的姓名、球员 ID 和球队 ID。在这个统计中，是否出场是通过 player_score 这张表中的球员出场表现来统计的，如果某个球员在 player_score 中有出场记录则代表他出场过，这里就使用到了 EXISTS 子查询，即`EXISTS (SELECT player_id FROM player_score WHERE player.player_id = player_score.player_id)`，然后将它作为筛选的条件，实际上也是关联子查询，即：
+
+```sql
+SQL：SELECT player_id, team_id, player_name FROM player WHERE EXISTS (SELECT player_id FROM player_score WHERE player.player_id = player_score.player_id)
+
+```
+
+运行结果：（19 条记录）
+
+![1638936234941](sql.assets/1638936234941.png)
+
+同样，NOT EXISTS 就是不存在的意思，我们也可以通过 NOT EXISTS 查询不存在于 player_score 表中的球员信息，比如主表中的 player_id 不在子表 player_score 中，判断语句为`NOT EXISTS (SELECT player_id FROM player_score WHERE player.player_id = player_score.player_id)`。整体的 SQL 语句为：
+
+```sql
+SQL: SELECT player_id, team_id, player_name FROM player WHERE NOT EXISTS (SELECT player_id FROM player_score WHERE player.player_id = player_score.player_id)
+
+```
+
+运行结果：（18 条记录）
+
+![1638936299426](sql.assets/1638936299426.png)
 
 
+
+#### 集合比较子查询
+
+集合比较子查询的作用是与另一个查询结果集进行比较，我们可以在子查询中使用 IN、ANY、ALL 和 SOME 操作符，它们的含义和英文意义一样：
+
+![1638936790737](sql.assets/1638936790737.png)
+
+还是通过上面那个例子，假设我们想要看出场过的球员都有哪些，可以采用 IN 子查询来进行操作：
+
+```sql
+SELECT player_id, team_id, player_name FROM player WHERE player_id in (SELECT player_id FROM player_score WHERE player.player_id = player_score.player_id)
+```
+
+你会发现运行结果和上面的是一样的，那么问题来了，既然 IN 和 EXISTS 都可以得到相同的结果，那么我们该使用 IN 还是 EXISTS 呢？
+
+我们可以把这个模式抽象为：
+
+```sql
+SELECT * FROM A WHERE cc IN (SELECT cc FROM B)
+```
+
+```sql
+SELECT * FROM A WHERE EXIST (SELECT cc FROM B WHERE B.cc=A.cc)
+```
+
+```
+复制代码
+```
+
+实际上在查询过程中，在我们对 cc 列建立索引的情况下，我们还需要判断表 A 和表 B 的大小。在这里例子当中，表 A 指的是 player 表，表 B 指的是 player_score 表。如果表 A 比表 B 大，那么 IN 子查询的效率要比 EXIST 子查询效率高，因为这时 B 表中如果对 cc 列进行了索引，那么 IN 子查询的效率就会比较高。
+
+同样，如果表 A 比表 B 小，那么使用 EXISTS 子查询效率会更高，因为我们可以使用到 A 表中对 cc 列的索引，而不用从 B 中进行 cc 列的查询。
+
+了解了 IN 查询后，我们来看下 ANY 和 ALL 子查询。刚才讲到了 ANY 和 ALL 都需要使用比较符，比较符包括了（>）（=）（<）（>=）（<=）和（<>）等。
+
+
+
+如果我们想要查询球员表中，比印第安纳步行者（对应的 team_id 为 1002）中任何一个球员身高高的球员的信息，并且输出他们的球员 ID、球员姓名和球员身高，该怎么写呢？首先我们需要找出所有印第安纳步行者队中的球员身高，即`SELECT height FROM player WHERE team_id = 1002`，然后使用 ANY 子查询即：
+
+```java
+SQL: SELECT player_id, player_name, height FROM player WHERE height > ANY (SELECT height FROM player WHERE team_id = 1002)
+```
+
+运行结果：（35 条记录）
+
+![1638937865097](sql.assets/1638937865097.png)
+
+运行结果为 35 条，你发现有 2 个人的身高是不如印第安纳步行者的所有球员的。
