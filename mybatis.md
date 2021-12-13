@@ -134,7 +134,7 @@ public Object execute(SqlSession sqlSession, Object[] args) {
 ......  
 ```
 
-#### select 语句的返回类型
+#### select 语句的返回类型s
 
 对于select语句，必须在Mapper映射文件中显示声明返回值类型，否则会抛出异常，指出“A query was run and no Result Maps were found for the Mapped Statement”。
 
