@@ -1644,7 +1644,7 @@ SELECT player_id, player.team_id, player_name, height, team_name FROM player AS 
 
 
 
-非等值连接
+#### 非等值连接
 
 当我们进行多表查询的时候，如果连接多个表的条件是等号时，就是等值连接，其他的运算符连接就是非等值查询。
 
@@ -1665,51 +1665,93 @@ WHERE p.height BETWEEN h.height_lowest AND h.height_highest
 
 ![1639660185901](sql.assets/1639660185901.png)
 
+#### 外连接
 
+除了查询满足条件的记录以外，外连接还可以查询某一方不满足条件的记录。两张表的外连接，会有一张是主表，另一张是从表。如果是多张表的外连接，那么第一张表是主表，即显示全部的行，而第剩下的表则显示对应连接的信息。在 SQL92 中采用（+）代表从表所在的位置，而且在 SQL92 中，只有左外连接和右外连接，没有全外连接。
 
+什么是左外连接，什么是右外连接呢？
 
+左外连接，就是指左边的表是主表，需要显示左边表的全部行，而右侧的表是从表，（+）表示哪个是从表。
 
+```sql
+SQL：SELECT * FROM player, team where player.team_id = team.team_id(+)
+```
 
+相当于 SQL99 中的：
 
+```sql
+SQL：SELECT * FROM player LEFT JOIN team on player.team_id = team.team_id
+```
 
+右外连接，指的就是右边的表是主表，需要显示右边表的全部行，而左侧的表是从表。
 
+```sql
+SQL：SELECT * FROM player, team where player.team_id(+) = team.team_id
+```
 
+相当于 SQL99 中的：
 
-#### ---------------------------------
+```sql
+SQL：SELECT * FROM player RIGHT JOIN team on player.team_id = team.team_id
+```
 
+需要注意的是，LEFT JOIN 和 RIGHT JOIN 只存在于 SQL99 及以后的标准中，在 SQL92 中不存在，只能用（+）表示。
 
+#### 自连接
 
+自连接可以对多个表进行操作，也可以对同一个表进行操作。也就是说查询条件使用了当前表的字段。
 
+比如我们想要查看比布雷克·格里芬高的球员都有谁，以及他们的对应身高：
 
+```sql
+SQL：SELECT b.player_name, b.height FROM player as a , player as b WHERE a.player_name = '布雷克 - 格里芬' and a.height < b.height
+```
 
+运行结果（6 条记录）：
 
+![1639708318653](sql.assets/1639708318653.png)
 
+如果不用自连接的话，需要采用两次 SQL 查询。首先需要查询布雷克·格里芬的身高。
 
+```sql
+SQL：SELECT height FROM player WHERE player_name = '布雷克 - 格里芬'
+```
 
+运行结果为 2.08。
 
+然后再查询比 2.08 高的球员都有谁，以及他们的对应身高：
 
+```sql
+SQL：SELECT player_name, height FROM player WHERE height > 2.08
+```
 
-height_grades 表为身高等级表，如下所示：
+运行结果和采用自连接的运行结果是一致的。
 
-![1639656085113](sql.assets/1639656085113.png)
+#### 总结
 
+今天我讲解了常用的 SQL 标准以及 SQL92 中的连接操作。SQL92 和 SQL99 是经典的 SQL 标准，也分别叫做 SQL-2 和 SQL-3 标准。也正是在这两个标准发布之后，SQL 影响力越来越大，甚至超越了数据库领域。现如今 SQL 已经不仅仅是数据库领域的主流语言，还是信息领域中信息处理的主流语言。在图形检索、图像检索以及语音检索中都能看到 SQL 语言的使用。
 
+除此以外，我们使用的主流 RDBMS，比如 MySQL、Oracle、SQL Sever、DB2、PostgreSQL 等都支持 SQL 语言，也就是说它们的使用符合大部分 SQL 标准，但很难完全符合，因为这些数据库管理系统都在 SQL 语言的基础上，根据自身产品的特点进行了扩充。即使这样，SQL 语言也是目前所有语言中半衰期最长的，在 1992 年，Windows3.1 发布，SQL92 标准也同时发布，如今我们早已不使用 Windows3.1 操作系统，而 SQL92 标准却一直持续至今。
 
+当然我们也要注意到 SQL 标准的变化，以及不同数据库管理系统使用时的差别，比如 Oracle 对 SQL92 支持较好，而 MySQL 则不支持 SQL92 的外连接。
 
+### SQL99是如何使用连接的，与SQL92的区别是什么？
 
+上节课我们讲解了 SQL92 标准，在它之后又提出了 SQL99 标准。现在各大 DBMS 中对 SQL99 标准的支持度更好。你一定听说过 LEFT JOIN、RIGHT JOIN 这样的操作符，这实际上就是 SQL99 的标准，在 SQL92 中它们是用（+）代替的。SQL92 和 SQL99 标准原理类似，只是 SQL99 标准的可读性更强。
 
+今天我就来讲解一下 SQL99 标准中的连接查询，在今天的课程中你需要重点掌握以下几方面的内容：
 
+1. SQL99 标准下的连接查询是如何操作的？
+2. SQL99 与 SQL92 的区别是什么？
+3. 在不同的 DBMS 中，使用连接需要注意什么？
 
+#### SQL99 标准中的连接查询
 
+上一篇文章中，我用 NBA 球员的数据表进行了举例，包括了三张数据表 player、team 和 height_grades。
 
+其中 player 表为球员表，一共有 37 个球员，如下所示：
 
-
-
-
-
-
-
-
+ ![1639708709533](sql.assets/1639708709533.png)
 
 接下来我们看下在 SQL99 标准中，是如何进行连接查询的？
 
@@ -1933,3 +1975,251 @@ SQLite 是一款轻量级的数据库软件，在外连接上只支持左连接�
 
 此外我还想强调一下，我们在进行连接的时候，使用的关系型数据库管理系统，之所以存在关系是因为各种数据表之间存在关联，它们并不是孤立存在的。在实际工作中，尤其是做业务报表的时候，我们会用到 SQL 中的连接操作（JOIN），因此我们需要理解和熟练掌握 SQL 标准中连接的使用，以及不同 DBMS 中对连接的语法规范。剩下要做的，就是通过做练习和实战来增强你的经验了，做的练习多了，也就自然有感觉了。
 
+
+
+### 视图在SQL中的作用是什么，它是怎样工作的？
+
+我们之前对 SQL 中的数据表查询进行了讲解，今天我们来看下如何对视图进行查询。视图，也就是我们今天要讲的虚拟表，本身是不具有数据的，它是 SQL 中的一个重要概念。从下面这张图中，你能看到，虚拟表的创建连接了一个或多个数据表，不同的查询应用都可以建立在虚拟表之上。
+
+![1639709131637](sql.assets/1639709131637.png)
+
+视图一方面可以帮我们使用表的一部分而不是所有的表，另一方面也可以针对不同的用户制定不同的查询视图。比如，针对一个公司的销售人员，我们只想给他看部分数据，而某些特殊的数据，比如采购的价格，则不会提供给他。
+
+刚才讲的只是视图的一个使用场景，实际上视图还有很多作用，今天我们就一起学习下。今天的文章里，你将重点掌握以下的内容：
+
+1. 什么是视图？如何创建、更新和删除视图？
+2. 如何使用视图来简化我们的 SQL 操作？
+3. 视图和临时表的区别是什么，它们各自有什么优缺点？
+
+#### 如何创建，更新和删除视图
+
+视图作为一张虚拟表，帮我们封装了底层与数据表的接口。它相当于是一张表或多张表的数据结果集。视图这一特点，可以帮我们简化复杂的SQL查询，比如在编写视图后，我们就可以直接重用它，而不需要考虑视图中包含的基础查询的细节。同样，我们也可以根据需要更改数据格式，返回与底层数据表格式不同的数据。
+
+通常情况下，小型项目的数据库可以不使用视图，但是在大型项目中，以及数据表比较复杂的情况下，视图的价值就凸显出来了，它可以帮助我们把经常查询的结果集放到虚拟表中，提升使用效率。理解和使用起来都非常方便。
+
+#### 创建视图：CREATE VIEW
+
+那么该如何创建视图呢？创建视图的语法是：
+
+```sql
+CREATE VIEW view_name AS SELECT column1,column2 FROM table WHERE condition 
+```
+
+实际上就是我们在SQL查询语句的基础上封装了视图VIEW ,这样就会基于SQL语句的结果集形成一张虚拟表。其中view_name为视图名称，column1,column2 代表列名，condition代表查询过滤条件。
+
+我们以NBA球员数据为例。我们想要查询比NBA球员平均身高高的球员有哪些，显示他们的球员ID和身高。假如我们给这个视图起个名字player_above_avg_height ,那么创建视图可以写成：
+
+```sql
+CTEATE VIEW play_above_avg_height AS 
+SELECT player_id,height 
+FROM player
+WHERE height >(SELECT AVG(height) FROM player)
+```
+
+视图查询结果（18 条记录）：
+
+![1639711211537](sql.assets/1639711211537.png)
+
+d当视图创建之后，它相当于一个虚拟表，可以直接使用：
+
+```sql
+SELECT * FROM player_-above_avg_height
+```
+
+运行结果和上面一样。
+
+#### 嵌套视图
+
+```sql
+CREATE VIEW player_above_above_avg_height AS
+SELECT player_id, height
+FROM player
+WHERE height > (SELECT AVG(height) from player_above_avg_height)
+```
+
+视图查询结果（11 条记录）：
+
+![1639713154753](sql.assets/1639713154753.png)
+
+你能看到这个视图的数据记录数为 11 个，比之前的记录少了 7 个。
+
+#### 修改视图：ALTER VIEW
+
+修改视图的语法是：
+
+```sql
+ALTER VIEW view_name AS
+SELECT column1, column2
+FROM table
+WHERE condition
+```
+
+你能看出来它的语法和创建视图一样，只是对原有视图的更新。比如我们想更新视图 player_above_avg_height，增加一个 player_name 字段，可以写成：
+
+```sql
+ALTER VIEW player_above_avg_height AS
+SELECT player_id, player_name, height
+FROM player
+WHERE height > (SELECT AVG(height) from player)
+```
+
+这样的话，下次再对视图进行查询的时候，视图结果就进行了更新。
+
+```sql
+SELECT * FROM player_above_avg_height
+```
+
+运行结果（18 条记录）：
+
+![1639713370022](sql.assets/1639713370022.png)
+
+#### 删除视图：DROP VIEW
+
+删除视图的语法是：
+
+```
+DROP VIEW view_name
+```
+
+比如我们想把刚才创建的视图删除，可以使用：
+
+```sql
+DROP VIEW player_above_avg_height
+```
+
+需要说明的是，SQLite 不支持视图的修改，仅支持只读视图，也就是说你只能使用 CREATE VIEW 和 DROP VIEW，如果想要修改视图，就需要先 DROP 然后再 CREATE。
+
+#### 如何使用视图简化 SQL 操作
+
+从上面这个例子中，你能看出视图就是对 SELECT 语句进行了封装，方便我们重用它们。下面我们再来看几个视图使用的例子。
+
+##### 利用视图完成复杂的连接
+
+我在讲解 SQL99 标准连接操作的时候，举了一个 NBA 球员和身高等级连接的例子，有两张表，分别为 player 和 height_grades。其中 height_grades 记录了不同身高对应的身高等级。这里我们可以通过创建视图，来完成球员以及对应身高等级的查询。
+
+首先我们对 player 表和 height_grades 表进行连接，关联条件是球员的身高 height（在身高等级表规定的最低身高和最高身高之间），这样就可以得到这个球员对应的身高等级，对应的字段为 height_level。然后我们通过 SELECT 得到我们想要查询的字段，分别为球员姓名 player_name、球员身高 height，还有对应的身高等级 height_level。然后把取得的查询结果集放到视图 player_height_grades 中，即：
+
+```sql
+CREATE VIEW player_height_grades AS
+SELECT p.player_name, p.height, h.height_level
+FROM player as p JOIN height_grades as h
+ON height BETWEEN h.height_lowest AND h.height_highest
+```
+
+以后我们进行查询的时候，可以直接通过视图查询，比如我想查询身高介于 1.90m 和 2.08m 之间的球员及他们对应的身高：
+
+```sql
+SELECT * FROM player_height_grades WHERE height >= 1.90 AND height <= 2.08
+
+```
+
+这样就把一个相对复杂的连接查询转化成了视图查询。
+
+##### 利用视图对数据进行格式化
+
+我们经常需要输出某个格式的内容，比如我们想输出球员姓名和对应的球队，对应格式为 player_name(team_name)，就可以使用视图来完成数据格式化的操作：
+
+```sql
+CREATE VIEW player_team AS 
+SELECT CONCAT(player_name, '(' , team.team_name , ')') AS player_team FROM player JOIN team WHERE player.team_id = team.team_id
+```
+
+首先我们将 player 表和 team 表进行连接，关联条件是相同的 team_id。我们想要的格式是`player_name(team_name)`，因此我们使用 CONCAT 函数，即`CONCAT(player_name, '(' , team.team_name , ')')`，将 player_name 字段和 team_name 字段进行拼接，得到了拼接值被命名为 player_team 的字段名，将它放到视图 player_team 中。
+
+这样的话，我们直接查询视图，就可以得到格式化后的结果：
+
+```sql
+SELECT * FROM player_team
+```
+
+运行结果（37 条记录）：
+
+![1639722426352](sql.assets/1639722426352.png)
+
+##### 使用视图与计算字段
+
+我们在数据查询中，有很多统计的需求可以通过视图来完成。正确地使用视图可以帮我们简化复杂的数据处理
+
+我以球员比赛成绩表为例，对应的是 player_score 表。这张表中一共有 19 个字段，它们代表的含义如下：
+
+![1639722605912](sql.assets/1639722605912.png)
+
+如果我想要统计每位球员在每场比赛中的二分球、三分球和罚球的得分，可以通过创建视图完成：
+
+```sql
+CREATE VIEW game_player_score AS
+SELECT game_id, player_id, (shoot_hits-shoot_3_hits)*2 AS shoot_2_points, shoot_3_hits*3 AS shoot_3_points, shoot_p_hits AS shoot_p_points, score  FROM player_score
+```
+
+然后通过查询视图就可以完成。
+
+```sql
+SELECT * FROM game_player_score
+```
+
+运行结果（19 条记录）：
+
+![1639723394274](sql.assets/1639723394274.png)
+
+你能看出正确使用视图可以简化复杂的 SQL 查询，让 SQL 更加清爽易用。不过有一点需要注意，视图是虚拟表，它只是封装了底层的数据表查询接口，因此有些 RDBMS 不支持对视图创建索引（有些 RDBMS 则支持，比如新版本的 SQL Server）
+
+#### 总结
+
+今天我讲解了视图的使用，包括创建，修改和删除视图。使用视图有很多好处，比如安全、简单清晰。
+
+1. 安全性：虚拟表是基于底层数据表的，我们在使用视图时，一般不会轻易通过视图对底层数据进行修改，即使是使用单表的视图，也会受到限制，比如计算字段，类型转换等是无法通过视图来对底层数据进行修改的，这也在一定程度上保证了数据表的数据安全性。同时，我们还可以针对不同用户开放不同的数据查询权限，比如人员薪酬是个敏感的字段，那么只给某个级别以上的人员开放，其他人的查询视图中则不提供这个字段。
+2. 简单清晰：视图是对 SQL 查询的封装，它可以将原本复杂的 SQL 查询简化，在编写好查询之后，我们就可以直接重用它而不必要知道基本的查询细节。同时我们还可以在视图之上再嵌套视图。这样就好比我们在进行模块化编程一样，不仅结构清晰，还提升了代码的复用率。
+
+另外，我们也需要了解到视图是虚拟表，本身不存储数据，如果想要通过视图对底层数据表的数据进行修改也会受到很多限制，通常我们是把视图用于查询，也就是对 SQL 查询的一种封装。那么它和临时表又有什么区别呢？在实际工作中，我们可能会见到各种临时数据。比如你可能会问，如果我在做一个电商的系统，中间会有个购物车的功能，需要临时统计购物车中的商品和金额，那该怎么办呢？这里就需要用到临时表了，临时表是真实存在的数据表，不过它不用于长期存放数据，只为当前连接存在，关闭连接后，临时表就会自动释放。
+
+
+
+### 什么是存储过程，在实际项目中用得多么？
+
+今天我来讲一下 SQL 的存储过程，它是 SQL 中另一个重要应用，和视图一样，都是对 SQL 代码进行封装，可以反复利用。它和视图有着同样的优点，清晰、安全，还可以减少网络传输量。不过它和视图不同，视图是虚拟表，通常不对底层数据表直接操作，而存储过程是程序化的 SQL，可以直接操作底层数据表，相比于面向集合的操作方式，能够实现一些更复杂的数据处理。存储过程可以说是由 SQL 语句和流控制语句构成的语句集合，它和我们之前学到的函数一样，可以接收输入参数，也可以返回输出参数给调用者，返回计算结果
+
+今天有关存储过程的内容，你将重点掌握以下几个部分：
+
+1. 什么是存储过程，如何创建一个存储过程？
+2. 流控制语句都有哪些，如何使用它们？
+3. 各大公司是如何看待存储过程的？在实际工作中，我们该如何使用存储过程？
+
+#### 什么是存储过程，如何创建一个存储过程
+
+存储过程的英文是 Stored Procedure。它的思想很简单，就是 SQL 语句的封装。一旦存储过程被创建出来，使用它就像使用函数一样简单，我们直接通过调用存储过程名即可。我在前面讲过，存储过程实际上由 SQL 语句和流控制语句共同组成。流控制语句都有哪些呢？这个我稍后讲解。
+
+我们先来看下如何定义一个存储过程：
+
+在这里，我们使用 CREATE PROCEDURE 创建一个存储过程，后面是存储过程的名称，以及过程所带的参数，可以包括输入参数和输出参数。最后由 BEGIN 和 END 来定义我们所要执行的语句块。
+
+和视图一样，我们可以删除已经创建的存储过程，使用的是 DROP PROCEDURE。如果要更新存储过程，我们需要使用 ALTER PROCEDURE。
+
+讲完了如何创建，更新和删除一个存储过程，下面我们来看下如何实现一个简单的存储过程。比如我想做一个累加运算，计算 1+2+…+n 等于多少，我们可以通过参数 n 来表示想要累加的个数，那么如何用存储过程实现这一目的呢？这里我做一个 add_num 的存储过程，具体的代码如下：
+
+```sql
+CREATE PROCEDURE `add_num`(IN n INT)
+BEGIN
+       DECLARE i INT;
+       DECLARE sum INT;
+       
+       SET i = 1;
+       SET sum = 0;
+       WHILE i <= n DO
+              SET sum = sum + i;
+              SET i = i +1;
+       END WHILE;
+       SELECT sum;
+END
+```
+
+
+
+
+
+
+
+
+
+
+
+#### 
