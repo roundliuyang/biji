@@ -177,3 +177,118 @@ getCanonicalName()返回底层类的标准名称。注意，java.lang.Class使�
 
 ### 获取Super Class
 
+在一个Class对象上的getSuperclass()方法返回该类的超类。如果这个Class代表Object类，一个接口，一个原始类型，或者是void，那么将返回null。如果这个对象代表一个数组类，那么将返回代表Object类的Class对象。
+
+```java
+Class<?> superClass = Class.forName("com.journaldev.reflection.ConcreteClass").getSuperclass();
+System.out.println(superClass); // prints "class com.journaldev.reflection.BaseClass"
+System.out.println(Object.class.getSuperclass()); // prints "null"
+System.out.println(String[][].class.getSuperclass());// prints "class java.lang.Object"
+```
+
+
+
+类代表对象的getClasses()方法返回一个数组，该数组包含代表所有公有类、接口和枚举的类对象，它们是该类对象所代表的类的成员。这包括从超类继承的公有类和接口成员以及由该类声明的公有类和接口成员。如果这个Class对象没有公共成员类或接口，或者这个Class对象代表一个原始类型、一个数组类或void，这个方法返回一个长度为0的数组
+
+
+
+### 获取Declared Classes
+
+getDeclaredClasses()方法返回一个Class对象数组，该数组反映了作为该Class对象所代表的类的成员所声明的所有类和接口。返回的数组不包括在继承的类和接口中声明的类。(注意：则是获取所声明的所有类和接口，不是属性)
+
+```java
+
+//getting all of the classes, interfaces, and enums that are explicitly declared in ConcreteClass
+Class<?>[] explicitClasses = Class.forName("com.journaldev.reflection.ConcreteClass").getDeclaredClasses();
+//prints [class com.journaldev.reflection.ConcreteClass$ConcreteClassDefaultClass, 
+//class com.journaldev.reflection.ConcreteClass$ConcreteClassDefaultEnum, 
+//class com.journaldev.reflection.ConcreteClass$ConcreteClassPrivateClass, 
+//class com.journaldev.reflection.ConcreteClass$ConcreteClassProtectedClass, 
+//class com.journaldev.reflection.ConcreteClass$ConcreteClassPublicClass, 
+//class com.journaldev.reflection.ConcreteClass$ConcreteClassPublicEnum, 
+//interface com.journaldev.reflection.ConcreteClass$ConcreteClassPublicInterface]
+System.out.println(Arrays.toString(explicitClasses));
+```
+
+
+
+### 获取 Declaring Class
+
+getDeclaringClass()方法返回代表它所声明的类的Class对象。
+
+```java
+Class<?> innerClass = Class.forName("com.journaldev.reflection.ConcreteClass$ConcreteClassDefaultClass");
+//prints com.journaldev.reflection.ConcreteClass
+System.out.println(innerClass.getDeclaringClass().getCanonicalName());
+System.out.println(innerClass.getEnclosingClass().getCanonicalName());
+```
+
+
+
+### 获取包名
+
+getPackage() 方法返回此类的包。此类的类加载器用于查找包。我们可以调用 Package 的 getName() 方法来获取包的名称。
+
+```java
+
+//prints "com.journaldev.reflection"
+System.out.println(Class.forName("com.journaldev.reflection.BaseInterface").getPackage().getName());
+```
+
+
+
+### 获取类修饰符
+
+getModifiers() 方法返回类修饰符的 int 表示，我们可以使用 java.lang.reflect.Modifier.toString() 方法以源代码中使用的字符串格式获取它。
+
+```java
+System.out.println(Modifier.toString(concreteClass.getModifiers())); //prints "public"
+//prints "public abstract interface"
+System.out.println(Modifier.toString(Class.forName("com.journaldev.reflection.BaseInterface").getModifiers())); 
+```
+
+
+
+### 获取类型参数
+
+`getTypeParameters()`如果有任何与类关联的类型参数，则返回 TypeVariable 数组。类型参数的返回顺序与声明的顺序相同。
+
+```java
+//Get Type parameters (generics)
+TypeVariable<?>[] typeParameters = Class.forName("java.util.HashMap").getTypeParameters();
+for(TypeVariable<?> t : typeParameters)
+System.out.print(t.getName()+",");
+```
+
+
+
+### 获取 Implemented Interfaces 
+
+`getGenericInterfaces()` method returns the array of interfaces implemented by the class with generic type information. We can also use `getInterfaces()` to get the class representation of all the implemented interfaces.
+
+```java
+Type[] interfaces = Class.forName("java.util.HashMap").getGenericInterfaces();
+//prints "[java.util.Map<K, V>, interface java.lang.Cloneable, interface java.io.Serializable]"
+System.out.println(Arrays.toString(interfaces));
+//prints "[interface java.util.Map, interface java.lang.Cloneable, interface java.io.Serializable]"
+System.out.println(Arrays.toString(Class.forName("java.util.HashMap").getInterfaces()));
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
