@@ -2373,7 +2373,7 @@ ACID 可以说是事务的四大特性，在这四个特性中，原子性是基
 
 当我们了解了事务的特性后，再来看下如何使用事务。我们知道 Oracle 是支持事务的，而在 MySQL 中，则需要选择适合的存储引擎才可以支持事务。如果你使用的是 MySQL，可以通过 SHOW ENGINES 命令来查看当前 MySQL 支持的存储引擎都有哪些，以及这些存储引擎是否支持事务。
 
-![1640188941481](C:\Users\yuanl\AppData\Roaming\Typora\typora-user-images\1640188941481.png)
+![1640190772248](sql.assets/1640190772248.png)
 
 
 
@@ -2418,7 +2418,7 @@ SELECT * FROM test;
 
 运行结果（1 行数据）：
 
-![1640189143004](C:\Users\yuanl\AppData\Roaming\Typora\typora-user-images\1640189143004.png)
+![1640190793580](sql.assets/1640190793580.png)
 
 在这个事务中，整个 SQL 一共执行了 2 个事务，第一个是插入“关羽”，提交后执行成功，第二个是插入两次“张飞”，这里需要注意的是，我们将 name 设置为了主键，也就是说主键的值是唯一的，那么第二次插入“张飞”时就会产生错误，然后执行 ROLLBACK 相当于对事务进行了回滚，所以我们看到最终结果只有一行数据，也就是第一个事务执行之后的结果，即“关羽”。
 
@@ -2439,7 +2439,7 @@ SELECT * FROM test;
 
 运行结果（2 行数据）：
 
-![1640189305197](C:\Users\yuanl\AppData\Roaming\Typora\typora-user-images\1640189305197.png)
+![1640190806932](sql.assets/1640190806932.png)
 
 你能看到这次数据是 2 行，上一次操作我把两次插入“张飞”放到一个事务里，而这次操作它们不在同一个事务里，那么对于 MySQL 来说，默认情况下这实际上就是两个事务，因为在 autocommit=1 的情况下，MySQL 会进行隐式事务，也就是自动提交，因此在进行第一次插入“张飞”后，数据表里就存在了两行数据，而第二次插入“张飞”就会报错：`1062 - Duplicate entry '张飞' for key 'PRIMARY'`。
 
@@ -2461,7 +2461,7 @@ SELECT * FROM test;
 
 运行结果（1 行数据）：
 
-![1640189454068](C:\Users\yuanl\AppData\Roaming\Typora\typora-user-images\1640189454068.png)
+![1640190833348](sql.assets/1640190833348.png)
 
 你能看到还是相同的 SQL 代码，只是我在事务开始之前设置了`SET @@completion_type = 1;`，结果就和我们第一次处理的一样，只有一个“关羽”。这是为什么呢？
 
