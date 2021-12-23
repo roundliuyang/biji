@@ -26,7 +26,7 @@ Java 中的反射是一个非常强大的概念，在普通编程中用处不大
 - **安全问题**——使用反射我们可以访问我们不应该访问的部分代码，例如我们可以访问类的私有字段并更改它的值。这可能是一个严重的安全威胁，并导致您的应用程序行为异常。
 - **高维护**– 反射代码难以理解和调试，并且在编译时也无法发现代码的任何问题，因为类可能不可用，从而使其灵活性降低且难以维护。
 
-## 类的 Java 反射
+## Java Reflection for Classes
 
 在 java 中，每个对象要么是原始类型，要么是引用。所有的类、枚举、数组都是引用类型并继承自`java.lang.Object`. 原始类型是——boolean、byte、short、int、long、char、float 和 double。
 
@@ -276,19 +276,221 @@ System.out.println(Arrays.toString(Class.forName("java.util.HashMap").getInterfa
 
 
 
+### 获取所有 Public  Methods
+
+getMethods() 方法返回类的公共方法数组，包括其超类和超接口的公共方法。
+
+```java
+Method[] publicMethods = Class.forName("com.journaldev.reflection.ConcreteClass").getMethods();
+//prints public methods of ConcreteClass, BaseClass, Object
+System.out.println(Arrays.toString(publicMethods));
+```
+
+### 获取所有 Public  Constructors
+
+getConstructors() 方法返回类引用对象的公共构造函数列表。
+
+```java
+//Get All public constructors
+Constructor<?>[] publicConstructors = Class.forName("com.journaldev.reflection.ConcreteClass").getConstructors();
+//prints public constructors of ConcreteClass
+System.out.println(Arrays.toString(publicConstructors));
+```
 
 
 
+### 获取所有 Public 字段 Fields
+
+getFields()返回类的公共字段数组，包括其超类和超接口的公共字段。
+
+```java
+//Get All public fields
+Field[] publicFields = Class.forName("com.journaldev.reflection.ConcreteClass").getFields();
+//prints public fields of ConcreteClass, it's superclass and super interfaces
+System.out.println(Arrays.toString(publicFields));
+```
 
 
 
+### 获取所有 Annotations
+
+getAnnotations() 方法返回元素的所有注解，我们也可以将它与类、字段和方法一起使用。请注意，只有可用于反射的注解才具有 RUNTIME 的保留策略，请查看 Java 注解教程。
+
+我们将在后面的部分中更详细地研究这一点。
 
 
 
+## Java Reflection for Fields
+
+反射API提供了几种方法来分析类的字段并在运行时修改它们的值，在这一节中我们将研究一些常用的方法的反射函数。
+
+### 获取 Public  Field
+
+在上一节中，我们看到了如何获取类的所有公共字段的列表。反射 API 还提供了通过 getField() 方法获取类的特定公共字段的方法。此方法在指定的类引用中查找字段，然后在超接口中查找字段，然后在超类中查找。
+
+```java
+ield field = Class.forName("com.journaldev.reflection.ConcreteClass").getField("interfaceInt");
+```
+
+上面的调用将返回由 ConcreteClass 实现的 BaseInterface 的字段。如果没有找到字段，则抛出 NoSuchFieldException。
 
 
 
+### Field Declaring Class
 
+我们可以使用字段对象的getDeclaringClass()来获得声明该字段的类。
+
+```java
+try {
+	Field field = Class.forName("com.journaldev.reflection.ConcreteClass").getField("interfaceInt");
+	Class<?> fieldClass = field.getDeclaringClass();
+	System.out.println(fieldClass.getCanonicalName()); //prints com.journaldev.reflection.BaseInterface
+} catch (NoSuchFieldException | SecurityException e) {
+	e.printStackTrace();
+}
+```
+
+
+
+### 获取Field Type
+
+getType() 方法返回声明的字段类型的 Class 对象，如果字段是原始类型，则返回包装类对象
+
+```java
+Field field = Class.forName("com.journaldev.reflection.ConcreteClass").getField("publicInt");
+Class<?> fieldType = field.getType();
+System.out.println(fieldType.getCanonicalName()); //prints int
+```
+
+
+
+### 获取/设置 Public Field Value
+
+我们可以使用反射来获取和设置对象中字段的值。
+
+```java
+Field field = Class.forName("com.journaldev.reflection.ConcreteClass").getField("publicInt");
+ConcreteClass obj = new ConcreteClass(5);
+System.out.println(field.get(obj)); //prints 5
+field.setInt(obj, 10); //setting field value to 10 in object
+System.out.println(field.get(obj)); //prints 10
+```
+
+get()方法返回Object，所以如果字段是原始类型，它返回相应的Wrapper Class。如果字段是静态的，我们可以在get()方法中把Object传成null。
+
+有几个set*()方法可以为字段设置Object，或者为字段设置不同类型的原始类型。我们可以得到字段的类型，然后调用正确的函数来正确设置字段的值。如果字段是final，set()方法会抛出java.lang.IllegalAccessException。
+
+
+
+### 获取/设置 Private Field Value
+
+我们知道私有字段和方法不能在类之外访问，但是使用反射我们可以通过关闭字段修饰符的 java 访问检查来获取/设置私有字段值。
+
+```java
+Field privateField = Class.forName("com.journaldev.reflection.ConcreteClass").getDeclaredField("privateString");
+//turning off access check with below method call
+privateField.setAccessible(true);
+ConcreteClass objTest = new ConcreteClass(1);
+System.out.println(privateField.get(objTest)); // prints "private string"
+privateField.set(objTest, "private string updated");
+System.out.println(privateField.get(objTest)); //prints "private string updated"
+```
+
+
+
+## Java Reflection for Methods
+
+使用反射，我们可以得到一个方法的信息，也可以调用它。在本节中，我们将学习获取方法、调用方法和访问私有方法的不同方式。
+
+### 获取 Public Method
+
+我们可以使用 getMethod() 来获取类的公共方法，我们需要传递该方法的方法名称和参数类型。如果在类中找不到该方法，反射 API 会在超类中查找该方法。
+
+在下面的示例中，我使用反射获取 HashMap 的 put() 方法。该示例还展示了如何获取方法的参数类型、方法修饰符和返回类型。
+
+```java
+Method method = Class.forName("java.util.HashMap").getMethod("put", Object.class, Object.class);
+//get method parameter types, prints "[class java.lang.Object, class java.lang.Object]"
+System.out.println(Arrays.toString(method.getParameterTypes()));
+//get method return type, return "class java.lang.Object", class reference for void
+System.out.println(method.getReturnType());
+//get method modifiers
+System.out.println(Modifier.toString(method.getModifiers())); //prints "public"
+```
+
+
+
+### Invoking Public Method
+
+我们可以使用 Method 对象的 invoke() 方法来调用一个方法，在下面的示例代码中，我使用反射调用 HashMap 上的 put 方法。
+
+```java
+
+Method method = Class.forName("java.util.HashMap").getMethod("put", Object.class, Object.class);
+Map<String, String> hm = new HashMap<>();
+method.invoke(hm, "key", "value");
+System.out.println(hm); // prints {key=value}
+```
+
+如果方法是静态的，我们可以将 NULL 作为对象参数传递。
+
+### Invoking Private Methods
+
+我们可以使用 getDeclaredMethod() 来获取私有方法，然后关闭访问检查来调用它，下面的例子展示了我们如何调用静态且没有参数的 BaseClass 的 method3()。
+
+```java
+//invoking private method
+Method method = Class.forName("com.journaldev.reflection.BaseClass").getDeclaredMethod("method3", null);
+method.setAccessible(true);
+method.invoke(null, null); //prints "Method3"
+```
+
+
+
+## Java Reflection for Constructors
+
+反射API提供了获取类的构造函数的方法来进行分析，我们可以通过调用构造函数来创建新的类实例。我们已经学会了如何获取所有的公共构造函数。
+
+### 获取 Public Constructor
+
+我们可以在对象的类表示上使用 getConstructor() 方法来获取特定的公共构造函数。下面的例子展示了如何获取上面定义的 ConcreteClass 的构造函数和 HashMap 的无参数构造函数。它还展示了如何获取构造函数的参数类型数组。
+
+```java
+onstructor<?> constructor = Class.forName("com.journaldev.reflection.ConcreteClass").getConstructor(int.class);
+//getting constructor parameters
+System.out.println(Arrays.toString(constructor.getParameterTypes())); // prints "[int]"
+		
+Constructor<?> hashMapConstructor = Class.forName("java.util.HashMap").getConstructor(null);
+System.out.println(Arrays.toString(hashMapConstructor.getParameterTypes())); // prints "[]"
+```
+
+
+
+###   Instantiate Object using Constructor
+
+我们可以在构造器对象上使用newInstance()方法来实例化一个新的类的实例。因为当我们在编译时没有类的信息时，我们可以使用反射，我们可以把它赋值给Object，然后进一步使用反射来访问它的字段和调用它的方法。
+
+```java
+Constructor<?> constructor = Class.forName("com.journaldev.reflection.ConcreteClass").getConstructor(int.class);
+//getting constructor parameters
+System.out.println(Arrays.toString(constructor.getParameterTypes())); // prints "[int]"
+		
+Object myObj = constructor.newInstance(10);
+Method myObjMethod = myObj.getClass().getMethod("method1", null);
+myObjMethod.invoke(myObj, null); //prints "Method1 impl."
+
+Constructor<?> hashMapConstructor = Class.forName("java.util.HashMap").getConstructor(null);
+System.out.println(Arrays.toString(hashMapConstructor.getParameterTypes())); // prints "[]"
+HashMap<String,String> myMap = (HashMap<String,String>) hashMapConstructor.newInstance(null);
+```
+
+
+
+### Reflection for Annotations
+
+注解是在Java 1.5中引入的，用于提供类、方法或字段的元数据信息，现在它在Spring和Hibernate等框架中被大量使用。反射API也被扩展，以提供对运行时分析注解的支持。
+
+使用反射API，我们可以分析保留策略为Runtime的注解。我已经写了一篇关于注解的详细教程，以及我们如何使用反射API来解析注解，所以我建议你去看看《Java注解教程》。
 
 
 
