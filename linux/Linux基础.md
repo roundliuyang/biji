@@ -122,7 +122,7 @@ drwxrwxr-x  5 root    root        4096 Sep 13 19:33 bill
 
 ### 基础常用命令
 
-> #### ls
+#### ls
 
 ```shell
 # 查询目录的内容
@@ -132,6 +132,9 @@ drwxrwxr-x  5 root    root        4096 Sep 13 19:33 bill
 -r		# 反向排序，经常和 -t、-S 一起使用
 -S		# 按文件大小排序
 -l		# 显示详细信息，别名是 ll
+-d      #查看当前目录的详细信息
+
+检索（例如检索 profile）：ls -l | grep profile
 ```
 
 #### vim
@@ -264,7 +267,32 @@ n		# 光标跳转到指定行行首
 mv file1 file2 file3 dir  # 将多个文件剪切到 dir 目录
 ```
 
+#### whoami
 
+查看当前用户
+
+#### su
+
+- 切换用户：
+
+  ```
+  su -用户名
+  ```
+
+   
+
+  或者
+
+   
+
+  ```
+  su 用户名
+  ```
+
+  （从其他用户切换到 root 用户需要密码，从 root 用户切换到任何其他用户不需要密码）
+
+  - 切换到 root 用户：su
+  - 切换到 root 用户后使用命令：exit 切换到普通用户
 
 #### rm
 
@@ -300,16 +328,9 @@ touch file1 file2 file3  # 可以同时创建多个文件
 
 
 
-#### mkdir
+#### passwd
 
-```shell
-# 创建目录
-
-mkdir dir1 dir2 dir3  # 可以同时创建多个目录
--p		# 递归创建目录，即创建目录的路径有某些目录未创建，会一次性创建
-```
-
-
+修改密码：修改 root 自己的密码，直接输入 `passwd`，输入两遍新密码即可。若修改其他用户，如 oracle 的密码，可直接输入 `passwd oracle`，输入两遍性新密码即可。
 
 #### cp
 
@@ -332,7 +353,13 @@ cp -r file1 dir1 dir2  # 将多个文件或目录复制到 dir2 目录中
 -n		# 显示行号
 ```
 
+#### chmod
 
+获取权限：`chmod 777 文件名`
+
+#### locale
+
+查看系统编码：`locale`
 
 #### head
 
@@ -354,6 +381,32 @@ cp -r file1 dir1 dir2  # 将多个文件或目录复制到 dir2 目录中
 ```
 
 
+
+#### sysctl -p
+
+修改配置文件后立即生效：`sysctl -p`
+
+#### env
+
+查看系统环境变量：`env`
+
+#### free -m/g
+
+查看内存：`free -m/g`
+
+#### tree
+
+`tree`：树形查看当前目录结构
+
+
+
+#### lsof
+
+列出谁在使用 3306 端口：`lsof -i:3306`
+
+#### dirname 
+
+`dirname` 用于取指定路径所在的目录，如：`dirname /home/ikidou`，结果为：`/home`
 
 #### date
 
@@ -589,6 +642,77 @@ grep -R "images.mycool.tv"
 
 
 
+### 文件操作指令
+
+#### mkdir
+
+```shell
+# 创建文件夹
+
+mkdir dir1 dir2 dir3  # 可以同时创建多个目录
+-p		# 递归创建目录，即创建目录的路径有某些目录未创建，会一次性创建
+```
+
+
+
+#### touch
+
+创建文件：`touch [路径] + 文件名`
+
+- `touch [路径] + 文件名1 [路径] + 文件名2`（可以同时创建多个文件，空格隔开）
+
+
+
+#### copy
+
+- 复制（copy）文件：`cp 源文件 目标文件夹`（正常情况下使用绝对路径） -复制文件夹：`cp -r 源文件 目标文件夹`
+
+
+
+#### move
+
+- 移动（move）文件：`mv 源文件 目标文件夹`（正常情况下使用绝对路径）
+  - 移动文件夹：`mv 源文件夹 目标文件夹`
+  - 重命名：`mv aa.txt aaaa.txt`
+
+#### remove
+
+- 删除（remove）文件：`rm [路径] + 文件名` （可以删除多个文件，每个文件用空格隔开）
+  - 删除文件夹：`rm -r 文件夹1 文件夹2`（递归 recursive 删除文件夹1和文件夹2下的所有内容，每删除一个会提示）
+  - `rm -rf 文件夹`（强制 force 删除文件夹下的所有内容，不提示删除）删除后无法还原
+  - 删除文件夹或者： `rmdir 文件夹`（文件夹必须为空）
+  - 删除所有内容：`rm -rf *`
+
+
+
+### 文件读写指令
+
+#### echo
+
+```shell
+echo "Hello World" >> a.txt
+```
+
+将字符串 Hello World追加到文件 a.txt 中。
+
+- `echo "Hello World" > a.txt` 将文件 a.txt 中的内容`替换`为字符串 Hello World。
+
+#### cat
+
+查看文件内容：`cat a.txt`
+
+#### head
+
+`head services` 查看 services 文件前 10 行的内容（默认前 10 行） `head -20 services` （前20行的内容）
+
+#### tail
+
+`tail services` 查看 services 文件结尾 10 行的内容 `tail -20f services`（滚动显示结尾 20 行的内容）
+
+#### more
+
+`more services` 分页查看 services 文件中的内容，按空格或 f 切换下一页，回车下一行,q 退出。（文件内容较多时使用）
+
 ### 常用服务重启命令
 
 #### service
@@ -677,9 +801,9 @@ supervisor> restart viking  # 交互式可以 tab 补全服务名称
 
 
 
-## 网络通讯
+### 网络通讯
 
-### netstat
+#### netstat
 
 **netstat -tunlp** 用于显示 tcp，udp 的端口和进程等相关情况。
 
@@ -689,7 +813,7 @@ netstat 查看端口占用语法格式：
 netstat -tunlp | grep 端口号
 ```
 
-- -t (tcp) 仅显示tcp相关选项
+- -t (tcp) 仅显示tcp相关选项top
 - -u (udp)仅显示udp相关选项
 - -n 拒绝显示别名，能显示数字的全部转化为数字
 - -l 仅列出在Listen(监听)的服务状态
@@ -958,4 +1082,8 @@ supervisorctl stop xxxx
 ```shell
 supervisorctl restart xxxx
 ```
+
+
+
+## 
 
