@@ -659,6 +659,8 @@ jdbc.password=root
                              targetProject="mall-tiny-generator\src\main\java"/>
         <!--生成全部表tableName设为%-->
         <table tableName="ums_admin">
+            //开启驼峰命名
+             <property name="useActualColumnNames" value="true" />
             <generatedKey column="id" sqlStatement="MySql" identity="true"/>
         </table>
         <table tableName="ums_role">

@@ -250,6 +250,15 @@ n		# 光标跳转到指定行行首
 
 
 
+#### proc
+
+```
+//查看redis进程ps -aux | grep redis 或者ps -ef|grep redis
+//假设得到redis的进程号123，然后使用以下命令查看安装位置。ll /proc/123/cwd
+```
+
+
+
 #### pwd
 
 ```shell
@@ -1130,6 +1139,22 @@ ps -ef		# 显示当前所有进程，和上面的命令结果格式稍微有区�
 
 # 查看 tomcat 进程
 ps -ef | grep tomcat
+```
+
+
+
+#### source 
+
+在 [linux](https://so.csdn.net/so/search?q=linux) 里，当我们修改了配置文件，不想让linux重启时就可以通过重载配置文件使配置文件生效。
+例如，刚修改 `/etc/profile`文件，我想让刚刚作出的修改立刻看到效果，但又不愿意重启，这时，就可以通过重载配置文件来使配置文件立即生效：
+
+```shell
+方式一：
+source /etc/profile
+
+方式二：
+. /etc/profile
+
 ```
 
 

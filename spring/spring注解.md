@@ -823,7 +823,7 @@ public class FieldAutowiredNameIntegrationTest {
 
 
 
-## CommandLineRunner，@Order
+## CommandLineRunner，@Order，ApplicationRunner
 
 在我们实际工作中，总会遇到这样需求，在项目启动的时候需要做一些初始化的操作，比如初始化线程池，提前加载好加密证书等。今天就给大家介绍一个 Spring Boot 神器，专门帮助大家解决项目启动初始化资源操作。
 
@@ -935,3 +935,1105 @@ The service has started.
 通过控制台的输出我们发现，添加 `@Order` 注解的实现类最先执行，并且`@Order()`里面的值越小启动越早。
 
 在实践中，使用`ApplicationRunner`也可以达到相同的目的，两着差别不大。看来使用 Spring Boot 解决初始化资源的问题非常简单。
+
+
+
+### 实现启动时执行指定任务（CommandLineRunner、ApplicationRunner）
+
+有时一些特殊的任务需要在系统启动时执行，例如配置文件加载、数据库初始化等操作。Spring Boot 提供了两种解决方案：CommandLineRunner 和 ApplicationRunner。二者使用方式大体一致，差别主要体现在参数上。
+
+#### 使用 CommandLineRunner
+
+##### 1、基本介绍
+
+**Spring Boot** 项目在启动时会遍历所有的 **CommandLineRunner** 的实现类并调用其中的 **run** 方法。
+
+- 如果整个系统中有多个 **CommandLineRunner** 的实现类，那么可以使用 **@Order** 注解对这些实现类的调用顺序进行排序（数字越小越先执行）。
+- **run** 方法的参数是系统启动是传入的参数，即入口类中 **main** 方法的参数（在调用 **SpringApplication****.run** 方法时被传入 **Spring Boot** 项目中）
+
+##### 2、使用样例
+
+（1）首先在项目中添加两个 **CommandLineRunner**，它们内容分别如下，就是把启动时传入的参数打印出来：
+
+```java
+@Component
+@Order(1)
+public class MyCommandLineRunner1 implements CommandLineRunner {
+    @Override
+    public void run(String... args) throws Exception {
+        System.out.println("Runner1>>>"+ Arrays.toString(args));
+    }
+}
+ 
+@Component
+@Order(2)
+public class MyCommandLineRunner2 implements CommandLineRunner {
+    @Override
+    public void run(String... args) throws Exception {
+        System.out.println("Runner2>>>"+ Arrays.toString(args));
+    }
+}
+```
+
+（2）我们可以配置在系统启动时需要传入的参数，这里以 intelliJ IDEA 为例，单击右上角的编辑启动配置。
+
+![原文:SpringBoot - 实现启动时执行指定任务（CommandLineRunner、ApplicationRunner）](spring注解.assets/201907151444328495-1641290348185.png)
+
+（3）在弹出页中编辑 **Program arguments** 栏目，在里面填写需要传入的参数。如果有多个参数，参数之间使用空格隔开。这里我们既配了选项参数，也配了非选项参数。
+
+```properties
+如果我们将项目打包，以 jar 包的形式运行。那么这些参数可以跟在启动命令后面：
+java -jar demo-0.0.1-SNAPSHOT.jar --name=hangge --age=100 hangge.com 航歌
+```
+
+![原文:SpringBoot - 实现启动时执行指定任务（CommandLineRunner、ApplicationRunner）](spring注解.assets/2019071515351449817.png)
+
+
+
+（4）启动项目，控制台输出如下：
+
+![原文:SpringBoot - 实现启动时执行指定任务（CommandLineRunner、ApplicationRunner）](spring注解.assets/2019071515440392897.png)
+
+
+
+#### 使用 ApplicationRunner
+
+##### 1，基本介绍
+
+（1）**ApplicationRunner** 用法和 **CommandLineRunner** 基本一致。项目在启动时会遍历所有的 **ApplicationRunner** 的实现类并调用其中的 **run** 方法。
+
+```properties
+如果整个系统中有多个 ApplicationRunner 的实现类，同样可以使用 @Order 注解对这些实现类的调用顺序进行排序（数字越小越先执行）。
+```
+
+（2）**ApplicationRunner** 与 **CommandLineRunner** 的区别主要体现在 **run** 方法的参数上。不同于 **CommandLineRunner** 中的 **run** 方法的数组参数，**ApplicationRunner** 里 **run** 方法的参数是一个 **ApplicationArguments** 对象。
+
+
+```properties
+ApplicationArguments 区分选项参数和非选项参数：
+对于非选项参数：我们可以通过 ApplicationArguments 的 getNonOptionArgs() 方法获取，获取到的是一个数组。
+对于选项参数：可以通过 ApplicationArguments 的 getOptionNames() 方法获取所有选项名称。通过 getOptionValues() 方法获取实际值（它会返回一个列表字符串）。
+```
+
+##### 2，使用样例
+
+（1）首先在项目中添加两个 **ApplicationRunner**，它们内容分别如下，就是把启动时传入的参数打印出来：
+
+```java
+@Component
+@Order(1)
+public class MyApplicationRunner1 implements ApplicationRunner {
+    @Override
+    public void run(ApplicationArguments args) throws Exception {
+        List<String> nonOptionArgs = args.getNonOptionArgs();
+        System.out.println("Runner1[非选项参数]>>> " + nonOptionArgs);
+        Set<String> optionNames = args.getOptionNames();
+        for(String optionName: optionNames) {
+            System.out.println("Runner1[选项参数]>>> name:" + optionName
+                    + ";value:" + args.getOptionValues(optionName));
+        }
+    }
+}
+ 
+@Component
+@Order(2)
+public class MyApplicationRunner2 implements ApplicationRunner {
+    @Override
+    public void run(ApplicationArguments args) throws Exception {
+        List<String> nonOptionArgs = args.getNonOptionArgs();
+        System.out.println("Runner2[非选项参数]>>> " + nonOptionArgs);
+        Set<String> optionNames = args.getOptionNames();
+        for(String optionName: optionNames) {
+            System.out.println("Runner2[选项参数]>>> name:" + optionName
+                    + ";value:" + args.getOptionValues(optionName));
+        }
+    }
+}
+```
+
+（2）我们可以配置在系统启动时需要传入的参数，这里以 **intelliJ IDEA** 为例，单击右上角的编辑启动配置。
+
+![原文:SpringBoot - 实现启动时执行指定任务（CommandLineRunner、ApplicationRunner）](spring注解.assets/201907151444328495-1641290772709.png)
+
+（3）在弹出页中编辑 **Program arguments** 栏目，在里面填写需要传入的参数。如果有多个参数，参数之间使用空格隔开。这里我们既配了选项参数，也配了非选项参数。
+
+```properties
+如果我们将项目打包，以 jar 包的形式运行。那么这些参数可以跟在启动命令后面：
+java -jar demo-0.0.1-SNAPSHOT.jar --name=hangge --age=100 hangge.com 航歌
+```
+
+![原文:SpringBoot - 实现启动时执行指定任务（CommandLineRunner、ApplicationRunner）](spring注解.assets/2019071515351449817-1641290804771.png)
+
+（4）启动项目，控制台输出如下：
+
+![原文:SpringBoot - 实现启动时执行指定任务（CommandLineRunner、ApplicationRunner）](spring注解.assets/2019071515361438874.png)
+
+
+
+## @ConfigurationProperties,@EnableConfigurationProperties
+
+### 1、介绍
+
+Spring Boot 具有许多有用的功能，包括**外部化配置和轻松访问属性文件中定义的属性**。较早的[教程](https://www.baeldung.com/properties-with-spring)描述了可以做到这一点的各种方法。
+
+我们现在将更详细地探索*@ConfigurationProperties*注释。
+
+
+
+### **2、设置**
+
+本教程使用一个相当标准的设置。我们首先在pom.xml中添加spring-boot-starter-parent作为父类。
+
+```xml
+<parent>
+    <groupId>org.springframework.boot</groupId>
+    <artifactId>spring-boot-starter-parent</artifactId>
+    <version>2.4.0</version>
+    <relativePath/>
+</parent>
+```
+
+为了能够验证文件中定义的属性，我们还需要一个 JSR-303 的实现，[*hibernate-validator*](https://search.maven.org/search?q=a:hibernate-validator AND g:org.hibernate)就是其中之一。
+
+让我们也将它添加到我们的*pom.xml*中：
+
+```xml
+<dependency>
+   <groupId>org.hibernate</groupId>
+   <artifactId>hibernate-validator</artifactId>
+   <version>6.0.16.Final</version>
+</dependency>
+```
+
+在[“开始使用Hibernate验证”](http://hibernate.org/validator/documentation/getting-started/)进行了详细介绍。
+
+### **3、Simple Properties**
+
+官方文档建议我们将配置属性隔离到单独的 POJO 中。
+
+所以让我们从这样做开始：
+
+```java
+@Configuration
+@ConfigurationProperties(prefix = "mail")
+public class ConfigProperties {
+    
+    private String hostName;
+    private int port;
+    private String from;
+
+    // standard getters and setters
+}
+```
+
+我们使用@Configuration，这样Spring就会在应用上下文中创建一个Spring Bean。
+
+**@ConfigurationProperties最适用于所有具有相同前缀的分层属性；**因此，我们添加了一个*mail*前缀。
+
+Spring 框架使用标准的 Java bean setter，因此我们必须为每个属性声明 setter。
+
+注意：如果我们在POJO中不使用*@Configuration*，那么我们需要在主Spring应用类中添加*@EnableConfigurationProperties(ConfigProperties.class)*来将属性绑定到POJO中：
+
+```java
+@SpringBootApplication
+@EnableConfigurationProperties(ConfigProperties.class)
+public class EnableConfigurationDemoApplication {
+    public static void main(String[] args) {
+        SpringApplication.run(EnableConfigurationDemoApplication.class, args);
+    }
+}
+```
+
+而已！**Spring 将自动绑定在我们的属性文件中定义的任何属性，这些属性具有前缀mail并且与ConfigProperties类中的字段之一具有相同的名称**。
+
+Spring 使用一些宽松的规则来绑定属性。因此，以下变体都绑定到属性*hostName*：
+
+```java
+mail.hostName
+mail.hostname
+mail.host_name
+mail.host-name
+mail.HOST_NAME
+```
+
+因此，我们可以使用以下属性文件来设置所有字段：
+
+```properties
+#Simple properties
+mail.hostname=host@mail.com
+mail.port=9000
+mail.from=mailer@mail.com
+```
+
+#### 3.1. Spring Boot 2.2
+
+**从Spring Boot 2.2 开始，Spring通过类路径扫描查找并注册@ConfigurationProperties类**。因此，**不需要使用@Component***（以及其他元注释，如@Configuration）* **来注释此类类***，***甚至不需要使用@EnableConfigurationProperties：**
+
+```java
+@ConfigurationProperties(prefix = "mail") 
+public class ConfigProperties { 
+
+    private String hostName; 
+    private int port; 
+    private String from; 
+
+    // standard getters and setters 
+}
+```
+
+*@SpringBootApplication*启用的类路径扫描器找到了*ConfigProperties*类，即使我们没有用*@Component*注释这个类。
+
+此外，我们可以使用**的@ConfigurationPropertiesScan 注释扫描配置属性类的自定义位置：**
+
+```
+@SpringBootApplication
+@ConfigurationPropertiesScan("com.baeldung.configurationproperties")
+public class EnableConfigurationDemoApplication { 
+
+    public static void main(String[] args) {   
+        SpringApplication.run(EnableConfigurationDemoApplication.class, args); 
+    } 
+}
+```
+
+这样 Spring 将只在*com.baeldung.properties*包中查找配置属性类。
+
+### 4、嵌套属性
+
+我们可以在Lists、Maps和Classes中拥有嵌套属性。
+
+让我们创建一个新的 Credentials 类来用于一些嵌套的属性：
+
+```java
+public class Credentials {
+    private String authMethod;
+    private String username;
+    private String password;
+
+    // standard getters and setters
+}
+```
+
+我们还需要更新 ConfigProperties 类以使用 List、Map 和 Credentials 类：
+
+```java
+public class ConfigProperties {
+
+    private String host;
+    private int port;
+    private String from;
+    private List<String> defaultRecipients;
+    private Map<String, String> additionalHeaders;
+    private Credentials credentials;
+ 
+    // standard getters and setters
+}
+```
+
+以下属性文件将设置所有字段：
+
+```properties
+#Simple properties
+mail.hostname=mailer@mail.com
+mail.port=9000
+mail.from=mailer@mail.com
+
+#List properties
+mail.defaultRecipients[0]=admin@mail.com
+mail.defaultRecipients[1]=owner@mail.com
+
+#Map Properties
+mail.additionalHeaders.redelivery=true
+mail.additionalHeaders.secure=true
+
+#Object properties
+mail.credentials.username=john
+mail.credentials.password=password
+mail.credentials.authMethod=SHA1
+```
+
+### 5、在@Bean方法上使用@ConfigurationProperties
+
+**我们还可以在@Bean注解方法上使用@ConfigurationProperties注解。**
+
+当我们想要将属性绑定到我们无法控制的第三方组件时，这种方法可能特别有用。
+
+让我们创建一个简单的*Item*类，我们将在下一个示例中使用它：
+
+```java
+public class Item {
+    private String name;
+    private int size;
+
+    // standard getters and setters
+}
+```
+
+现在让我们看看如何在*@Bean*方法上使用*@ConfigurationProperties*将外部化属性绑定到*Item*实例：
+
+```java
+@Configuration
+public class ConfigProperties {
+
+    @Bean
+    @ConfigurationProperties(prefix = "item")
+    public Item item() {
+        return new Item();
+    }
+}
+```
+
+因此，任何以 item 为前缀的属性都将映射到Spring 上下文管理的*Item*实例。
+
+### 6、属性验证
+
+@ConfigurationProperties 使用 JSR-303 格式提供属性验证。这允许各种整洁的东西。
+
+例如，让我们强制设置*hostName*属性：
+
+    ```java
+@NotBlank
+private String hostName;
+    ```
+
+接下来，让*authMethod*属性的*长度*为 1 到 4 个字符：
+
+```java
+@Length(max = 4, min = 1)
+private String authMethod;
+```
+
+然后*端口*属性从 1025 到 65536：
+
+```java
+@Min(1025)
+@Max(65536)
+private int port;
+```
+
+最后，*from*属性必须匹配电子邮件地址格式：
+
+```java
+@Pattern(regexp = "^[a-z0-9._%+-]+@[a-z0-9.-]+\\.[a-z]{2,6}$")
+private String from;
+```
+
+这有助于我们减少代码中的大量*if-else*条件，并使其看起来更简洁、更简洁。
+
+如果这些验证中的任何一个失败，**则主应用程序将无法以IllegalStateException启动**。
+
+Hibernate Validation 框架使用标准的 Java bean getter 和 setter，因此我们为每个属性声明 getter 和 setter 很重要。
+
+### 7、属性转换
+
+*@ConfigurationProperties*支持将属性绑定到对应的 bean 的多种类型的转换。
+
+#### **7.1、Duration**
+
+我们将首先研究将属性转换为*Duration*对象*。*
+
+这里我们有两个*Duration*类型的字段：
+
+```java
+@ConfigurationProperties(prefix = "conversion")
+public class PropertyConversion {
+
+    private Duration timeInDefaultUnit;
+    private Duration timeInNano;
+    ...
+}
+```
+
+这是我们的属性文件：
+
+```java
+conversion.timeInDefaultUnit=10
+conversion.timeInNano=9ns
+```
+
+因此，字段 timeInDefaultUnit 的值为 10 毫秒，而 timeInNano 的值为 9 纳秒。
+
+支持的单位是 ns、us、ms、s、m、h 和 d，分别表示纳秒、微秒、毫秒、秒、分钟、小时和天。
+
+默认单位是毫秒，这意味着如果我们没有在数值旁边指定单位，Spring 会将值转换为毫秒。
+
+我们还可以使用@DurationUnit 覆盖默认单位：
+
+```java
+@DurationUnit(ChronoUnit.DAYS)
+private Duration timeInDays;
+```
+
+这是相应的属性：
+
+```java
+conversion.timeInDays=2
+```
+
+#### **7.2. DataSize**
+
+**同样，Spring Boot @ConfigurationProperties支持DataSize类型转换。**
+
+让我们添加三个*DataSize*类型的*字段*：
+
+```java
+private DataSize sizeInDefaultUnit;
+
+private DataSize sizeInGB;
+
+@DataSizeUnit(DataUnit.TERABYTES)
+private DataSize sizeInTB;
+```
+
+这些是相应的属性：
+
+```properties
+conversion.sizeInDefaultUnit=300
+conversion.sizeInGB=2GB
+conversion.sizeInTB=4
+```
+
+**在这种情况下，sizeInDefaultUnit值将为 300 字节，因为默认单位是字节。**
+
+支持的单位为*B、KB、MB、GB*和*TB。*我们还可以使用*@DataSizeUnit*覆盖默认单位*。*
+
+#### **7.3、 自定义转换器**
+
+我们还可以添加我们自己的自定义*转换器*来支持将属性转换为特定的类类型。
+
+让我们添加一个简单的类*Employee*：
+
+```java
+public class Employee {
+    private String name;
+    private double salary;
+}
+```
+
+然后我们将创建一个自定义转换器来转换此属性：
+
+```properties
+conversion.employee=john,2000
+```
+
+我们将其转换为*Employee*类型的文件：
+
+```java
+private Employee employee;
+```
+
+我们需要实现*Converter*接口，然后**使用@ConfigurationPropertiesBinding注解来注册我们的自定义*****Converter**：*
+
+```java
+@Component
+@ConfigurationPropertiesBinding
+public class EmployeeConverter implements Converter<String, Employee> {
+
+    @Override
+    public Employee convert(String from) {
+        String[] data = from.split(",");
+        return new Employee(data[0], Double.parseDouble(data[1]));
+    }
+}
+```
+
+### 8、不可变的@ConfigurationProperties 绑定
+
+从Spring Boot 2.2开始，我们可以使用@ConstructorBinding注解来绑定我们的配置属性。
+
+这实质上意味着@ConfigurationProperties注解的类现在可以是不可变的。
+
+```java
+@ConfigurationProperties(prefix = "mail.credentials")
+@ConstructorBinding
+public class ImmutableCredentials {
+
+    private final String authMethod;
+    private final String username;
+    private final String password;
+
+    public ImmutableCredentials(String authMethod, String username, String password) {
+        this.authMethod = authMethod;
+        this.username = username;
+        this.password = password;
+    }
+
+    public String getAuthMethod() {
+        return authMethod;
+    }
+
+    public String getUsername() {
+        return username;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+}
+```
+
+正如我们所见，在使用 *@ConstructorBinding 时，*我们需要为构造函数提供我们想要绑定的所有参数。
+
+请注意，*ImmutableCredentials 的*所有字段  都是最终的。此外，没有 setter 方法。
+
+此外，需要强调的是，**要使用构造函数绑定，我们需要使用@EnableConfigurationProperties 或 @ConfigurationPropertiesScan****显式启用我们的配置类** *。*
+
+ 
+
+### 9、Java 16 *record*s
+
+Java 16 引入了 *记录* 类型作为[JEP 395 的](https://openjdk.java.net/jeps/395)一部分。记录是充当不可变数据的透明载体的类。这使它们成为配置持有者和 DTO 的完美候选者。事实上，**我们可以在 Spring Boot 中将 Java 记录定义为配置属性**。例如，前面的例子可以改写为：
+
+```java
+@ConstructorBinding
+@ConfigurationProperties(prefix = "mail.credentials")
+public record ImmutableCredentials(String authMethod, String username, String password) {
+}
+```
+
+显然，与所有那些嘈杂的 getter 和 setter 相比，它更简洁。
+
+此外，从[Spring Boot 2.6 开始](https://github.com/spring-projects/spring-boot/wiki/Spring-Boot-2.6.0-M2-Release-Notes#records-and-configurationproperties)，**对于单构造函数记录，我们可以删除 @ConstructorBinding 注释**。但是，如果我们的记录有多个构造函数，*@ConstructorBinding*仍应用于标识用于属性绑定的构造函数。
+
+### **10、 结论**
+
+在本文中，我们探讨了*@ConfigurationProperties*注释并重点介绍了它提供的一些有用功能，例如轻松绑定和 Bean 验证。
+
+## @PropertySource
+
+### @PropertySource注解概述
+
+@PropertySource注解是Spring 3.1开始引入的配置类注解。通过@PropertySource注解将properties配置文件中的值存储到Spring的 Environment中，Environment接口提供方法去读取配置文件中的值，参数是properties文件中定义的key值。也可以使用@Value 注解用${}占位符注入属性。
+
+@PropertySource注解的源代码如下所示。
+
+```java
+package org.springframework.context.annotation;
+import java.lang.annotation.Documented;
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Repeatable;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
+import org.springframework.core.io.support.PropertySourceFactory;
+
+@Target(ElementType.TYPE)
+@Retention(RetentionPolicy.RUNTIME)
+@Documented
+@Repeatable(PropertySources.class)
+public @interface PropertySource {
+	String name() default "";
+	String[] value();
+	boolean ignoreResourceNotFound() default false;
+	String encoding() default "";
+	Class<? extends PropertySourceFactory> factory() default PropertySourceFactory.class;
+}
+
+```
+
+从@PropertySource的源码可以看出，我们可以通过@PropertySource注解指定多个properties文件，可以使用如下形式进行指定。
+
+```java
+@PropertySource(value={"classpath:xxx.properties", "classpath:yyy.properties"})
+```
+
+细心的读者可以看到，在@PropertySource注解类的上面标注了如下的注解信息。
+
+```java
+@Repeatable(PropertySources.class)
+```
+
+看到这里，小伙伴们是不是有种恍然大悟的感觉呢？没错，我们也可以使用@PropertySources注解来指定properties配置文件。
+
+### @PropertySources注解
+
+首先，我们也是看下@PropertySources注解的源码，如下所示。
+
+```java
+package org.springframework.context.annotation;
+
+import java.lang.annotation.Documented;
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
+@Target(ElementType.TYPE)
+@Retention(RetentionPolicy.RUNTIME)
+@Documented
+public @interface PropertySources {
+	PropertySource[] value();
+}
+```
+
+@PropertySources注解的源码比较简单，只有一个PropertySource[]数组类型的属性value，那我们如何使用@PropertySources注解指定配置文件呢？其实也很简单，就是使用如下所示的方式就可以了。
+
+```java
+@PropertySources(value={
+    @PropertySource(value={"classpath:xxx.properties"}),
+    @PropertySource(value={"classpath:yyy.properties"}),
+})
+```
+
+是不是很简单呢？接下来，我们就以一个小案例来说明@PropertySource注解的用法。
+
+### 使用注解方式获取值
+
+如果我们使用注解的方式该如何做呢？首先，我们需要在PropertyValueConfig配置类上添加@PropertySource注解，如下所示。
+
+```java
+package io.mykit.spring.plugins.register.config;
+import io.mykit.spring.plugins.register.bean.Person;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.PropertySource;
+/**
+ * @author binghe
+ * @version 1.0.0
+ * @description 测试属性赋值
+ */
+@PropertySource(value = {"classpath:person.properties"})
+@Configuration
+public class PropertyValueConfig {
+    @Bean
+    public Person person(){
+        return new Person();
+    }
+}
+
+这里使用的`@PropertySource(value = {"classpath:person.properties"})`就相当于xml文件中使用的`<context:property-placeholder location="classpath:person.properties"/>`。
+```
+
+## Environment(非注解)
+
+### 使用Environment获取值
+
+这里，我们在PropertyValueTest类中创建testPropertyValue03()方法，来使用Environment获取person.properties中的值，如下所示。
+
+```java
+@Test
+public void testPropertyValue03(){
+    AnnotationConfigApplicationContext context = new AnnotationConfigApplicationContext(PropertyValueConfig.class);
+    Environment environment = context.getEnvironment();
+    String nickName = environment.getProperty("person.nickName");
+    System.out.println(nickName);
+}
+```
+
+运行PropertyValueTest类中的testPropertyValue03()方法，输出的结果信息如下所示。
+
+```bash
+zhangsan
+```
+
+可以看到，使用Environment确实能够获取到person.properties中的值。
+
+
+
+## @SpringBootConfiguration
+
+Spring Boot 中的@SpringBootConfiguration 指南
+
+### 1、概述
+
+在本教程中，我们将简要讨论@SpringBoootConfiguration注解，我们还将看看它在Spring Boot 应用程序的配置
+
+### 2、Spring Boot 应用配置
+
+@SpringBootConfiguration 是类级别的注解，是Spring  Boot 框架的一部分。它**表示一个类提供应用程序配置**。
+
+Spring Boot倾向于基于Java的配置。因此，@SpringBootConfiguration注解是应用程序中配置的主要来源。一般来说，定义main()方法的类是这个注解的良好候选者。
+
+
+
+#### 2.1、*@SpringBootConfiguration*
+
+大多数 Spring Boot通过[*@SpringBootApplication*](https://www.baeldung.com/spring-boot-annotations)使用*@SpringBootConfiguration*，这是一个从它继承的注解。如果应用程序使用*@SpringBootApplication*，则它已经在使用*@SpringBootConfiguration*。
+
+我们来看看*@SpringBootConfiguration*在一个应用中*的*用法。
+
+首先，我们创建一个包含我们的配置的应用程序类：
+
+```java
+@SpringBootConfiguration
+public class Application {
+
+    public static void main(String[] args) {
+        SpringApplication.run(Application.class, args);
+    }
+
+    @Bean
+    public PersonService personService() {
+        return new PersonServiceImpl();
+    }
+}
+```
+
+
+
+该*@SpringBootConfiguration*注解注释的*应用程序*类。这向 Spring 容器表明**该类具有@Bean定义方法**。换句话说，它包含实例化和配置我们的依赖项的方法。
+
+此外，容器还处理配置类。这反过来又会为应用程序生成Bean。因此，我们现在可以使用依赖注入注解，如@Autowired或@Inject。
+
+#### 2.2、*@SpringBootConfiguration*与*@Configuration*
+
+*@SpringBootConfiguration*是[*@Configuration*](https://www.baeldung.com/spring-bean-annotations)注解的替代品。主要区别在于*@SpringBootConfiguration*允许自动定位配置。这对于单元或集成测试特别有用。
+
+建议您的应用程序**只使用一个@SpringBootConfiguration或@SpringBootApplication**。大多数应用程序将简单地使用*@SpringBootApplication。*
+
+### 3、结论
+
+在本文中，我们快速浏览了*@SpringBootConfiguration*注释。此外，我们查看了*@SpringBootConfiguration*在 Spring Boot 应用程序中的用法。我们还回顾了 Spring 的*@Bean*注释*。*
+
+```
+我想通过一个例子来了解更多关于下面的句子。
+“主要区别在于@SpringBootConfiguration 允许自动定位配置。”?
+
+提供一个例子并不容易，但我可以澄清：@SpringBootConfiguration 在功能上等同于@Configuration；但是，Spring Boot 的某些组件会查找前者而不是后者，特别是用于集成测试的 @SpringBootTest 注释。
+Spring Boot 用于自动检测用于特定集成测试的配置的算法详述于：
+https : //docs.spring.io/spring-boot/docs/current/reference/html/boot-features-testing .html#boot-features-testing-spring-boot-applications-detecting-config。
+```
+
+
+
+## @ComponentScan,@EnableAutoConfiguration
+
+Spring Boot中@ComponentScan和@EnableAutoConfiguration的区别
+
+### 1、介绍
+
+在这个快速教程中，我们将了解Spring 框架中[*@ComponentScan*](https://www.baeldung.com/spring-component-scanning)和*@EnableAutoConfiguration*注解之间的区别。
+
+### 2、Spring 注解
+
+注解使得在 Spring 中配置依赖注入变得更加容易。**我们可以在类和方法上使用Spring Bean注释来定义 beans ，而不是使用 XML 配置文件**。之后，Spring IoC 容器配置和管理 bean。
+
+以下是我们将在本文中讨论的注解的概述：
+
+- *@ComponentScan* scans for annotated Spring components
+- *@EnableAutoConfiguration*用于启用自动配置
+
+现在让我们看看这两个注释之间的区别。
+
+### 3、他们有何不同
+
+这些注解之间的区别在于@ComponentScan 扫描Spring 组件，而**@EnableAutoConfiguration用于自动配置Spring Boot应用程序中类路径中存在的 bean**。
+
+#### 3.1、 *@ComponentScan*
+
+在开发应用程序时，我们需要告诉Spring 框架查找Spring 管理的组件。**@ComponentScan enables Spring to scan for things like configurations, controllers, services, and other components we define**.
+
+特别地，*@ComponentScan* 注解与*@Configuration*注解一起使用，指定Spring 扫描组件的包：
+
+```java
+@Configuration
+@ComponentScan
+public class EmployeeApplication {
+    public static void main(String[] args) {
+        ApplicationContext context = SpringApplication.run(EmployeeApplication.class, args);
+        // ...
+    }
+}
+```
+
+**或者，Spring 也可以从指定的包开始扫描，我们可以使用basePackageClasses()或basePackages() 定义。****如果未指定包，则它将声明@ComponentScan**注释的类**的包视为起始包**：**
+
+```java
+package com.baeldung.annotations.componentscanautoconfigure;
+
+// ...
+
+@Configuration
+@ComponentScan(basePackages = {"com.baeldung.annotations.componentscanautoconfigure.healthcare",
+  "com.baeldung.annotations.componentscanautoconfigure.employee"},
+  basePackageClasses = Teacher.class)
+public class EmployeeApplication {
+    public static void main(String[] args) {
+        ApplicationContext context = SpringApplication.run(EmployeeApplication.class, args);
+        // ...
+    }
+}
+```
+
+In the example, Spring will scan the *healthcare* and *employee* packages and the *Teacher* class for components.
+
+Spring 在指定的包及其所有子包中搜索用*@Configuration*注释的类*。*
+
+此外，配置类可以包含@Bean注解，它将方法注册为Spring应用上下文中的Bean。之后，@ComponentScan注解可以自动检测到这些Bean。
+
+```java
+@Configuration
+public class Hospital {
+    @Bean
+    public Doctor getDoctor() {
+        return new Doctor();
+    }
+}
+```
+
+此外，@ComponentScan注解还可以扫描、检测和注册用@Component、@Controller、@Service和@Repository注解的类的bean。
+
+例如，我们可以创建一个Employee类作为组件，它可以被@ComponentScan注解所扫描。
+
+```java
+@Component("employee")
+public class Employee {
+    // ...
+}
+```
+
+
+
+#### 3.2、 *@EnableAutoConfiguration*
+
+@EnableAutoConfiguration 注解使 Spring Boot 能够自动配置应用程序上下文。因此，它会根据类路径中包含的 jar 文件和我们定义的 bean 自动创建和注册 bean。
+
+例如，当我们在类路径中定义 spring-boot-starter-web 依赖项时，Spring Boot 会自动配置 Tomcat 和 Spring MVC。但是，如果我们定义自己的配置，这种自动配置的优先级较低。
+
+声明 @EnableAutoConfiguration 注释的类的包被视为默认值。因此，我们应该始终在根包中应用 @EnableAutoConfiguration 注释，以便可以检查每个子包和类：
+
+```java
+@Configuration
+@EnableAutoConfiguration
+public class EmployeeApplication {
+    public static void main(String[] args) {
+        ApplicationContext context = SpringApplication.run(EmployeeApplication.class, args);
+        // ...
+    }
+}
+```
+
+此外，*@EnableAutoConfiguration*注解提供了两个参数来手动排除任何参数：
+
+我们可以使用*exclude*来禁用我们不想自动配置的类列表：
+
+```java
+@Configuration
+@EnableAutoConfiguration(exclude={JdbcTemplateAutoConfiguration.class})
+public class EmployeeApplication {
+    public static void main(String[] args) {
+        ApplicationContext context = SpringApplication.run(EmployeeApplication.class, args);
+        // ...
+    }
+}
+```
+
+我们可以使用*excludeName*来定义要从自动配置中排除的类名的完全限定列表：
+
+```java
+@Configuration
+@EnableAutoConfiguration(excludeName = {"org.springframework.boot.autoconfigure.jdbc.JdbcTemplateAutoConfiguration"})
+public class EmployeeApplication {
+    public static void main(String[] args) {
+        ApplicationContext context = SpringApplication.run(EmployeeApplication.class, args);
+        // ...
+    }
+}
+```
+
+从 Spring Boot 1.2.0 开始，我们可以使用**@SpringBootApplication 注解，它是三个注解@Configuration、@ EnableAutoConfiguration和@ComponentScan的组合及其默认属性**：
+
+```java
+@SpringBootApplication
+public class EmployeeApplication {
+    public static void main(String[] args) {
+        ApplicationContext context = SpringApplication.run(EmployeeApplication.class, args);
+        // ...
+    }
+}
+```
+
+## **Meta-Annotations**
+
+元注解是可以应用于其他注解的注解。
+
+例如，这些元注解被用于注解配置。
+
+1. *@Target*
+2. *@Retention*
+3. *@Inherited*
+4. *@Documented*
+5. *@Repeatable*
+
+### **@Target**
+
+注解的范围可以根据需求而变化。当一个注解只用于方法时，另一个注解可以被用于构造函数和字段声明。
+
+要确定自定义注解的目标元素，我们需要用@Target 注解标记它。
+
+@Target 可以处理 12 种不同的元素类型。如果我们查看@SafeVarargs 的源代码，那么我们可以看到它必须只附加到构造函数或方法上：
+
+```java
+@Documented
+@Retention(RetentionPolicy.RUNTIME)
+@Target({ElementType.CONSTRUCTOR, ElementType.METHOD})
+public @interface SafeVarargs {
+}
+```
+
+### **@Retention**
+
+一些注解旨在用作编译器的提示，而另一些则在运行时使用。
+
+**我们使用@Retention注解来说明我们的注解在程序生命周期中的哪个位置适用**。
+
+1. *RetentionPolicy.SOURCE –*编译器和运行时都不可见
+2. *RetentionPolicy.CLASS* – 编译器可见
+3. *RetentionPolicy.RUNTIME –*编译器和运行时可见
+
+**如果注释声明中没有@Retention注释，则保留策略默认为RetentionPolicy.CLASS。**
+
+如果我们有一个在运行时应该可以访问的注释：
+
+```java
+@Retention(RetentionPolicy.RUNTIME)
+@Target(TYPE)
+public @interface RetentionAnnotation {
+}
+```
+
+然后，如果我们给一个类添加一些注解：
+
+```java
+@RetentionAnnotation
+@Generated("Available only on source code")
+public class AnnotatedClass {
+}
+```
+
+现在我们可以反思*AnnotatedClass*以查看保留了多少注解：
+
+```java
+@Test
+public void whenAnnotationRetentionPolicyRuntime_shouldAccess() {
+    AnnotatedClass anAnnotatedClass = new AnnotatedClass();
+    Annotation[] annotations = anAnnotatedClass.getClass().getAnnotations();
+    assertThat(annotations.length, is(1));
+}
+```
+
+**该值为 1，因为****@RetentionAnnotation具有RUNTIME的保留策略，而@Generated 没有。**
+
+
+
+### @Inherited
+
+In some situations, we may need a subclass to have the annotations bound to a parent class.
+
+**我们可以使用@Inherited注解让我们的注解从一个带注解的类传播到它的子类。**
+
+如果我们将*@Inherited*应用于我们的自定义注解，然后将其应用于*BaseClass*：
+
+```java
+@Inherited
+@Target(ElementType.TYPE)
+@Retention(RetentionPolicy.RUNTIME)
+public @interface InheritedAnnotation {
+}
+
+@InheritedAnnotation
+public class BaseClass {
+}
+
+public class DerivedClass extends BaseClass {
+}
+```
+
+然后，在扩展 BaseClass 之后，我们应该看到*DerivedClass*在运行时似乎具有相同的注解：
+
+```java
+@Test
+public void whenAnnotationInherited_thenShouldExist() {
+    DerivedClass derivedClass = new DerivedClass();
+    InheritedAnnotation annotation = derivedClass.getClass()
+      .getAnnotation(InheritedAnnotation.class);
+ 
+    assertThat(annotation, instanceOf(InheritedAnnotation.class));
+}
+```
+
+**如果没有@Inherited注解，上述测试将失败。**
+
+@Inherited 元注解是一个标记注解，@Inherited阐述了某个被标注的类型是被继承的。 
+如果一个使用了@Inherited修饰的annotation类型被用于一个class，则这个annotation将被用于该class的子类。 
+
+注意：@Inherited annotation类型是被标注过的class的子类所继承。类并不从它所实现的接口继承annotation， 
+ 方法并不从它所重载的方法继承annotation。
+
+
+
+### **@Documented**
+
+By default, Java doesn't document the usage of annotations in Javadocs.
+
+**但是，我们可以使用@Documented注解来更改 Java 的默认行为**。
+
+如果我们创建一个使用*@Documented*的自定义注解：
+
+```java
+@Documented
+@Target(ElementType.FIELD)
+@Retention(RetentionPolicy.RUNTIME)
+public @interface ExcelCell {
+    int value();
+}
+```
+
+并且，将其应用于适当的 Java 元素：
+
+```java
+public class Employee {
+    @ExcelCell(0)
+    public String name;
+}
+```
+
+然后，*Employee* Javadoc 将揭示注解用法：
+
+![img](spring注解.assets/Screen-Shot-2018-02-08-at-1.38.45-PM-1-300x140.png)
+
+
+
+### **@Repeatable**
+
+有时，在给定的 Java 元素上多次指定相同的注解会很有用。
+
+在 Java 7 之前，我们必须将注解组合到一个容器注解中：
+
+```java
+@Schedules({
+    @Schedule(time = "15:05"),
+    @Schedule(time = "23:00")
+})
+void scheduledAlarm() {
+}
+```
+
+然而，Java 7带来了一种更简洁的方法。通过@Repeatable注解，我们可以使一个注解可重复。
+
+```java
+@Repeatable(Schedules.class)
+public @interface Schedule {
+    String time() default "09:00";
+}
+```
+
+要使用*@Repeatable*，我们也需要有一个容器注解*。*在这种情况下，我们将重用*@Schedules*：
+
+```java
+public @interface Schedules {
+    Schedule[] value();
+}
+```
+
+```
+@Schedule
+@Schedule(time = "15:05")
+@Schedule(time = "23:00")
+void scheduledAlarm() {
+}
+```
+
+因为 Java 需要包装器注解，所以我们很容易从 Java 7 之前的注释列表迁移到可重复的注解。
+
+
+
