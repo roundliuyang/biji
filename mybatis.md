@@ -1120,3 +1120,57 @@ public interface UmsAdminDao {
 #### 总结
 
 总的来说MyBatis官方代码生成器MBG还是很强大的，可以生成一些常用的单表CRUD方法，减少了我们的工作量。但是对于子查询、多表查询和一些复杂查询支持有点偏弱，依然需要在mapper.xml中手写SQL实现。
+
+
+
+### 动态xml 的一些测试用例
+
+#### 批量更新（selective）
+
+```java
+ int batchUpdateSelective(List<CmsMessage> list);
+```
+
+xml
+
+```xml
+ <update id="batchUpdateSelective" parameterType="java.util.List">
+    <foreach collection="list" item="item" open="" close="" separator=";">
+      update `cms_message`
+      <set>
+        <if test="item.msgType != null">
+          msgType = #{item.msgType,jdbcType=INTEGER},
+        </if>
+        <if test="item.contentType != null">
+          contentType = #{item.contentType,jdbcType=INTEGER},
+        </if>
+        <if test="item.relType != null">
+          relType = #{item.relType,jdbcType=INTEGER},
+        </if>
+        <if test="item.langId != null">
+          langId = #{item.langId,jdbcType=INTEGER},
+        </if>
+        <if test="item.title != null">
+          title = #{item.title,jdbcType=VARCHAR},
+        </if>
+        <if test="item.text != null">
+          text = #{item.text,jdbcType=VARCHAR},
+        </if>
+        <if test="item.pic != null">
+          pic = #{item.pic,jdbcType=VARCHAR},
+        </if>
+        <if test="item.video != null">
+          video = #{item.video,jdbcType=VARCHAR},
+        </if>
+        <if test="item.isEnable != null">
+          isEnable = #{item.isEnable,jdbcType=INTEGER},
+        </if>
+        <if test="item.createTime != null">
+          createTime = #{item.isEnable,jdbcType=BIGINT},
+        </if>
+      </set>
+      where `id` = #{item.id,jdbcType=INTEGER}
+    </foreach>
+  </update>
+```
+

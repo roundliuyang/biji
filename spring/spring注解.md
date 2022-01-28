@@ -2037,3 +2037,101 @@ void scheduledAlarm() {
 
 
 
+## @ControllerAdvice
+
+在Spring里，我们可以使用@ControllerAdvice来声明一些全局性的东西，最常见的是结合@ExceptionHandler注解用于全局异常的处理。
+
+@ControllerAdvice是在类上声明的注解，其用法主要有三点：
+
+- @ExceptionHandler注解标注的方法：用于捕获Controller中抛出的不同类型的异常，从而达到异常全局处理的目的；
+- @InitBinder注解标注的方法：用于请求中注册自定义参数的解析，从而达到自定义请求参数格式的目的；
+- @ModelAttribute注解标注的方法：表示此方法会在执行目标Controller方法之前执行 。
+
+看下具体用法：
+
+```java
+这里@RestControllerAdvice等同于@ControllerAdvice + @ResponseBody
+@RestControllerAdvice
+public class GlobalHandler {
+    private final Logger logger = LoggerFactory.getLogger(GlobalHandler.class);
+    // 这里@ModelAttribute("loginUserInfo")标注的modelAttribute()方法表示会在Controller方法之前
+    // 执行，返回当前登录用户的UserDetails对象
+    @ModelAttribute("loginUserInfo")
+    public UserDetails modelAttribute() {
+        return (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+    }
+    // @InitBinder标注的initBinder()方法表示注册一个Date类型的类型转换器，用于将类似这样的2019-06-10
+    // 日期格式的字符串转换成Date对象
+    @InitBinder
+    protected void initBinder(WebDataBinder binder) {
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+        dateFormat.setLenient(false);
+        binder.registerCustomEditor(Date.class, new CustomDateEditor(dateFormat, false));
+    } 
+    // 这里表示Controller抛出的MethodArgumentNotValidException异常由这个方法处理
+    @ExceptionHandler(MethodArgumentNotValidException.class)
+    public Result exceptionHandler(MethodArgumentNotValidException e) {
+        Result result = new Result(BizExceptionEnum.INVALID_REQ_PARAM.getErrorCode(),
+                BizExceptionEnum.INVALID_REQ_PARAM.getErrorMsg());
+        logger.error("req params error", e);
+        return result;
+    }
+    // 这里表示Controller抛出的BizException异常由这个方法处理
+    @ExceptionHandler(BizException.class)
+    public Result exceptionHandler(BizException e) {
+        BizExceptionEnum exceptionEnum = e.getBizExceptionEnum();
+        Result result = new Result(exceptionEnum.getErrorCode(), exceptionEnum.getErrorMsg());
+        logger.error("business error", e);
+        return result;
+    }
+    // 这里就是通用的异常处理器了,所有预料之外的Exception异常都由这里处理
+    @ExceptionHandler(Exception.class)
+    public Result exceptionHandler(Exception e) {
+        Result result = new Result(1000, "网络繁忙,请稍后再试");
+        logger.error("application error", e);
+        return result;
+    }
+}
+```
+
+在Controller里取出@ModelAttribute标注的方法返回的UserDetails对象：
+
+```java
+RestController
+@RequestMapping("/json/exam")
+@Validated
+public class ExamController {
+    @Autowired
+    private IExamService examService;
+    // ......
+    @PostMapping("/getExamListByOpInfo")
+    public Result<List<GetExamListResVo>> getExamListByOpInfo( @NotNull Date examOpDate,
+                                                              @ModelAttribute("loginUserInfo") UserDetails userDetails) {
+        List<GetExamListResVo> resVos = examService.getExamListByOpInfo(examOpDate, userDetails);
+        Result<List<GetExamListResVo>> result = new Result(resVos);
+        return result;
+    }
+
+}
+```
+
+这里当入参为examOpDate=2019-06-10时，Spring会使用我们上面@InitBinder注册的类型转换器将2019-06-10转换examOpDate对象：
+
+```java
+  @PostMapping("/getExamListByOpInfo")
+    public Result<List<GetExamListResVo>> getExamListByOpInfo(@NotNull Date examOpDate,
+                                                              @ModelAttribute("loginUserInfo") UserDetails userDetails) {
+        List<GetExamListResVo> resVos = examService.getExamListByOpInfo(examOpDate, userDetails);
+        Result<List<GetExamListResVo>> result = new Result(resVos);
+        return result;
+    }
+```
+
+@ExceptionHandler标注的多个方法分别表示只处理特定的异常。这里需要注意的是当Controller抛出的某个异常多个@ExceptionHandler标注的方法都适用时，Spring会选择最具体的异常处理方法来处理，也就是说@ExceptionHandler(Exception.class)这里标注的方法优先级最低，只有当其它方法都不适用时，才会来到这里处理。
+
+源码：略
+
+https://zhuanlan.zhihu.com/p/73087879
+
+
+
