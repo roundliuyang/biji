@@ -1,25 +1,15 @@
 # 芋道 Spring Cloud Netflix 负载均衡 Ribbon 入门
 
 - [1. 概述](http://www.iocoder.cn/Spring-Cloud-Netflix/Ribbon/)
-
 - [2. 负载均衡的实现方式](http://www.iocoder.cn/Spring-Cloud-Netflix/Ribbon/)
-
-- ## [3. 快速入门](http://www.iocoder.cn/Spring-Cloud-Netflix/Ribbon/)
-
+- [3. 快速入门](http://www.iocoder.cn/Spring-Cloud-Netflix/Ribbon/)
 - [4. 负载均衡规则](http://www.iocoder.cn/Spring-Cloud-Netflix/Ribbon/)
-
 - [5. 自定义 Ribbon 配置](http://www.iocoder.cn/Spring-Cloud-Netflix/Ribbon/)
-
 - [6. Nacos 自定义负载均衡规则](http://www.iocoder.cn/Spring-Cloud-Netflix/Ribbon/)
-
 - [7. 饥饿加载](http://www.iocoder.cn/Spring-Cloud-Netflix/Ribbon/)
-
 - [8. HTTP 客户端](http://www.iocoder.cn/Spring-Cloud-Netflix/Ribbon/)
-
 - [9. 请求重试](http://www.iocoder.cn/Spring-Cloud-Netflix/Ribbon/)
-
 - [10. Ribbon 主要组件](http://www.iocoder.cn/Spring-Cloud-Netflix/Ribbon/)
-
 - [666. 彩蛋](http://www.iocoder.cn/Spring-Cloud-Netflix/Ribbon/)
 
 ------
@@ -60,7 +50,7 @@
 
 服务端级别的负载均衡，客户端通过**外部的**代理服务器，将请求转发到后端的多个服务。比较常见的有 Nginx 服务器，如下图所示：![服务端级别](芋道 Spring Cloud Netflix 负载均衡 Ribbon 入门.assets/01.png)
 
-### 客户端级别的负载均衡，客户端通过**内嵌**的“代理”，将请求转发到后端的多个服务。比较常见的有 Dubbo、Ribbon 框架提供的负载均衡功能，如下图所示：![客户端级别](芋道 Spring Cloud Netflix 负载均衡 Ribbon 入门.assets/02.png)
+客户端级别的负载均衡，客户端通过**内嵌**的“代理”，将请求转发到后端的多个服务。比较常见的有 Dubbo、Ribbon 框架提供的负载均衡功能，如下图所示：![客户端级别](芋道 Spring Cloud Netflix 负载均衡 Ribbon 入门.assets/02.png)
 
 相比来说，客户端级别的负载均衡可以有**更好的性能**，因为不需要多经过一层代理服务器。并且，服务端级别的负载均衡需要额外考虑代理服务的高可用，以及请求量较大时的负载压力。因此，在微服务场景下，一般采用客户端级别的负载均衡为主。
 
@@ -1096,7 +1086,7 @@ Spring Cloud Netflix Ribbon 提供的 [RibbonClientConfiguration](https://github
 
 IClientConfig 只有一个实现类 [DefaultClientConfigImpl](https://github.com/Netflix/ribbon/blob/2.x/ribbon-core/src/main/java/com/netflix/client/config/DefaultClientConfigImpl.java)。在该类中，我们可以看到 Ribbon 配置项的默认值。
 
-### 10.2 IRule
+10.2 IRule
 
 [IRule](https://github.com/Netflix/ribbon/blob/2.x/ribbon-loadbalancer/src/main/java/com/netflix/loadbalancer/IRule.java) 接口，负载均衡规则接口，定义了从服务中**选择**一个实例的方法。
 
@@ -1172,3 +1162,4 @@ Ribbon 提供了 3 个 ILoadBalancer 实现类，如下图所示：![ILoadBalanc
 - [《Ribbon 官方文档》](https://github.com/Netflix/ribbon/wiki)
 - [《Spring Cloud Netflix 中文文档 —— Ribbon》](https://www.docs4dev.com/docs/zh/spring-cloud/Edgware.SR5/reference/multi_spring-cloud-ribbon.html)
 
+后续，胖友可以继续阅读* [《芋道 Spring Cloud 声明式调用 Feign 入门》](http://www.iocoder.cn/Spring-Cloud/Feign/?self)文章。
