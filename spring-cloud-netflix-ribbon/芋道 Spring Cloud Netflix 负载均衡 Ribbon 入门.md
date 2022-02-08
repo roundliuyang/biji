@@ -580,7 +580,7 @@ consumer:14648-provider:123
 
 
 
-```
+```java
 // RibbonConfiguration.java
 @Configuration
 @RibbonClients(
