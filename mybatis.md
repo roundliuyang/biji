@@ -271,14 +271,16 @@ public TypeHandlerRegistry() {
 
 ### MyBatis 的mapper参数传递
 
+#### 简单参数传递
+
 简单参数传递是指：
 
 - 传递单个基本类型参数，数字类型、String
 - 传递多个基本类型参数
 
-#### parameterType 属性可以省略；
+parameterType 属性可以省略；
 
-#### 传递单个基本类型参数
+##### 传递单个基本类型参数
 
 SQL语句中参数的引用名称并不需要和接口中的参数名称相同，如selectActorById元素的where语句改为  where actor_id=#{abc} 也能够得到正确的结果；
 
@@ -300,9 +302,9 @@ Actor actor = mapper.selectActorById(1L)
 
 
 
-#### 传递多个基本类型参数
+##### 传递多个基本类型参数
 
-#####  使用map进行参数传递
+使用map进行参数传递
 
 ```java
 Boolean insertActorByMap(Map map);
@@ -327,7 +329,7 @@ System.out.println(result);
 
 
 
-##### 通过param1、param2进行多参数引用（此时接口方法中的参数可以使用任意名称，SQL语句中使用 param1、param2进行引用）
+**通过param1、param2进行多参数引用（此时接口方法中的参数可以使用任意名称，SQL语句中使用 param1、param2进行引用）**
 
 ```
 　Boolean insertActorByString(String var1,String var2);
@@ -346,7 +348,7 @@ System.out.println(result);
 
 
 
-##### 通过命名参数进行引用，通过使用@Parma注解，可以在SQL语句中使用命名参数引用，注意命名参数区分大小写
+**通过命名参数进行引用，通过使用@Parma注解，可以在SQL语句中使用命名参数引用，注意命名参数区分大小写**
 
 ```java
 Boolean insertActorByParamString(@Param("firstName")String var1, @Param("lastName")String var2);
@@ -365,7 +367,7 @@ Boolean insertActorByParamString(@Param("firstName")String var1, @Param("lastNam
 
 
 
-##### 命名参数和非命名参数混合使用，此时非命名参数只能采用 param1，param2...的方式使用，命名参数即能采用@Param指定名字也能使用 param1，param2...的方式进行引用
+**命名参数和非命名参数混合使用，此时非命名参数只能采用 param1，param2...的方式使用，命名参数即能采用@Param指定名字也能使用 param1，param2...的方式进行引用**
 
 ```java
 Boolean insertActorByMixedString(String var1, @Param("lastName")String var2);
@@ -388,7 +390,8 @@ Boolean insertActorByMixedString(String var1, @Param("lastName")String var2);
 
 #### 自定义类型参数传递
 
-传递单个自定义类型参数，定义用于传递参数的Bean，如 id=“insertActor”语句中的 canger.study.chapter04.bean.Actor，可以直接在SQL语句中使用Bean的属性名；
+##### 传递单个自定义类型参数，定义用于传递参数的Bean，如 id=“insertActor”语句中的 canger.study.chapter04.bean.Actor，可以直接在SQL语句中使用Bean的属性名；
+
 需要注意的是，如果此时采用命名参数（如@Param("actor")）传递单个自定义类型参数，则不能直接引用属性名，而需要采用级联引用（actor.firstName 或 param1.firstName）
 
 ```java
@@ -407,7 +410,7 @@ Actor actor = new Actor("James","Harden");
 Boolean  result = mapper.insertActor(actor);
 ```
 
-#### 传递自定义参数和基本参数
+##### 传递自定义参数和基本参数
 
 这种情况和传递多个基本参数没有什么打的区别，唯一需要注意的是需要使用级联引用，才能使用自定义参数属性的值
 
@@ -1172,5 +1175,20 @@ xml
       where `id` = #{item.id,jdbcType=INTEGER}
     </foreach>
   </update>
+```
+
+#### 批量添加
+
+```xml
+  <insert id="batchInsert" parameterType="java.util.List">
+    insert into `cms_message` (id, msgType, contentType, relType, hotelId, langId, title, text, pic, video, isEnable, createTime)
+    values
+      <foreach collection="list" item="item" separator=",">
+      (#{item.id,jdbcType=INTEGER}, #{item.msgType,jdbcType=INTEGER}, #{item.contentType,jdbcType=INTEGER},
+            #{item.relType,jdbcType=INTEGER}, #{item.hotelId,jdbcType=INTEGER}, #{item.langId,jdbcType=INTEGER},
+            #{item.title,jdbcType=VARCHAR}, #{item.text,jdbcType=VARCHAR},#{item.pic,jdbcType=VARCHAR},#{item.video,jdbcType=VARCHAR},
+            #{item.isEnable,jdbcType=INTEGER}, #{item.createTime,jdbcType=BIGINT})
+      </foreach>
+  </insert>
 ```
 
