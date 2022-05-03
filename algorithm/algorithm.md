@@ -89,11 +89,44 @@ O(n)  优化
 
 ![1651506228881](algorithm.assets/1651506228881.png)
 
-solution :见自己 idea 笔记
+solution :
+
+```java
+ // 时间复杂度O(n)
+    public int subarraySumEqualsKII(int[] nums, int k) {
+        int[] prefixSum = getPrefixSum(nums);
+
+        int answer = Integer.MAX_VALUE;
+
+        // 变量命名小技巧
+        // hashmap / dict 用 key2value  的方式命名，代表了 key 是 sum, value 是 index
+        HashMap<Integer, Integer> sum2index = new HashMap<> ();
+        sum2index.put(0, 0);
+        for (int end = 0; end < nums.length; end++) {
+            if (sum2index.containsKey(prefixSum[end + 1] - k)) {
+                int len = end + 1 - sum2index.get(prefixSum[end + 1] - k);
+                answer = Math.min(answer, len);
+            }
+            sum2index.put(prefixSum[end + 1], end + 1);
+        }
+        return answer;
+    }
+
+    private int[] getPrefixSum(int[] nums) {
+        int[] prefixSum = new int[nums.length + 1];
+        prefixSum[0] = 0;
+        for (int i = 0; i < nums.length; i++) {
+            prefixSum[i + 1] = prefixSum[i] + nums[i];
+        }
+        return prefixSum;
+    }
+```
 
 
 
-##### 拓展：求和= k的最短的子数组
+
+
+##### 拓展：求和= k的最长的子数组
 
 ```java
 math.min--->max
@@ -118,6 +151,66 @@ for   子数组左端点 start     //O(n)
 ```
 
 
+
+
+
+最优的O(n)的算法
+
+本问题中的O(n) 的方法需要使用单调队列来解决，这个内容 我们将在后续课程中讲解，今天我们主要通过这个题来看看 O(n log n)的解法
+
+**使用单调队列的方法**
+
+![1651544405934](algorithm.assets/1651544405934.png)
+
+
+
+
+
+**O(n log n)的算法**
+
+时间复杂度为logn 的数据结构：线段树、红黑树、堆
+
+
+
+**n 次 O(log n)的操作**
+
+```properties
+类别上一题的做法
+prefixSum[end + 1] - prefixSum[start] >= k
+=>
+prefixSum[start] <= prefixSum[end + 1] - k
+在 logn 的时间内如何找到
+使得 prefixSum[start] <= prefixSum[end + 1] - k 的最大的 start？
+```
+
+
+
+```properties
+**线段树 Segment Tree **（我不会 ）
+
+有一堆 pairs (a,b), 令 a=index, b=prefixSum[index]，找到 b<=k 的所有 pairs 里的最大 a
+=>在线段树中以 b 为 index, a 为 value，在 index 范围 [最小index, b] 之间找最大值 。
+```
+
+
+
+**logn 次 O(n) 的操作** 
+
+```properties
+二分答案 + O(n) 判断答案偏大偏小
+二分数组最小长度 x，判断条件是哪个？
+A: 检测是否存在subarray和 >=k 且长度 = x
+B: 检测是否存在subarray和 >=k 且长度 <= x
+
+```
+
+![1651548285672](algorithm.assets/1651548285672.png)
+
+![1651548293938](algorithm.assets/1651548293938.png)
+
+
+
+ps:属实不想看。
 
 
 
