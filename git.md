@@ -2056,3 +2056,45 @@ $ git log --graph --pretty=oneline --abbrev-commit
 ### 使用SourceTree
 
 ### 期末总结
+
+
+
+
+
+
+
+### 案例
+
+1.查看邮箱
+
+```shell
+git config user.email
+```
+
+
+
+2.修改全局默认邮箱的用户名和邮箱
+
+```shell
+git config --global user.name "ordinaryA"
+git config --global user.email "353458582@qq.com"
+```
+
+3.修改单个`Git`仓库的用户名和邮箱
+
+打开项目所在目录，`bash`如下指令
+
+```shell
+cd .git 
+git config user.name "ordinaryA"
+git config user.email "353458582@qq.com"
+```
+
+
+
+4.然后通过执行命令可以查看`config`文件检查是否修改成功：
+
+```shell
+cat config
+```
+
