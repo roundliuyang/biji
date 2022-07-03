@@ -128,3 +128,33 @@ server {
 
 ## 实战操作
 
+### 查看[nginx](https://so.csdn.net/so/search?q=nginx&spm=1001.2101.3001.7020)服务路径
+
+```java
+ps aux|grep nginx
+```
+
+nginx的路径为：/usr/sbin/nginx
+
+
+
+### 查看nginx配置文件路径
+
+使用nginx的 `-t` 参数进行配置检查，即可知道实际调用的配置文件路径及是否调用有效。
+
+```shell
+/usr/sbin/nginx -t
+```
+
+
+
+### nginx配置文件include其他配置文件
+
+nginx 的配置很灵活,支持`include`配置文件,如果配置内容过多， 这个文件就会比较乱, 也影响管理和阅读.所以直接拆分出来,分成不同的配置文件；怎么实现呢 ？直接include：
+
+```shell
+include /etc/nginx/conf.d/*.conf;
+include /etc/nginx/sites/pstest.conf;
+```
+
+所以，如果在主配置文件里找不到想要的配置信息，可以看看是否include其他配置文件；
