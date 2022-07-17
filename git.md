@@ -2099,3 +2099,17 @@ git config user.email "353458582@qq.com"
 cat config
 ```
 
+
+
+5.git merge --abort
+
+合并时遇到冲突想取消操作，恢复index
+
+
+
+6.git revert
+
+可以撤销某个提交，撤销会产生一个新的提交
+
+
+
