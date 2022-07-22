@@ -2113,3 +2113,8 @@ cat config
 
 
 
+7.drop commit
+
+您可以丢弃当前分支中的推送提交，而不会留下任何操作痕迹。
+
+Unlike [reverting a commit](https://www.jetbrains.com/help/idea/undo-changes.html#revert-commit), which is reflected in the branch history, you can discard a pushed commit in the current branch without leaving any traces of the operation.
