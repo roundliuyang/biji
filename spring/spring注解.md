@@ -90,7 +90,7 @@ public class VerifySpringCoreFeature
   classes=ApplicationContextTestResourceNameType.class)
 public class FieldResourceInjectionIntegrationTest {
 
-    @Resource(name="namedFile")
+    @Resource(name="namedFile")   //注意名字首字母是小写
     private File defaultFile;
 
     @Test
@@ -137,7 +137,7 @@ private File defaultFile;
 
 然后我们再次运行测试。
 
-测试仍然会通过，因为如果 @Resource 注释没有接收 bean 名称作为属性值，Spring Framework 将继续下一级优先级，按类型匹配，以尝试解决依赖关系。
+测试仍然会通过，因为如果 @Resource 注解没有接收 bean 名称作为属性值，Spring Framework 将继续下一级优先级，按类型匹配，以尝试解决依赖关系。
 
 >@Resource装配规则
 >
