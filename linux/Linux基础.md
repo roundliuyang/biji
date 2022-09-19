@@ -1381,6 +1381,27 @@ ss
 
 ![1656691108186](Linux基础.assets/1656691108186.png)
 
+```shell
+1、创建用户：elasticsearch
+[root@iZbp1bb2egi7w0ueys548pZ bin]# adduser elasticsearch
+
+2、创建用户密码，需要输入两次
+[root@iZbp1bb2egi7w0ueys548pZ bin]# passwd elasticsearch
+
+3、将对应的文件夹权限赋给该用户
+[root@iZbp1bb2egi7w0ueys548pZ local]# chown -R elasticsearch elasticsearch-6.0.0
+
+4、切换至elasticsearch用户
+[root@iZbp1bb2egi7w0ueys548pZ etc]# su elasticsearch
+
+5、进入启动目录启动 /usr/local/elasticsearch-6.0.0/bin  使用后台启动方式：./elasticsearch -d
+[elasticsearch@vmt10003 bin]$ ./elasticsearch -d
+```
+
+
+
+
+
 #### 组管理命令
 
  ```shell
@@ -1745,6 +1766,18 @@ top
 ### 防火墙分类
 
 ![1656855569752](Linux基础.assets/1656855569752.png)
+
+```shell
+1、firewall-cmd --state（查看防火墙开启状态）提示running则防火墙已启动
+2、firewall-cmd --list-ports（查看防火墙）
+
+3、如果是防火墙没有开启对应端口，可使用以下命令添加需要开放的端口，参考
+firewall-cmd --add-port=8888/tcp --permanent ##永久添加80端口
+firewall-cmd --reload 之后才管用
+
+4、防火墙已开放对应端口后，检查是否有应用监听制定端口，可使用以下命令
+netstat -lnp
+```
 
 
 
