@@ -252,11 +252,424 @@ spring:
 
 在本示例中，我们会把一个 Queue 作为一个 Consumer Group ，同时创建消费该 Queue 的 Consumer 。这样，在我们启动多个 JVM 进程时，就会有多个 Consumer 消费该 Queue ，从而实现集群消费的效果。
 
+下面，让我们开始集群消费的示例。
+
+#### 10.1.1 引入依赖
+
+和 [「3.1.1 引入依赖」](https://www.iocoder.cn/Spring-Boot/RabbitMQ/#) 一致，见 [`pom.xml`](https://github.com/YunaiV/SpringBoot-Labs/blob/master/lab-04-rabbitmq/lab-04-rabbitmq-demo-message-model/pom.xml) 文件。
+
+#### 10.1.2 应用配置文件
+
+和 [「3.1.2 应用配置文件」](https://www.iocoder.cn/Spring-Boot/RabbitMQ/#) 一致，见 [`application.yaml`](https://github.com/YunaiV/SpringBoot-Labs/blob/master/lab-04-rabbitmq/lab-04-rabbitmq-demo-message-model/src/main/resources/application.yaml) 文件。
+
+#### 10.1.3 ClusteringMessage
+
+在 [`cn.iocoder.springboot.lab04.rabbitmqdemo.message`](https://github.com/YunaiV/SpringBoot-Labs/tree/master/lab-04-rabbitmq/lab-04-rabbitmq-demo-message-model/src/main/java/cn/iocoder/springboot/lab04/rabbitmqdemo/message) 包下，创建 [ClusteringMessage](https://github.com/YunaiV/SpringBoot-Labs/blob/master/lab-04-rabbitmq/lab-04-rabbitmq-demo-message-model/src/main/java/cn/iocoder/springboot/lab04/rabbitmqdemo/message/ClusteringMessage.java) 消息类，提供给当前示例使用。代码如下：
+
+```java
+// ClusteringMessage.java
+
+public class ClusteringMessage implements Serializable {
+
+    public static final String QUEUE = "QUEUE_CLUSTERING";
+
+    public static final String EXCHANGE = "EXCHANGE_CLUSTERING";
+
+    /**
+     * 编号
+     */
+    private Integer id;
+
+    // ... 省略 set/get/toString 方法
+
+}
+```
+
+- 在这里，我们并没有定义 RoutingKey 的枚举，答案我们在[「9.1.6 ClusteringConsumer」](https://www.iocoder.cn/Spring-Boot/RabbitMQ/#)揭晓。
+
+#### 10.1.4 RabbitConfig
+
+在 [`cn.iocoder.springboot.lab04.rabbitmqdemo.config`](https://github.com/YunaiV/SpringBoot-Labs/tree/master/lab-04-rabbitmq/lab-04-rabbitmq-demo-message-model/src/main/java/cn/iocoder/springboot/lab04/rabbitmqdemo/config) 包下，创建 [RabbitConfig](https://github.com/YunaiV/SpringBoot-Labs/blob/master/lab-04-rabbitmq/lab-04-rabbitmq-demo-message-model/src/main/java/cn/iocoder/springboot/lab04/rabbitmqdemo/config/RabbitConfig.java) 配置类，添加集群消费需要的 Exchange 的配置。代码如下：
+
+```java
+// RabbitConfig.java
+
+@Configuration
+public class RabbitConfig {
+
+    /**
+     * 集群消费的示例的配置
+     */
+    public static class ClusteringConfiguration {
+
+        // 创建 Topic Exchange
+        @Bean
+        public TopicExchange clusteringExchange() {
+            return new TopicExchange(ClusteringMessage.EXCHANGE,
+                    true,  // durable: 是否持久化
+                    false);  // exclusive: 是否排它
+        }
+
+    }
+
+}
+```
+
+- 在这里，我们创建了 Exchange 类型是 **Topic** 。
+
+为什么不选择 Exchange 类型是 **Direct** 呢？考虑到集群消费的模式，会存在多 Consumer Group 消费的情况，显然我们要支持一条消息投递到多个 Queue 中，所以 Direct Exchange 基本就被排除了。
+
+为什么不选择 Exchange 类型是 **Fanout** 或者 **Headers** 呢？实际是可以的，不过询问了朋友(didi) [Spring Cloud Stream RabbitMQ](https://github.com/spring-cloud/spring-cloud-stream-binder-rabbit) 是怎么实现的。得知答案是[默认](https://raw.githubusercontent.com/spring-cloud/spring-cloud-stream-binder-rabbit/master/docs/src/main/asciidoc/images/rabbit-binder.png)是使用 Topic Exchange 的，所以艿艿示例这里也就使用 Topic Exchange 类型了。
+
+#### 10.1.5 ClusteringProducer
+
+在 [`cn.iocoder.springboot.lab04.rabbitmqdemo.producer`](https://github.com/YunaiV/SpringBoot-Labs/tree/master/lab-04-rabbitmq/lab-04-rabbitmq-demo-message-model/src/main/java/cn/iocoder/springboot/lab04/rabbitmqdemo/producer) 包下，创建 [ClusteringProducer](https://github.com/YunaiV/SpringBoot-Labs/blob/master/lab-04-rabbitmq/lab-04-rabbitmq-demo-message-model/src/main/java/cn/iocoder/springboot/lab04/rabbitmqdemo/producer/ClusteringProducer.java) 类，它会使用 Spring-AMQP 封装提供的 RabbitTemplate ，实现发送消息。代码如下：
+
+```java
+// ClusteringProducer.java
+
+@Component
+public class ClusteringProducer {
+
+    @Autowired
+    private RabbitTemplate rabbitTemplate;
+
+    public void syncSend(Integer id) {
+        // 创建 ClusteringMessage  消息
+        ClusteringMessage message = new ClusteringMessage();
+        message.setId(id);
+        // 同步发送消息
+        rabbitTemplate.convertAndSend(ClusteringMessage.EXCHANGE, null, message);
+    }
+
+}
+```
+
+- 和[「3.2.3 Demo02Producer」](https://www.iocoder.cn/Spring-Boot/RabbitMQ/#)是基本一致的，除了调用 RabbitTemplate 发送消息时，我们传递的 `routingKey` 参数为 `null` 。为什么呢？答案我们也在[「9.1.6 ClusteringConsumer」](https://www.iocoder.cn/Spring-Boot/RabbitMQ/#)揭晓。
+
+#### 10.1.6 ClusteringConsumer
+
+在 [`cn.iocoder.springboot.lab04.rabbitmqdemo.consumer`](https://github.com/YunaiV/SpringBoot-Labs/tree/master/lab-04-rabbitmq/lab-04-rabbitmq-demo-message-model/src/main/java/cn/iocoder/springboot/lab04/rabbitmqdemo/consumer) 包下，创建 [ClusteringConsumer](https://github.com/YunaiV/SpringBoot-Labs/blob/master/lab-04-rabbitmq/lab-04-rabbitmq-demo-message-model/src/main/java/cn/iocoder/springboot/lab04/rabbitmqdemo/consumer/ClusteringConsumer.java) 类，**集群**消费消息。代码如下：
+
+```java
+// ClusteringConsumer.java
+
+@Component
+@RabbitListener(
+        bindings = @QueueBinding(
+                value = @Queue(
+                        name = ClusteringMessage.QUEUE + "-" + "GROUP-01"
+                ),
+                exchange = @Exchange(
+                        name = ClusteringMessage.EXCHANGE,
+                        type = ExchangeTypes.TOPIC,
+                        declare = "false"
+                ),
+                key = "#"
+        )
+)
+public class ClusteringConsumer {
+
+    private Logger logger = LoggerFactory.getLogger(getClass());
+
+    @RabbitHandler
+    public void onMessage(ClusteringMessage message) {
+        logger.info("[onMessage][线程编号:{} 消息内容：{}]", Thread.currentThread().getId(), message);
+    }
+
+}
+```
+
+- 相比其它 Consumer 示例来说，这里添加的 `@RabbitListener` 注解复杂很多。
+- 在 `bindings` 属性，我们添加了 [`@QueueBinding`](https://github.com/spring-projects/spring-amqp/blob/master/spring-rabbit/src/main/java/org/springframework/amqp/rabbit/annotation/QueueBinding.java) 注解，来定义了一个 Binding 。通过 `key` 属性，设置使用的 RoutingKey 为 `#` ，**匹配所有**。这就是为什么我们在[「9.1.3 ClusteringMessage」](https://www.iocoder.cn/Spring-Boot/RabbitMQ/#)未定义 RoutingKey ，以及在[「9.1.5 ClusteringProducer」](https://www.iocoder.cn/Spring-Boot/RabbitMQ/#)中使用 `routingKey = null` 的原因。
+- 在 `exchange` 属性，我们添加了 [`@Exchange`](https://github.com/spring-projects/spring-amqp/blob/master/spring-rabbit/src/main/java/org/springframework/amqp/rabbit/annotation/Queue.java) 注解，设置了对应 `EXCHANGE_CLUSTERING` 这个 Exchange 。
+  - `type` 属性，设置是 TopicExchange 。
+  - `declare` 属性，因为[「9.1.4 RabbitConfig」](https://www.iocoder.cn/Spring-Boot/RabbitMQ/#)中，已经配置创建这个 Exchange 了。
+- 在 `value` 属性，我们添加了 [`@Queue`](https://github.com/spring-projects/spring-amqp/blob/master/spring-rabbit/src/main/java/org/springframework/amqp/rabbit/annotation/Queue.java) 注解，设置消费 `QUEUE_CLUSTERING-GROUP-01` 这个 Queue 的消息。
+
+注意，通过添加 `@Exchange`、`@Queue`、`@QueueBinding` 注解，如果未声明 `declare="false"` 时，会**自动创建对应**的 Exchange、Queue、Binding 。
+
+
+
+#### 10.1.7 简单测试
+
+创建 [ClusteringProducerTest](https://github.com/YunaiV/SpringBoot-Labs/blob/master/lab-04-rabbitmq/lab-04-rabbitmq-demo-message-model/src/test/java/cn/iocoder/springboot/lab04/rabbitmqdemo/producer/ClusteringProducerTest.java) 测试类，用于测试集群消费。代码如下：
+
+```java
+// ClusteringProducerTest.java
+
+@RunWith(SpringRunner.class)
+@SpringBootTest(classes = Application.class)
+public class ClusteringProducerTest {
+
+    private Logger logger = LoggerFactory.getLogger(getClass());
+
+    @Autowired
+    private ClusteringProducer producer;
+
+    @Test
+    public void mock() throws InterruptedException {
+        // 阻塞等待，保证消费
+        new CountDownLatch(1).await();
+    }
+
+    @Test
+    public void testSyncSend() throws InterruptedException {
+        // 发送 3 条消息
+        for (int i = 0; i < 3; i++) {
+            int id = (int) (System.currentTimeMillis() / 1000);
+            producer.syncSend(id);
+            logger.info("[testSyncSend][发送编号：[{}] 发送成功]", id);
+        }
+
+        // 阻塞等待，保证消费
+        new CountDownLatch(1).await();
+    }
+
+}
+```
+
+首先，执行 `#mock()` 测试方法，先启动一个消费 `"QUEUE_CLUSTERING-GROUP-01"` 这个 Queue 的 Consumer 节点。
+
+然后，执行 `#testSyncSend()` 测试方法，再启动一个消费 `"QUEUE_CLUSTERING-GROUP-01"` 这个 Queue 的 Consumer 节点。同时，该测试方法，调用 `ClusteringProducer#syncSend(id)` 方法，同步发送了 3 条消息。控制台输出如下：
+
+```shell
+// #### testSyncSend 方法对应的控制台 ####
+
+# Producer 同步发送消息成功
+2019-12-15 22:13:44.372  INFO 43363 --- [           main] c.i.s.l.r.p.ClusteringProducerTest       : [testSyncSend][发送编号：[1576073624] 发送成功]
+2019-12-15 22:13:44.373  INFO 43363 --- [           main] c.i.s.l.r.p.ClusteringProducerTest       : [testSyncSend][发送编号：[1576073624] 发送成功]
+2019-12-15 22:13:44.374  INFO 43363 --- [           main] c.i.s.l.r.p.ClusteringProducerTest       : [testSyncSend][发送编号：[1576073624] 发送成功]
+
+# ClusteringConsumer 消费了 1 条消息
+2019-12-15 22:13:44.393  INFO 43363 --- [ntContainer#1-1] c.i.s.l.r.consumer.ClusteringConsumer    : [onMessage][线程编号:19 消息内容：ClusteringtMessage{id=1576073624}]
+
+// ### mock 方法对应的控制台 ####
+
+# ClusteringConsumer 消费了 2 条消息
+2019-12-15 22:13:44.396  INFO 43308 --- [ntContainer#1-1] c.i.s.l.r.consumer.ClusteringConsumer    : [onMessage][线程编号:19 消息内容：ClusteringtMessage{id=1576073624}]
+2019-12-15 22:13:44.398  INFO 43308 --- [ntContainer#1-1] c.i.s.l.r.consumer.ClusteringConsumer    : [onMessage][线程编号:19 消息内容：ClusteringtMessage{id=1576073624}]
+
+```
+
+- 3 条消息，都仅被 **两个** Consumer 节点的**一个**进行消费。符合集群消费的预期~
+
+因为考虑让集群消费的示例做的比较简单，所以并未提供一条消息投递到多个 Queue 中，从而实现多集群下的集群消费的效果。不过比较简单，胖友可以自行在创建一个类似[「9.1.6 ClusteringConsumer」](https://www.iocoder.cn/Spring-Boot/RabbitMQ/#)的消费者类，设置消费另外一个 Queue 即可。例如说：
+
+```java
+@Component
+@RabbitListener(
+        bindings = @QueueBinding(
+                value = @Queue(
+                        name = ClusteringMessage.QUEUE + "-" + "GROUP-02" // 这里从 "GROUP-01" 改成了 "GROUP-02" 。
+                ),
+                exchange = @Exchange(
+                        name = ClusteringMessage.EXCHANGE,
+                        type = ExchangeTypes.TOPIC,
+                        declare = "false"
+                ),
+                key = "#"
+        )
+)
+```
+
+
+
+
+
+
+
+
+
 ### 10.2 广播消费
 
 在集群消费中，我们通过在 RabbitMQ 中，如果多个 Consumer 订阅相同的 Queue ，那么每一条消息有且仅会被一个 Consumer 所消费”特性，来实现了集群消费。但是，在实现广播消费时，这个特性恰恰成为了一种阻碍。
 
 不过机制的我们，可以通过给每个Consumer创建一个独有 Queue,从而保证都能接收到全亮的消息。同时，RabbitMQ 支持队列的自动删除，所以我们可以在 Consumer 关闭的时候，通过该功能删除其**独有**的 Queue 。
+
+下面，让我们开始集群消费的示例。考虑到简便，我们直接继续在 [lab-04-rabbitmq-demo](https://github.com/YunaiV/SpringBoot-Labs/tree/master/lab-04-rabbitmq/lab-04-rabbitmq-demo) 项目改造。
+
+#### 10.2.1 BroadcastMessage
+
+在 [`cn.iocoder.springboot.lab04.rabbitmqdemo.message`](https://github.com/YunaiV/SpringBoot-Labs/tree/master/lab-04-rabbitmq/lab-04-rabbitmq-demo-message-model/src/main/java/cn/iocoder/springboot/lab04/rabbitmqdemo/message) 包下，创建 [BroadcastMessage](https://github.com/YunaiV/SpringBoot-Labs/blob/master/lab-04-rabbitmq/lab-04-rabbitmq-demo-message-model/src/main/java/cn/iocoder/springboot/lab04/rabbitmqdemo/message/BroadcastMessage.java) 消息类，提供给当前示例使用。代码如下：
+
+```java
+// BroadcastMessage.java
+
+public class BroadcastMessage implements Serializable {
+
+    public static final String QUEUE = "QUEUE_BROADCASTING";
+
+    public static final String EXCHANGE = "EXCHANGE_BROADCASTING";
+
+    /**
+     * 编号
+     */
+    private Integer id;
+
+    // ... 省略 set/get/toString 方法
+
+}
+```
+
+- 和[「9.1.3 ClusteringMessage」](https://www.iocoder.cn/Spring-Boot/RabbitMQ/#)一致，只是 Queue 和 Exchange 的名字不同。
+
+
+
+#### 10.2.2 RabbitConfig
+
+修改 [RabbitConfig](https://github.com/YunaiV/SpringBoot-Labs/blob/master/lab-04-rabbitmq/lab-04-rabbitmq-demo-message-model/src/main/java/cn/iocoder/springboot/lab04/rabbitmqdemo/config/RabbitConfig.java) 配置类，添加自定义的 [SimpleRabbitListenerContainerFactory](https://github.com/spring-projects/spring-amqp/blob/master/spring-rabbit/src/main/java/org/springframework/amqp/rabbit/config/SimpleRabbitListenerContainerFactory.java) Bean ，添加广播消费需要的 Exchange 的配置。代码如下：
+
+```java
+// RabbitConfig.java
+
+/**
+ * 广播消费的示例的配置
+ */
+public static class BroadcastingConfiguration {
+
+    // 创建 Topic Exchange
+    @Bean
+    public TopicExchange broadcastingExchange() {
+        return new TopicExchange(BroadcastMessage.EXCHANGE,
+                true,  // durable: 是否持久化
+                false);  // exclusive: 是否排它
+    }
+
+}
+```
+
+- 和[「9.1.4 RabbitConfig」](https://www.iocoder.cn/Spring-Boot/RabbitMQ/#)的 ClusteringConfiguration 配置类是一致，只是创建了不同的 Exchange 。
+
+
+
+#### 10.2.3 BroadcastProducer
+
+在 [`cn.iocoder.springboot.lab04.rabbitmqdemo.producer`](https://github.com/YunaiV/SpringBoot-Labs/tree/master/lab-04-rabbitmq/lab-04-rabbitmq-demo-message-model/src/main/java/cn/iocoder/springboot/lab04/rabbitmqdemo/producer) 包下，创建 [BroadcastProducer](https://github.com/YunaiV/SpringBoot-Labs/blob/master/lab-04-rabbitmq/lab-04-rabbitmq-demo-message-model/src/main/java/cn/iocoder/springboot/lab04/rabbitmqdemo/producer/BroadcastProducer.java) 类，它会使用 Spring-AMQP 封装提供的 RabbitTemplate ，实现发送消息。代码如下：
+
+```java
+// BroadcastProducer.java
+
+@Component
+public class BroadcastProducer {
+
+    @Autowired
+    private RabbitTemplate rabbitTemplate;
+
+    public void syncSend(Integer id) {
+        // 创建 BroadcastMessage 消息
+        BroadcastMessage message = new BroadcastMessage();
+        message.setId(id);
+        // 同步发送消息
+        rabbitTemplate.convertAndSend(BroadcastMessage.EXCHANGE, null, message);
+    }
+
+}
+```
+
+- 和[「9.1.5 ClusteringProducer」](https://www.iocoder.cn/Spring-Boot/RabbitMQ/#)是一致，只是使用了不同的 Exchange 和消息。
+
+#### 10.2.4 BroadcastConsumer
+
+在 [`cn.iocoder.springboot.lab04.rabbitmqdemo.consumer`](https://github.com/YunaiV/SpringBoot-Labs/tree/master/lab-04-rabbitmq/lab-04-rabbitmq-demo-message-model/src/main/java/cn/iocoder/springboot/lab04/rabbitmqdemo/consumer) 包下，创建 [BroadcastConsumer](https://github.com/YunaiV/SpringBoot-Labs/blob/master/lab-04-rabbitmq/lab-04-rabbitmq-demo-message-model/src/main/java/cn/iocoder/springboot/lab04/rabbitmqdemo/consumer/ClusteringConsumer.java) 类，**广播**消费消息。代码如下：
+
+```java
+// BroadcastConsumer.java
+
+@Component
+@RabbitListener(
+        bindings = @QueueBinding(
+                value = @Queue(
+                        name = BroadcastMessage.QUEUE + "-" + "#{T(java.util.UUID).randomUUID()}",
+                        autoDelete = "true"
+                ),
+                exchange = @Exchange(
+                        name = BroadcastMessage.EXCHANGE,
+                        type = ExchangeTypes.TOPIC,
+                        declare = "false"
+                )
+        )
+)
+public class BroadcastConsumer {
+
+    private Logger logger = LoggerFactory.getLogger(getClass());
+
+    @RabbitHandler
+    public void onMessage(BroadcastMessage message) {
+        logger.info("[onMessage][线程编号:{} 消息内容：{}]", Thread.currentThread().getId(), message);
+    }
+
+}
+```
+
+- 总体和[「9.1.6 ClusteringConsumer」](https://www.iocoder.cn/Spring-Boot/RabbitMQ/#)是一致，主要差异在两点。
+- 第一点，在 `@Queue` 注解的 `name` 属性，我们通过 Spring EL 表达式，在 Queue 的名字上，使用 UUID 生成其后缀。这样，我们就能保证每个项目启动的 Consumer 的 Queue 不同，以达到广播消费的目的。
+- 第二点，在 `@Queue` 注解的 `autoDelete` 属性，我们设置为 `"true"` ，这样在 Consumer 关闭时，该队列就可以被自动删除了。
+
+
+
+#### 10.2.5 简单测试
+
+创建 [BroadcastProducerTest](https://github.com/YunaiV/SpringBoot-Labs/blob/master/lab-04-rabbitmq/lab-04-rabbitmq-demo-message-model/src/test/java/cn/iocoder/springboot/lab04/rabbitmqdemo/producer/BroadcastProducerTest.java) 测试类，用于测试广播消费。代码如下：
+
+```java
+// BroadcastProducerTest.java
+
+@RunWith(SpringRunner.class)
+@SpringBootTest(classes = Application.class)
+public class BroadcastProducerTest {
+
+    private Logger logger = LoggerFactory.getLogger(getClass());
+
+    @Autowired
+    private BroadcastProducer producer;
+
+    @Test
+    public void mock() throws InterruptedException {
+        // 阻塞等待，保证消费
+        new CountDownLatch(1).await();
+    }
+
+    @Test
+    public void testSyncSend() throws InterruptedException {
+        int id = (int) (System.currentTimeMillis() / 1000);
+        producer.syncSend(id);
+        logger.info("[testSyncSend][发送编号：[{}] 发送成功]", id);
+
+        // 阻塞等待，保证消费
+        new CountDownLatch(1).await();
+    }
+
+}
+```
+
+首先，执行 `#mock()` 测试方法，先启动一个消费 `"QUEUE_BROADCAST-${UUID1}"` 这个 Queue 的 Consumer 节点。
+
+然后，执行 `#testSyncSend()` 测试方法，再启动一个消费 `"QUEUE_BROADCAST-${UUID2}"` 这个 Queue 的 Consumer 节点。同时，该测试方法，调用 `BroadcastProducer#syncSend(id)` 方法，同步发送了 3 条消息。控制台输出如下：
+
+```java
+// #### testSyncSend 方法对应的控制台 ####
+
+# Producer 同步发送消息成功
+2019-12-15 00:11:41.459  INFO 64479 --- [           main] c.i.s.l.r.p.BroadcastProducerTest        : [testSyncSend][发送编号：[1576080701] 发送成功]
+2019-12-15 00:11:41.460  INFO 64479 --- [           main] c.i.s.l.r.p.BroadcastProducerTest        : [testSyncSend][发送编号：[1576080701] 发送成功]
+2019-12-15 00:11:41.461  INFO 64479 --- [           main] c.i.s.l.r.p.BroadcastProducerTest        : [testSyncSend][发送编号：[1576080701] 发送成功]
+
+# BroadcastConsumer 消费了 3 条消息
+2019-12-15 00:11:41.478  INFO 64479 --- [ntContainer#0-1] c.i.s.l.r.consumer.BroadcastConsumer     : [onMessage][线程编号:17 消息内容：BroadcastMessage{id=1576080701}]
+2019-12-15 00:11:41.479  INFO 64479 --- [ntContainer#0-1] c.i.s.l.r.consumer.BroadcastConsumer     : [onMessage][线程编号:17 消息内容：BroadcastMessage{id=1576080701}]
+2019-12-15 00:11:41.480  INFO 64479 --- [ntContainer#0-1] c.i.s.l.r.consumer.BroadcastConsumer     : [onMessage][线程编号:17 消息内容：BroadcastMessage{id=1576080701}]
+
+// ### mock 方法对应的控制台 ####
+
+# BroadcastConsumer 也消费了 3 条消
+2019-12-15 00:11:41.460  INFO 63795 --- [ntContainer#0-1] c.i.s.l.r.consumer.BroadcastConsumer     : [onMessage][线程编号:17 消息内容：BroadcastMessage{id=1576080701}]
+2019-12-15 00:11:41.462  INFO 63795 --- [ntContainer#0-1] c.i.s.l.r.consumer.BroadcastConsumer     : [onMessage][线程编号:17 消息内容：BroadcastMessage{id=1576080701}]
+2019-12-15 00:11:41.462  INFO 63795 --- [ntContainer#0-1] c.i.s.l.r.consumer.BroadcastConsumer     : [onMessage][线程编号:17 消息内容：BroadcastMessage{id=1576080701}]
+
+```
+
+- **两个** Consumer 节点，都消费了这条发送的消息。符合广播消费的预期~
 
 
 
