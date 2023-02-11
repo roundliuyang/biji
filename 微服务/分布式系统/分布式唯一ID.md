@@ -97,11 +97,159 @@ ID生成服务假设每次批量拉取5个ID，服务访问数据库，将当前
 
 snowflake 是 twitter 开源的分布式ID生成算法，其核心思想为，一个long型的ID：
 
-- 41 bit 作为毫秒数 - 41位的长度可以使用69年
-- 10 bit 作为机器编号 （5个bit是数据中心，5个bit的机器ID） - 10位的长度最多支持部署1024个节点
-- 12 bit 作为毫秒内序列号 - 12位的计数顺序号支持每个节点每毫秒产生4096个ID序号
+![img](分布式唯一ID.assets/v2-0ca4a4125b1cbda69cfa972b1e568ffb_1440w.webp)
 
-![img](分布式唯一ID.assets/L3Byb3h5L2h0dHBzL2ltZzIwMjAuY25ibG9ncy5jb20vYmxvZy8xMDE4ODEzLzIwMjEwNy8xMDE4ODEzLTIwMjEwNzI4MjAzNDU4MzY4LTQ3NjY2NzYwMC5wbmc=.jpg)
+#### **组成部分（64bit）**
+
+**1.第一位** 占用1bit，其值始终是0，没有实际作用。 **2.时间戳** 占用41bit，精确到毫秒，总共可以容纳约69年的时间。 **3.工作机器id** 占用10bit，其中高位5bit是数据中心ID，低位5bit是工作节点ID，做多可以容纳1024个节点。 **4.序列号** 占用12bit，每个节点每毫秒0开始不断累加，最多可以累加到4095，一共可以产生4096个ID。
+
+SnowFlake算法在同一毫秒内最多可以生成多少个全局唯一ID呢：： **同一毫秒的ID数量 = 1024 X 4096 = 4194304**
+
+
+
+#### 雪花算法的实现
+
+雪花算法的实现主要依赖于数据中心ID和数据节点ID这两个参数，具体实现如下。
+
+**JAVA实现**
+
+```java
+public class SnowflakeIdWorker {
+    /**
+     * 开始时间截 (2015-01-01)
+     */
+    private final long twepoch = 1420041600000L;
+    /**
+     * 机器id所占的位数
+     */
+    private final long workerIdBits = 5L;
+    /**
+     * 数据标识id所占的位数
+     */
+    private final long datacenterIdBits = 5L;
+    /**
+     * 支持的最大机器id，结果是31 (这个移位算法可以很快的计算出几位二进制数所能表示的最大十进制数)
+     */
+    private final long maxWorkerId = -1L ^ (-1L << workerIdBits);
+    /**
+     * 支持的最大数据标识id，结果是31
+     */
+    private final long maxDatacenterId = -1L ^ (-1L << datacenterIdBits);
+    /**
+     * 序列在id中占的位数
+     */
+    private final long sequenceBits = 12L;
+    /**
+     * 机器ID向左移12位
+     */
+    private final long workerIdShift = sequenceBits;
+    /**
+     * 数据标识id向左移17位(12+5)
+     */
+    private final long datacenterIdShift = sequenceBits + workerIdBits;
+    /**
+     * 时间截向左移22位(5+5+12)
+     */
+    private final long timestampLeftShift = sequenceBits + workerIdBits + datacenterIdBits;
+    /**
+     * 生成序列的掩码，这里为4095 (0b111111111111=0xfff=4095)
+     */
+    private final long sequenceMask = -1L ^ (-1L << sequenceBits);
+    /**
+     * 工作机器ID(0~31)
+     */
+    private long workerId;
+    /**
+     * 数据中心ID(0~31)
+     */
+    private long datacenterId;
+    /**
+     * 毫秒内序列(0~4095)
+     */
+    private long sequence = 0L;
+    /**
+     * 上次生成ID的时间截
+     */
+    private long lastTimestamp = -1L;
+    /**
+     * 构造函数
+     * @param workerId     工作ID (0~31)
+     * @param datacenterId 数据中心ID (0~31)
+     */
+    public SnowflakeIdWorker(long workerId, long datacenterId) {
+        if (workerId > maxWorkerId || workerId < 0) {
+            throw new IllegalArgumentException(String.format("worker Id can't be greater than %d or less than 0", maxWorkerId));
+        }
+        if (datacenterId > maxDatacenterId || datacenterId < 0) {
+            throw new IllegalArgumentException(String.format("datacenter Id can't be greater than %d or less than 0", maxDatacenterId));
+        }
+        this.workerId = workerId;
+        this.datacenterId = datacenterId;
+    }
+    /**
+     * 获得下一个ID (该方法是线程安全的)
+     * @return SnowflakeId
+     */
+    public synchronized long nextId() {
+        long timestamp = timeGen();
+        // 如果当前时间小于上一次ID生成的时间戳，说明系统时钟回退过这个时候应当抛出异常
+        if (timestamp < lastTimestamp) {
+            throw new RuntimeException(
+                    String.format("Clock moved backwards.  Refusing to generate id for %d milliseconds", lastTimestamp - timestamp));
+        }
+        // 如果是同一时间生成的，则进行毫秒内序列
+        if (lastTimestamp == timestamp) {
+            sequence = (sequence + 1) & sequenceMask;
+            // 毫秒内序列溢出
+            if (sequence == 0) {
+                //阻塞到下一个毫秒,获得新的时间戳
+                timestamp = tilNextMillis(lastTimestamp);
+            }
+        }
+        // 时间戳改变，毫秒内序列重置
+        else {
+            sequence = 0L;
+        }
+        // 上次生成ID的时间截
+        lastTimestamp = timestamp;
+        // 移位并通过或运算拼到一起组成64位的ID
+        return ((timestamp - twepoch) << timestampLeftShift) //
+                | (datacenterId << datacenterIdShift) //
+                | (workerId << workerIdShift) //
+                | sequence;
+    }
+    /**
+     * 阻塞到下一个毫秒，直到获得新的时间戳
+     * @param lastTimestamp 上次生成ID的时间截
+     * @return 当前时间戳
+     */
+    protected long tilNextMillis(long lastTimestamp) {
+        long timestamp = timeGen();
+        while (timestamp <= lastTimestamp) {
+            timestamp = timeGen();
+        }
+        return timestamp;
+    }
+    /**
+     * 返回以毫秒为单位的当前时间
+     * @return 当前时间(毫秒)
+     */
+    protected long timeGen() {
+        return System.currentTimeMillis();
+    }
+
+    public static void main(String[] args) throws InterruptedException {
+        SnowflakeIdWorker idWorker = new SnowflakeIdWorker(0, 0);
+        for (int i = 0; i < 10; i++) {
+            long id = idWorker.nextId();
+            Thread.sleep(1);
+            System.out.println(id);
+        }
+    }
+}
+```
+
+
 
 ### 方法七：滴滴开源的分布式id生成系统
 
