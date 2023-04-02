@@ -264,6 +264,78 @@ ts=2018-12-03 20:04:35; [cost=0.961441ms] result=@Integer[8]
 
 
 
+#### trace
+
+>方法内部调用路径，并输出方法路径上的每个节点上耗时
+
+`trace` 命令能主动搜索 `class-pattern`／`method-pattern` 对应的方法调用路径，渲染和统计整个调用链路上的所有性能开销和追踪调用链路。
+
+
+
+##### 参数说明
+
+|            参数名称 | 参数说明                             |
+| ------------------: | :----------------------------------- |
+|     *class-pattern* | 类名表达式匹配                       |
+|    *method-pattern* | 方法名表达式匹配                     |
+| *condition-express* | 条件表达式                           |
+|                 [E] | 开启正则表达式匹配，默认为通配符匹配 |
+|              `[n:]` | 命令执行次数                         |
+|             `#cost` | 方法执行耗时                         |
+
+
+
+
+
+##### 启动 Demo
+
+```java
+$ trace demo.MathGame run
+Press Q or Ctrl+C to abort.
+Affect(class-cnt:1 , method-cnt:1) cost in 28 ms.
+`---ts=2019-12-04 00:45:08;thread_name=main;id=1;is_daemon=false;priority=5;TCCL=sun.misc.Launcher$AppClassLoader@3d4eac69
+    `---[0.617465ms] demo.MathGame:run()
+        `---[0.078946ms] demo.MathGame:primeFactors() #24 [throws Exception]
+
+`---ts=2019-12-04 00:45:09;thread_name=main;id=1;is_daemon=false;priority=5;TCCL=sun.misc.Launcher$AppClassLoader@3d4eac69
+    `---[1.276874ms] demo.MathGame:run()
+        `---[0.03752ms] demo.MathGame:primeFactors() #24 [throws Exception]
+```
+
+>结果里的 `#24`，表示在 run 函数里，在源文件的第`24`行调用了`primeFactors()`函数。
+
+
+
+##### trace 多个类或者多个函数
+
+trace 命令只会 trace 匹配到的函数里的子调用，并不会向下 trace 多层。因为 trace 是代价比较贵的，多层 trace 可能会导致最终要 trace 的类和函数非常多。
+
+可以用正则表匹配路径上的多个类和函数，一定程度上达到多层 trace 的效果。
+
+```shell
+trace -E com.test.ClassA|org.test.ClassB method1|method2|method3
+```
+
+
+
+##### trace 次数限制
+
+如果方法调用的次数很多，那么可以用`-n`参数指定捕捉结果的次数。比如下面的例子里，捕捉到一次调用就退出命令。
+
+```shell
+$ trace demo.MathGame run -n 1
+Press Q or Ctrl+C to abort.
+Affect(class-cnt:1 , method-cnt:1) cost in 20 ms.
+`---ts=2019-12-04 00:45:53;thread_name=main;id=1;is_daemon=false;priority=5;TCCL=sun.misc.Launcher$AppClassLoader@3d4eac69
+    `---[0.549379ms] demo.MathGame:run()
+        +---[0.059839ms] demo.MathGame:primeFactors() #24
+        `---[0.232887ms] demo.MathGame:print() #25
+
+Command execution times exceed limit: 1, so command will exit. You can set it with -n option.
+```
+
+
+
 ### 3.基础命令
 
 #### stop

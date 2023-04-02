@@ -2118,3 +2118,35 @@ cat config
 您可以丢弃当前分支中的推送提交，而不会留下任何操作痕迹。
 
 Unlike [reverting a commit](https://www.jetbrains.com/help/idea/undo-changes.html#revert-commit), which is reflected in the branch history, you can discard a pushed commit in the current branch without leaving any traces of the operation.
+
+
+
+
+
+8.`git reset` 回退本地提交
+
+比如，我们进行了一个提交：
+
+```bash
+git commit -m "改了些东西，提交了"
+```
+
+这时候，我们只需要使用如下命令，即可回退这次的提交。
+
+```bash
+# 回退本地 Git 提交
+git reset HEAD~
+```
+
+然后重新编辑你需要的文件，再次提交即可。如果你想使用原来的提交信息，不想重新输入，即`改了些东西，提交了`。提交时，你可以：
+
+```bash
+# 使用上次提交的信息
+git commit -c ORIG_HEAD
+```
+
+`git reset HEAD~`回退后，将会保留原来的修改。如果你想把原来的修改全部删除的话，需要使用如下命令：
+
+```bash
+git reset HEAD~ --hard
+```
