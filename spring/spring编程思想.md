@@ -1311,7 +1311,7 @@ Limitations and Disadvantages of Autowiring 小节
 
 #### 手动模式
 
-• XML 资源配置元信息
+##### • XML 资源配置元信息
 
 xml文件
 
@@ -1374,7 +1374,7 @@ public class XmlDependencySetterInjectionDemo {
 
 
 
-• Java 注解配置元信息
+##### • Java 注解配置元信息
 
 ```java
 /**
@@ -1418,7 +1418,7 @@ public class AnnotationDependencySetterInjectionDemo {
 }
 ```
 
-• API 配置元信息
+##### • API 配置元信息
 
 ```java
 /**
@@ -1471,7 +1471,7 @@ public class ApiDependencySetterInjectionDemo {
 
 #### 自动模式
 
-• byName
+##### • byName
 
 ```
  <bean class="org.geekbang.thinking.in.spring.ioc.dependency.injection.UserHolder"
@@ -1481,7 +1481,7 @@ public class ApiDependencySetterInjectionDemo {
     </bean>
 ```
 
-• byType  
+##### • byType  
 
 ```xml
  <bean class="org.geekbang.thinking.in.spring.ioc.dependency.injection.UserHolder"
@@ -1520,13 +1520,15 @@ public class AutoWiringByNameDependencySetterInjectionDemo {
 }
 ```
 
+
+
 ## 构造器依赖注入
 
 ### 实现方法
 
 #### 手动模式
 
-• XML 资源配置元信息
+##### • XML 资源配置元信息
 
 ```xml
 <bean class="org.geekbang.thinking.in.spring.ioc.dependency.injection.UserHolder">
@@ -1560,7 +1562,7 @@ public class XmlDependencyConstructorInjectionDemo {
 }
 ```
 
-• Java 注解配置元信息
+##### • Java 注解配置元信息
 
 ```java
 /**
@@ -1602,7 +1604,7 @@ public class AnnotationDependencyConstructorInjectionDemo {
 }
 ```
 
-• API 配置元信息
+##### • API 配置元信息
 
 ```java
 /**
@@ -1655,7 +1657,7 @@ public class ApiDependencyConstructorInjectionDemo {
 
 #### 自动模式
 
-• constructor  
+##### • constructor  
 
 xml
 
@@ -1699,9 +1701,11 @@ public class AutoWiringConstructorDependencyConstructorInjectionDemo {
 
 #### Java 注解配置元信息
 
-• @Autowired
+##### • @Autowired
 
-• @Resource
+如下
+
+##### • @Resource
 
 ```java
 /**
@@ -1758,7 +1762,7 @@ public class AnnotationDependencyFieldInjectionDemo {
 }
 ```
 
-• @Inject（ 可选）  
+##### • @Inject（ 可选）  
 
 ## 方法注入
 
@@ -1766,10 +1770,15 @@ public class AnnotationDependencyFieldInjectionDemo {
 
 #### Java 注解配置元信息
 
-• @Autowired
-• @Resource
-• @Inject（ 可选）
-• @Bean  
+##### • @Autowired
+
+##### • @Resource
+
+##### • @Inject（ 可选）
+
+##### • @Bean  
+
+##### 代码示例
 
 ```java
 /**
@@ -1833,7 +1842,9 @@ public class AnnotationDependencyMethodInjectionDemo {
 }
 ```
 
-## 回调注入
+
+
+## 接口回调注入
 
 ### Aware 系列接口回调
 
@@ -2025,6 +2036,10 @@ public class User implements BeanNameAware {
 
 • 自定义注解 - 如 Spring Cloud @LoadBalanced  
 
+
+
+### 代码示例
+
 ```java
 /**
  * {@link Qualifier} 注解依赖注入
@@ -2141,6 +2156,10 @@ public class QualifierAnnotationDependencyInjectionDemo {
 • 单一类型
 • 集合类型  
 
+
+
+### 代码示例
+
 ```java
 /**
  * {@link ObjectProvider} 实现延迟依赖注入
@@ -2200,9 +2219,23 @@ public class LazyAnnotationDependencyInjectionDemo {
 
 ## 依赖处理过程
 
-?
+#### 基础知识
 
-## @Autowired 注入原理
+- 入口 - DefaultListableBeanFactory#resolveDependency
+- 依赖描述符 - DependencyDescriptor
+- 自定绑定候选对象处理器 - AutowireCandidateResolver
+
+
+
+## @Autowired 注入
+
+
+
+### @Autowired 注入规则
+
+- 非静态字段
+- 非静态方法
+- 构造器
 
 ### @Autowired 注入过程
 
@@ -2210,23 +2243,45 @@ public class LazyAnnotationDependencyInjectionDemo {
 • 依赖查找
 • 依赖注入（ 字段、 方法）  
 
-## JSR-330 @Inject 注入原理
+## @Inject 注入
 
-@Inject 注入过程
+### @Inject 注入过程
+
 • 如果 JSR-330 存在于 ClassPath 中， 复用 AutowiredAnnotationBeanPostProcessor 实现  
+
+
 
 ## Java通用注解注入原理
 
-• CommonAnnotationBeanPostProcessor
-• 注入注解
-• javax.xml.ws.WebServiceRef
-• javax.ejb.EJB
-• javax.annotation.Resource
-• 生命周期注解
-• javax.annotation.PostConstruct
-• javax.annotation.PreDestroy  
+### CommonAnnotationBeanPostProcessor
+
+#### • 注入注解
+
+- javax.xml.ws.WebServiceRef
+- javax.ejb.EJB
+- javax.annotation.Resource
+
+#### • 生命周期注解
+
+-  javax.annotation.PostConstruct
+-  javax.annotation.PreDestroy  
+
+
 
 ## 自定义依赖注入注解
+
+### 基于 AutowiredAnnotationBeanPostProcessor 实现
+
+- 基于 AutowiredAnnotationBeanPostProcessor 实现
+- 自定义实现
+  - 生命周期处理
+    - InstantiationAwareBeanPostProcessor
+    - MergedBeanDefinitionPostProcessor
+  - 元数据
+    - InjectedElement
+    - InjectionMetadata
+
+
 
 ## 面试题精选
 
