@@ -965,156 +965,154 @@ Bean 垃圾回收（ GC）
 
 # 第五章： Spring IoC 依赖查找
 
+
+
 ## 依赖查找的今世前生
 
-### 单一类型依赖查找
+- 单一类型依赖查找
+  - JNDI - javax.naming.Context#lookup(javax.naming.Name)
+  - JavaBeans - java.beans.beancontext.BeanContext
+- 集合类型依赖查找
+  - java.beans.beancontext.BeanContext
+- 层次性依赖查找
+  - java.beans.beancontext.BeanContext
 
-• JNDI - javax.naming.Context#lookup(javax.naming.Name)
-• JavaBeans - java.beans.beancontext.BeanContext
 
-### 集合类型依赖查找
-
-• java.beans.beancontext.BeanContext
-
-### 层次性依赖查找
-
-• java.beans.beancontext.BeanContext  
 
 ## 单一类型依赖查找
 
-### 单一类型依赖查找接口 - BeanFactory
 
-#### 根据 Bean 名称查找
 
-• getBean(String)
-• Spring 2.5 覆盖默认参数： getBean(String,Object...)
+- 单一类型依赖查找接口 - BeanFactory
 
-#### 根据 Bean 类型查找
+  - 根据 Bean 名称查找
 
-##### Bean 实时查找
+    - getBean(String)
+    - Spring 2.5 覆盖默认参数：getBean(String,Object...)
 
-• Spring 3.0 getBean(Class)
-• Spring 4.1 覆盖默认参数： getBean(Class,Object...)
+  - 根据 Bean 类型查找
 
-##### Spring 5.1 Bean 延迟查找
+    - Bean 实时查找
 
-• getBeanProvider(Class)
+      - Spring 3.0 getBean(Class)
+      - Spring 4.1 覆盖默认参数：getBean(Class,Object...)
 
-demo
+    - Spring 5.1 Bean 延迟查找
 
-```java
-public class ObjectProviderDemo { // @Configuration 是非必须注解
+      - getBeanProvider(Class)
 
-    public static void main(String[] args) {
-        // 创建 BeanFactory 容器
-        AnnotationConfigApplicationContext applicationContext = new AnnotationConfigApplicationContext();
-        // 将当前类 ObjectProviderDemo 作为配置类（Configuration Class）
-        applicationContext.register(ObjectProviderDemo.class);
-        // 启动应用上下文
-        applicationContext.refresh();
-        lookupByObjectProvider(applicationContext);
-        // 关闭应用上下文
-        applicationContext.close();
+        ```java
+        public class ObjectProviderDemo { // @Configuration 是非必须注解
+        
+            public static void main(String[] args) {
+                // 创建 BeanFactory 容器
+                AnnotationConfigApplicationContext applicationContext = new AnnotationConfigApplicationContext();
+                // 将当前类 ObjectProviderDemo 作为配置类（Configuration Class）
+                applicationContext.register(ObjectProviderDemo.class);
+                // 启动应用上下文
+                applicationContext.refresh();
+                lookupByObjectProvider(applicationContext);
+                // 关闭应用上下文
+                applicationContext.close();
+        
+            }
+        
+            @Bean
+            @Primary
+            public String helloWorld() { // 方法名就是 Bean 名称 = "helloWorld"
+                return "Hello,World";
+            }
+        
+            @Bean
+            public String message() {
+                return "Message";
+            }
+        
+            private static void lookupByObjectProvider(AnnotationConfigApplicationContext applicationContext) {
+                ObjectProvider<String> objectProvider = applicationContext.getBeanProvider(String.class);
+                System.out.println(objectProvider.getObject());
+            }
+        }
+        
+        ```
 
-    }
+      - getBeanProvider(ResolvableType)
 
-    @Bean
-    @Primary
-    public String helloWorld() { // 方法名就是 Bean 名称 = "helloWorld"
-        return "Hello,World";
-    }
+  - 根据 Bean 名称 + 类型查找：getBean(String,Class)
 
-    @Bean
-    public String message() {
-        return "Message";
-    }
 
-    private static void lookupByObjectProvider(AnnotationConfigApplicationContext applicationContext) {
-        ObjectProvider<String> objectProvider = applicationContext.getBeanProvider(String.class);
-        System.out.println(objectProvider.getObject());
-    }
-}
 
-```
 
-• getBeanProvider(ResolvableType)
-
-#### 根据 Bean 名称 + 类型查找： getBean(String,Class)  
 
 ## 集合类型依赖查找
 
-### 集合类型依赖查找接口 - ListableBeanFactory
 
-#### 根据 Bean 类型查找
 
-##### 获取同类型 Bean 名称列表
+- 集合类型依赖查找接口 - ListableBeanFactory
+  - 根据 Bean 类型查找
+    - 获取同类型 Bean 名称列表
+      - getBeanNamesForType(Class)
+      - Spring 4.2 getBeanNamesForType(ResolvableType)
+    - 获取同类型 Bean 实例列表
+      - getBeansOfType(Class) 以及重载方法
+  - 通过注解类型查找
+    - Spring 3.0 获取标注类型 Bean 名称列表
+      - getBeanNamesForAnnotation(Class<? extends Annotation>)
+    - Spring 3.0 获取标注类型 Bean 实例列表
+      - getBeansWithAnnotation(Class<? extends Annotation>)
+    - Spring 3.0 获取指定名称 + 标注类型 Bean 实例
+      - findAnnotationOnBean(String,Class<? extends Annotation>)
 
-• getBeanNamesForType(Class)
-• Spring 4.2 getBeanNamesForType(ResolvableType)
 
-##### 获取同类型 Bean 实例列表
 
-• getBeansOfType(Class) 以及重载方法
 
-#### 通过注解类型查找
-
-##### Spring 3.0 获取标注类型 Bean 名称列表
-
-• getBeanNamesForAnnotation(Class<? extends Annotation>)
-
-##### Spring 3.0 获取标注类型 Bean 实例列表
-
-• getBeansWithAnnotation(Class<? extends Annotation>)
-
-##### Spring 3.0 获取指定名称 + 标注类型 Bean 实例
-
-• findAnnotationOnBean(String,Class<? extends Annotation>)  
 
 ## 层次性依赖查找
 
-？？？
 
-### 层次性依赖查找接口 - HierarchicalBeanFactory
 
-#### 双亲 BeanFactory： getParentBeanFactory()
-
-#### 层次性查找
-
-##### 根据 Bean 名称查找
-
-• 基于 containsLocalBean 方法实现
-
-##### 根据 Bean 类型查找实例列表
-
-• 单一类型： BeanFactoryUtils#beanOfType
-• 集合类型： BeanFactoryUtils#beansOfTypeIncludingAncestors
-
-##### 根据 Java 注解查找名称列表
-
-• BeanFactoryUtils#beanNamesForTypeIncludingAncestors  
+- 层次性依赖查找接口 - HierarchicalBeanFactory
+  - 双亲 BeanFactory：getParentBeanFactory()
+  - 层次性查找
+    - 根据 Bean 名称查找
+      - 基于 containsLocalBean 方法实现
+    - 根据 Bean 类型查找实例列表
+      - 单一类型：BeanFactoryUtils#beanOfType
+      - 集合类型：BeanFactoryUtils#beansOfTypeIncludingAncestors
+    - 根据 Java 注解查找名称列表
+      - BeanFactoryUtils#beanNamesForTypeIncludingAncestors
 
 
 
 ## 延迟依赖查找
 
-？？
 
-### Bean 延迟依赖查找接口
 
-#### org.springframework.beans.factory.ObjectFactory
+- Bean 延迟依赖查找接口
+  - org.springframework.beans.factory.ObjectFactory
+  - org.springframework.beans.factory.ObjectProvider
+    - Spring 5 对 Java 8 特性扩展
+      - 函数式接口
+        - getIfAvailable(Supplier)
+        - ifAvailable(Consumer)
+      - Stream 扩展 - stream()
 
-#### org.springframework.beans.factory.ObjectProvider
 
-##### Spring 5 对 Java 8 特性扩展
 
-###### 函数式接口
 
-• getIfAvailable(Supplier)
-• ifAvailable(Consumer)
-
-###### Stream 扩展 - stream()  
 
 ## 安全依赖查找
+
+- 依赖查找安全性对比
+
+  | 依赖查找类型 | 代表实现                           | 是否安全 |
+  | ------------ | ---------------------------------- | -------- |
+  | 单一类型查找 | BeanFactory#getBean                | 否       |
+  |              | ObjectFactory#getObject            | 否       |
+  |              | ObjectProvider#getIfAvailable      | 是       |
+  |              |                                    |          |
+  | 集合类型查找 | ListableBeanFactory#getBeansOfType | 是       |
+  |              | ObjectProvider#stream              | 是       |
 
 
 
@@ -1195,7 +1193,11 @@ public class TypeSafetyDependencyLookupDemo {
 
 
 
+
+
 ## 内建可查找的依赖
+
+
 
 AbstractApplicationContext 内建可查找的依赖
 
@@ -1208,6 +1210,8 @@ AbstractApplicationContext 内建可查找的依赖
 | lifecycleProcessor          | LifecycleProcessor 对象           | Lifecycle Bean 处理器   |
 | applicationEventMulticaster | ApplicationEventMulticaster 对 象 | Spring 事件广播器       |
 
+
+
 注解驱动 Spring 应用上下文内建可查找的依赖（ 部分）
 
 | Bean 名称                                                    | Bean 实例                                  | 使用场景                                               |
@@ -1217,9 +1221,13 @@ AbstractApplicationContext 内建可查找的依赖
 | org.springframework.context. annotation.internalCommonAn notationProcessor | CommonAnnotationBeanPostProces sor 对象    | （ 条件激活） 处理 JSR-250 注解， 如 @PostConstruct 等 |
 | org.springframework.context. event.internalEventListener Processor | EventListenerMethodProcessor 对象          | 处理标注 @EventListener 的 Spring 事件监听方法         |
 
+注解驱动 Spring 应用上下文内建可查找的依赖（续）
+
 | org.springframework.context. event.internalEventListener Factory | DefaultEventListenerFactory 对 象            | @EventListener 事件监听方法适 配为 ApplicationListener |
 | ------------------------------------------------------------ | -------------------------------------------- | ------------------------------------------------------ |
 | org.springframework.context. annotation.internalPersiste nceAnnotationProcessor | PersistenceAnnotationBeanPostP rocessor 对象 | （ 条件激活） 处理 JPA 注解场景                        |
+
+
 
 ## 依赖查找中的经典异常
 
@@ -1233,23 +1241,33 @@ BeansException 子类型
 | BeanCreationException           | 当 Bean 初始化过程中                         | Bean 初始化方法执行异常 时                  |
 | BeanDefinitionStoreException    | 当 BeanDefinition 配置元信息非 法时          | XML 配置资源无法打开时                      |
 
+
+
 ## 面试题精选
 
 
 
 # 第六章 Spring IoC 依赖注入
 
+
+
 ## 依赖注入的模式和类型
+
+
 
 ###  手动模式 - 配置或者编程的方式， 提前安排注入规则
 
-• XML 资源配置元信息
-• Java 注解配置元信息
-• API 配置元信息
+- XML 资源配置元信息
+- Java 注解配置元信息
+- API 配置元信息
+
+
 
 ### 自动模式 - 实现方提供依赖自动关联的方式， 按照內建的注入规则
 
-• Autowiring（ 自动绑定）  
+- Autowiring（ 自动绑定）  
+
+
 
 ### 依赖注入类型
 
@@ -1304,6 +1322,8 @@ arguments.
 
 Limitations and Disadvantages of Autowiring 小节
 链接： https://docs.spring.io/spring/docs/5.2.2.RELEASE/spring-frameworkreference/core.html#beans-autowired-exceptions  
+
+
 
 ## Setter 方法依赖注入
 
@@ -1763,6 +1783,10 @@ public class AnnotationDependencyFieldInjectionDemo {
 ```
 
 ##### • @Inject（ 可选）  
+
+
+
+
 
 ## 方法注入
 

@@ -2150,3 +2150,31 @@ git commit -c ORIG_HEAD
 ```bash
 git reset HEAD~ --hard
 ```
+
+
+
+
+
+#### 创建本地项目并上传GitHub
+
+
+
+…or create a new repository on the command line
+
+```
+echo "# perfect" >> README.md
+git init
+git add README.md
+git commit -m "first commit"
+git branch -M master
+git remote add origin https://github.com/roundliuyang/perfect.git
+git push -u origin master
+```
+
+…or push an existing repository from the command line
+
+```
+git remote add origin https://github.com/roundliuyang/perfect.git
+git branch -M master
+git push -u origin master
+```

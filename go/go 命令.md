@@ -99,3 +99,14 @@ exclude 语句可以排除指定依赖包
   - 手动编辑；
 
 由于 `go build` 和 `go test` 不会自动编辑 `go.mod` 了，所以可以将原本的行为通过 `go mod tidy` 共同处理。
+
+
+
+## 缓存
+
+缓存：Go Modules会缓存已下载的依赖项。在某些情况下，Go Modules可能会使用缓存的版本而不是最新的版本。您可以尝试清除Go Modules的缓存，然后再运行`go mod tidy`：
+
+```shell
+go clean -modcache
+go mod tidy
+```

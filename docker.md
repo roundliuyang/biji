@@ -229,3 +229,15 @@ docker cp  容器ID:容器内路径 目的主机路径
 
 
 
+### 日志命令
+
+
+
+查看service 日志
+
+```shell
+docker service logs -f --tail 200 yxg8ytas0c6c
+```
+
+
+
