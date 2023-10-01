@@ -100,13 +100,16 @@ demo
 
 ### 根据 Bean 名称 + 类型查找
 
-？
+```java
+// 与上面类似
+User user = (User) beanFactory.getBean("user", User.class);
+```
+
+
 
 ### 根据 Java 注解查找
 
 #### 单个 Bean 对象
-
-？
 
 ####  集合 Bean 对象  
 
@@ -151,29 +154,42 @@ public class SuperUser extends User {
 
 ## Spring IoC 依赖注入
 
+
+
 ### 根据 Bean 名称注入
 
-略
+例子如下
+
+
 
 ### 根据 Bean 类型注入
 
 #### 单个 Bean 对象
 
+例子如下
+
+
+
 #### 集合 Bean 对象
+
+例子如下
+
+
 
 xml文件
 
 ```xml
-<bean id="userRepository" class="org.geekbang.thinking.in.spring.ioc.overview.repository.UserRepository"
+ <bean id="userRepository" class="org.geekbang.thinking.in.spring.ioc.overview.repository.UserRepository"
           autowire="byType"> <!-- Auto-Wiring -->
-       
-                <property name="users">
-                    <util:list>
-                        <ref bean="superUser" />
-                        <ref bean="user" />
-                    </util:list>
-                </property>
-</bean>
+        <!-- 手动配置 -->
+        <!--        <property name="users">-->
+        <!--            <util:list>-->
+        <!--                <ref bean="superUser" />-->
+        <!--                <ref bean="user" />-->
+        <!--            </util:list>-->
+        <!--        </property>-->
+
+    </bean>
 ```
 
 ```java
@@ -183,23 +199,72 @@ public class UserRepository {
 }
 ```
 
+```java
+  public static void main(String[] args) {
+
+        ApplicationContext applicationContext = new ClassPathXmlApplicationContext("classpath:/META-INF/dependency-injection-context.xml");
+
+        // 依赖来源一：自定义 Bean
+        UserRepository userRepository = applicationContext.getBean("userRepository", UserRepository.class);
+        System.out.println(userRepository.getUsers());
+  }
+```
+
 
 
 ### 注入容器內建 Bean 对象
 
 
 
+```java
+    public static void main(String[] args) {
+        ApplicationContext applicationContext = new ClassPathXmlApplicationContext("classpath:/META-INF/dependency-injection-context.xml");
+
+        // 依赖来源三：容器內建 Bean
+        Environment environment = applicationContext.getBean(Environment.class);
+        System.out.println("获取 Environment 类型的 Bean：" + environment);
+    }
+```
+
 
 
 ### 注入非 Bean 对象
+
+
+
+```java
+public class UserRepository {
+
+    private Collection<User> users; // 自定义 Bean
+
+    private BeanFactory beanFactory; // 內建非 Bean 对象（依赖）
+
+    private ObjectFactory<ApplicationContext> objectFactory;
+}
+
+```
+
+
+
+```java
+    public static void main(String[] args) {
+      
+        ApplicationContext applicationContext = new ClassPathXmlApplicationContext("classpath:/META-INF/dependency-injection-context.xml");
+
+        // 依赖来源二：依赖注入（ 內建非 Bean 对象（依赖））
+        System.out.println(userRepository.getBeanFactory());
+    }
+```
+
+
 
 ### 注入类型
 
 #### 实时注入
 
-#### 延迟注入  
 
-## 一脸懵逼？
+
+#### 延迟注入  
 
 
 
@@ -300,6 +365,8 @@ public class DependencyInjectionDemo {
 
 • 基于 Java 注解  
 
+
+
 ## Spring IoC 容器
 
 BeanFactory 和 ApplicationContext 谁才是 Spring IoC 容器
@@ -319,11 +386,28 @@ https://docs.spring.io/spring/docs/5.2.2.RELEASE/spring-framework-reference/core
 
 ## 使用 Spring IoC 容器
 
-### BeanFactory 是 Spring 底层 IoC 容器
+BeanFactory 是 Spring 底层 IoC 容器
+
+ApplicationContext 是具备应用特性的 BeanFactory 超集  
+
+总之：BeanFactory  是提供一些配置框架，并且是一个基本特性。ApplicationContext  是提供更多企业级特性的功能。ApplicationContext 是完全的一个超集，更多的特性比如说AOP 的更好的整合，国际化的支持，事务的发布等等。
+
+```java
+public abstract class AbstractRefreshableApplicationContext extends AbstractApplicationContext {
+
+	/** Bean factory for this context. */
+	@Nullable
+	private DefaultListableBeanFactory beanFactory;
+}
+```
+
+我们可以看到BeanFactory  ApplicationContext  其实是同一类事物，只不过在底层实现的时候，ApplicationContext  组合了一个BeanFactory  的实现，所以毕竟是两个对象，不是一个对象。尽管复用了同一个BeanFactory 接口。
+
+**如果你得到ApplicationContext  的时候，千万去调它的getBeanFactory()方法，去获取真正底层的实现。**
+
+![1696077456179](spring编程思想.assets/1696077456179.png)
 
 
-
-### ApplicationContext 是具备应用特性的 BeanFactory 超集  
 
 ### 使用BeanFactory
 
@@ -408,7 +492,21 @@ public class AnnotationApplicationContextAsIoCContainerDemo {
 
 ### 停止  
 
+
+
 ## 面试题精选
+
+**什么是 Spring IoC 容器？**
+
+Spring Framework 实现了控制反转 (IoC) 原则。IoC 也称为依赖注入 (DI)。在这个过程中，对象仅通过构造函数参数、工厂方法参数或对象实例构造或从工厂方法返回后设置的属性来定义其依赖关系（即与之协同工作的其他对象）。 然后，容器会在创建 Bean 时注入这些依赖关系。
+
+
+
+**BeanFactory 与 FactoryBean？**
+BeanFactory 是 IoC 底层容器
+FactoryBean 是 创建 Bean 的一种方式，帮助实现复杂的初始化逻辑
+
+
 
 
 
@@ -416,9 +514,9 @@ public class AnnotationApplicationContextAsIoCContainerDemo {
 
 ## 定义 Spring Bean
 
-### 什么是 BeanDefinition？
+什么是 BeanDefinition？
 
-BeanDefinition 是 Spring Framework 中定义 Bean 的配置元信息接口， 包含：
+BeanDefinition 是 Spring Framework 中定义 Bean 的**配置元信息接口**， 包含：
 	• Bean 的类名
 	• Bean 行为配置元素， 如作用域、 自动绑定的模式， 生命周期回调等
 	• 其他 Bean 引用， 又可称作合作者（ collaborators） 或者依赖（ dependencies）
@@ -426,7 +524,7 @@ BeanDefinition 是 Spring Framework 中定义 Bean 的配置元信息接口， �
 
 ## BeanDefinition 元信息
 
-### BeanDefinition 元信息  
+- BeanDefinition 元信息  
 
 | 属性（ Property）        | 说明                                            |
 | ------------------------ | ----------------------------------------------- |
@@ -440,11 +538,11 @@ BeanDefinition 是 Spring Framework 中定义 Bean 的配置元信息接口， �
 | Initialization method    | Bean 初始化回调方法名称                         |
 | Destruction method       | Bean 销毁回调方法名称                           |
 
-### BeanDefinition 构建
+- BeanDefinition 构建
+  - 通过 BeanDefinitionBuilder
+  - 通过 AbstractBeanDefinition 以及派生类  
 
-#### 通过 BeanDefinitionBuilder
 
-#### 通过 AbstractBeanDefinition 以及派生类  
 
 ```java
 public class BeanDefinitionCreationDemo {
@@ -479,21 +577,30 @@ public class BeanDefinitionCreationDemo {
 
 ```
 
+
+
 ## 命名 Spring Bean
 
-### Bean 的名称
-
-每个 Bean 拥有一个或多个标识符（ identifiers） ， 这些标识符在 Bean 所在的容器必须是
-唯一的。 通常， 一个 Bean 仅有一个标识符， 如果需要额外的， 可考虑使用别名（ Alias） 来
-扩充。
-在基于 XML 的配置元信息中， 开发人员可用 id 或者 name 属性来规定 Bean 的 标识符。 通
-常 Bean 的 标识符由字母组成， 允许出现特殊字符。 如果要想引入 Bean 的别名的话， 可在
-name 属性使用半角逗号（ “ ,” ） 或分号（ “ ;” ) 来间隔。
-Bean 的 id 或 name 属性并非必须制定， 如果留空的话， 容器会为 Bean 自动生成一个唯一
-的名称。 Bean 的命名尽管没有限制， 不过官方建议采用驼峰的方式， 更符合 Java 的命名约
-定  
+- Bean 的名称
+  - 每个 Bean 拥有一个或多个标识符（ identifiers） ， 这些标识符在 Bean 所在的容器必须是
+    唯一的。 通常， 一个 Bean 仅有一个标识符， 如果需要额外的， 可考虑使用别名（ Alias） 来
+    扩充。
+  - 在基于 XML 的配置元信息中， 开发人员可用 id 或者 name 属性来规定 Bean 的 标识符。 通
+    常 Bean 的 标识符由字母组成， 允许出现特殊字符。 如果要想引入 Bean 的别名的话， 可在
+    name 属性使用半角逗号（ “ ,” ） 或分号（ “ ;” ) 来间隔。
+  - Bean 的 id 或 name 属性并非必须制定， 如果留空的话， 容器会为 Bean 自动生成一个唯一
+    的名称。 Bean 的命名尽管没有限制， 不过官方建议采用驼峰的方式， 更符合 Java 的命名约
+    定 。
 
 ## Spring Bean 的别名
+
+-  Bean 别名（Alias）的价值
+  - 复用现有的 BeanDefinition
+
+  -  更具有场景化的命名方法，比如：
+
+    <alias name="myApp-dataSource" alias="subsystemA-dataSource"/>
+    <alias name="myApp-dataSource" alias="subsystemB-dataSource"/>
 
 xml
 
@@ -525,19 +632,23 @@ public class BeanAliasDemo {
 
 ### BeanDefinition 注册
 
+
+
 #### XML 配置元信息
 
-• <bean name=” ...” ... />
-
-demo 
+```xml
+<bean name=” ...” ... />
+```
 
 略
 
+
+
 #### Java 注解配置元信息
 
-• @Bean
 
-demo
+
+**@Bean**
 
 ```java
 public class AnnotationBeanDefinitionDemo {
@@ -561,9 +672,9 @@ public class AnnotationBeanDefinitionDemo {
 }
 ```
 
-• @Component
 
-demo
+
+**@Component**
 
 ```
 public class AnnotationBeanDefinitionDemo {
@@ -578,9 +689,7 @@ public class AnnotationBeanDefinitionDemo {
 
 
 
-• @Import
-
-demo
+**@Import**
 
 ```java
 // 3. 通过 @Import 来进行导入
@@ -592,17 +701,93 @@ public class AnnotationBeanDefinitionDemo {
 
 
 
+**完整示例如下**
+
+```java
+/**
+ * 注解 BeanDefinition 示例
+ *
+ * @author <a href="mailto:mercyblitz@gmail.com">Mercy</a>
+ * @since
+ */
+// 3. 通过 @Import 来进行导入
+@Import(AnnotationBeanDefinitionDemo.Config.class)
+public class AnnotationBeanDefinitionDemo {
+
+    public static void main(String[] args) {
+        // 创建 BeanFactory 容器
+        AnnotationConfigApplicationContext applicationContext = new AnnotationConfigApplicationContext();
+        // 注册 Configuration Class（配置类）
+        applicationContext.register(AnnotationBeanDefinitionDemo.class);
+
+        // 通过 BeanDefinition 注册 API 实现
+        // 1.命名 Bean 的注册方式
+        registerUserBeanDefinition(applicationContext, "mercyblitz-user");
+        // 2. 非命名 Bean 的注册方法
+        registerUserBeanDefinition(applicationContext);
+
+        // 启动 Spring 应用上下文
+        applicationContext.refresh();
+        // 按照类型依赖查找
+        System.out.println("Config 类型的所有 Beans" + applicationContext.getBeansOfType(Config.class));
+        System.out.println("User 类型的所有 Beans" + applicationContext.getBeansOfType(User.class));
+        // 显示地关闭 Spring 应用上下文
+        applicationContext.close();
+    }
+
+    public static void registerUserBeanDefinition(BeanDefinitionRegistry registry, String beanName) {
+        BeanDefinitionBuilder beanDefinitionBuilder = genericBeanDefinition(User.class);
+        beanDefinitionBuilder
+                .addPropertyValue("id", 1L)
+                .addPropertyValue("name", "小马哥");
+
+        // 判断如果 beanName 参数存在时
+        if (StringUtils.hasText(beanName)) {
+            // 注册 BeanDefinition
+            registry.registerBeanDefinition(beanName, beanDefinitionBuilder.getBeanDefinition());
+        } else {
+            // 非命名 Bean 注册方法
+            BeanDefinitionReaderUtils.registerWithGeneratedName(beanDefinitionBuilder.getBeanDefinition(), registry);
+        }
+    }
+
+    public static void registerUserBeanDefinition(BeanDefinitionRegistry registry) {
+        registerUserBeanDefinition(registry, null);
+    }
+
+    // 2. 通过 @Component 方式
+    @Component // 定义当前类作为 Spring Bean（组件）
+    public static class Config {
+
+        // 1. 通过 @Bean 方式定义
+
+        /**
+         * 通过 Java 注解的方式，定义了一个 Bean
+         */
+        @Bean(name = {"user", "xiaomage-user"})
+        public User user() {
+            User user = new User();
+            user.setId(1L);
+            user.setName("小马哥");
+            return user;
+        }
+    }
+
+
+}
+```
+
+
+
+
+
 #### Java API 配置元信息
 
-• 命名方式： BeanDefinitionRegistry#registerBeanDefinition(String,BeanDefinition)
+**命名方式： BeanDefinitionRegistry#registerBeanDefinition(String,BeanDefinition)**
 
-• 非命名方式：
-BeanDefinitionReaderUtils#registerWithGeneratedName(AbstractBeanDefinition,BeanDe
-finitionRegistry)
-
-
-
-demo
+ **非命名方式：**
+**BeanDefinitionReaderUtils#registerWithGeneratedName(AbstractBeanDefinition,BeanDe**
+**finitionRegistry)**
 
 ```java
 public class AnnotationBeanDefinitionDemo {
@@ -652,9 +837,9 @@ public class AnnotationBeanDefinitionDemo {
 
 ```
 
-• 配置类方式： AnnotatedBeanDefinitionReader#register(Class...)  
 
-demo
+
+**配置类方式： AnnotatedBeanDefinitionReader#register(Class...)**  
 
 ```java
 public class AnnotationBeanDefinitionDemo {
@@ -672,17 +857,21 @@ public class AnnotationBeanDefinitionDemo {
 }
 ```
 
+
+
 ## 实例化 Spring Bean
 
 ### Bean 实例化（ Instantiation）
 
+
+
 #### 常规方式
 
-• 通过构造器（ 配置元信息： XML、 Java 注解和 Java API ）
+**• 通过构造器（ 配置元信息： XML、 Java 注解和 Java API ）**
 
 同上
 
-• 通过静态工厂方法（ 配置元信息： XML 和 Java API ）
+**• 通过静态工厂方法（ 配置元信息： XML 和 Java API ）**
 
 xml
 
@@ -737,7 +926,7 @@ public class BeanInstantiationDemo {
 }
 ```
 
-• 通过 Bean 工厂方法（ 配置元信息： XML和 Java API ）
+**• 通过 Bean 工厂方法（ 配置元信息： XML和 Java API ）**
 
 xml
 
@@ -762,7 +951,7 @@ public class DefaultUserFactory implements UserFactory{
 }
 ```
 
-• 通过 FactoryBean（ 配置元信息： XML、 Java 注解和 Java API ）
+**• 通过 FactoryBean（ 配置元信息： XML、 Java 注解和 Java API ）**
 
 xml
 
@@ -786,11 +975,15 @@ public class UserFactoryBean implements FactoryBean {
 }
 ```
 
+
+
 #### 特殊方式
 
-• 通过 ServiceLoaderFactoryBean（ 配置元信息： XML、 Java 注解和 Java API ）
+**• 通过 ServiceLoaderFactoryBean（ 配置元信息： XML、 Java 注解和 Java API ）**
 
-file
+
+
+META-INF/services/org.geekbang.thinking.in.spring.bean.factory.UserFactory
 
 ```
 org.geekbang.thinking.in.spring.bean.factory.DefaultUserFactory
@@ -841,7 +1034,7 @@ public class SpecialBeanInstantiationDemo {
 }
 ```
 
-• 通过 AutowireCapableBeanFactory#createBean(java.lang.Class, int, boolean)
+**• 通过 AutowireCapableBeanFactory#createBean(java.lang.Class, int, boolean)**
 
 ```java
 public class SpecialBeanInstantiationDemo {
@@ -867,13 +1060,17 @@ public class SpecialBeanInstantiationDemo {
 }
 ```
 
-• 通过 BeanDefinitionRegistry#registerBeanDefinition(String,BeanDefinition)  
+**• 通过 BeanDefinitionRegistry#registerBeanDefinition(String,BeanDefinition)**  
 
-略
+注册Sring Bean 已经讲过
+
+
 
 ## 初始化 Spring Bean
 
 ### Bean 初始化（ Initialization）
+
+
 
 #### @PostConstruct 标注方法
 
@@ -893,6 +1090,8 @@ public class DefaultUserFactory implements UserFactory, InitializingBean, Dispos
 }
 ```
 
+
+
 #### 实现 InitializingBean 接口的 afterPropertiesSet() 方法
 
 ```
@@ -910,10 +1109,13 @@ public class DefaultUserFactory implements UserFactory, InitializingBean{
 }
 ```
 
+
+
 #### 自定义初始化方法
 
-• XML 配置： <bean init-method=” init” ... />
-• Java 注解： @Bean(initMethod=” init” )
+• **XML 配置： <bean init-method=” init” ... />**
+
+• **Java 注解： @Bean(initMethod=” init” )**
 
 ```java
 @Bean(initMethod = "initUserFactory")
@@ -929,7 +1131,9 @@ public class DefaultUserFactory {
 
 ```
 
-• Java API： AbstractBeanDefinition#setInitMethodName(String )
+• **Java API： AbstractBeanDefinition#setInitMethodName(String )**
+
+
 
 ## 延迟初始化 Spring Bean
 
@@ -937,25 +1141,40 @@ Bean 延迟初始化（ Lazy Initialization）
 • XML 配置： <bean lazy-init=” true” ... />
 • Java 注解： @Lazy(true)  
 
+```java
+    @Lazy()
+    public UserFactory userFactory() {
+        return new DefaultUserFactory();
+    }
+```
+
+
+
 ## 销毁 Spring Bean
 
 #### Bean 销毁（ Destroy）
 
+
+
 ##### @PreDestroy 标注方法
 
-#### 实现 DisposableBean 接口的 destroy() 方法
 
-#### 自定义销毁方法
 
-• XML 配置： <bean destroy=” destroy” ... />
-• Java 注解： @Bean(destroy=” destroy” )
-• Java API： AbstractBeanDefinition#setDestroyMethodName(String)  
+##### 实现 DisposableBean 接口的 destroy() 方法
+
+
+
+##### 自定义销毁方法
+
+• **XML 配置： <bean destroy=” destroy” ... />**
+• **Java 注解： @Bean(destroy=” destroy” )**
+• **Java API： AbstractBeanDefinition#setDestroyMethodName(String)**  
+
+
 
 ## 垃圾回收 Spring Bean
 
 ### Bean 垃圾回收（ GC）
-
-Bean 垃圾回收（ GC）
 
 1. 关闭 Spring 容器（ 应用上下文）
 2. 执行 GC
@@ -963,9 +1182,9 @@ Bean 垃圾回收（ GC）
 
 
 
+
+
 # 第五章： Spring IoC 依赖查找
-
-
 
 ## 依赖查找的今世前生
 
@@ -1114,7 +1333,7 @@ Bean 垃圾回收（ GC）
   | 集合类型查找 | ListableBeanFactory#getBeansOfType | 是       |
   |              | ObjectProvider#stream              | 是       |
 
-
+没理解
 
 ```java
 /**
@@ -1242,8 +1461,6 @@ BeansException 子类型
 | BeanDefinitionStoreException    | 当 BeanDefinition 配置元信息非 法时          | XML 配置资源无法打开时                      |
 
 
-
-## 面试题精选
 
 
 
@@ -1714,6 +1931,8 @@ public class AutoWiringConstructorDependencyConstructorInjectionDemo {
 
 }
 ```
+
+
 
 ## 字段注入
 
