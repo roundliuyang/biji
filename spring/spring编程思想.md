@@ -2387,6 +2387,8 @@ public class QualifierAnnotationDependencyInjectionDemo {
 }
 ```
 
+
+
 ## 延迟依赖注入
 
 ### 使用 API ObjectFactory 延迟注入
@@ -2460,6 +2462,8 @@ public class LazyAnnotationDependencyInjectionDemo {
 }
 ```
 
+
+
 ## 依赖处理过程
 
 #### 基础知识
@@ -2470,9 +2474,15 @@ public class LazyAnnotationDependencyInjectionDemo {
 
 
 
+**在Spring IOC依赖处理过程中，实际上是在DefaultListableBeanFactory的resolveDependency方法里面来执行的，实际上依赖注入也是这么一个过程，只不过依赖处理是依赖注入的一个环节，就是说在注入过程中我们把这个对象的依赖来进行解析，然后再把它插入或者说通过反射的方式来调入。**
+
+> todo
+
+
+
+
+
 ## @Autowired 注入
-
-
 
 ### @Autowired 注入规则
 
@@ -2485,6 +2495,10 @@ public class LazyAnnotationDependencyInjectionDemo {
 • 元信息解析
 • 依赖查找
 • 依赖注入（ 字段、 方法）  
+
+> todo
+
+
 
 ## @Inject 注入
 
@@ -2509,6 +2523,8 @@ public class LazyAnnotationDependencyInjectionDemo {
 -  javax.annotation.PostConstruct
 -  javax.annotation.PreDestroy  
 
+> todo
+
 
 
 ## 自定义依赖注入注解
@@ -2524,9 +2540,7 @@ public class LazyAnnotationDependencyInjectionDemo {
     - InjectedElement
     - InjectionMetadata
 
-
-
-## 面试题精选
+> todo
 
 
 
@@ -2538,12 +2552,14 @@ public class LazyAnnotationDependencyInjectionDemo {
 
 ### 查找来源
 
-| 来源                          | 配置元数据                                   |
-| ----------------------------- | -------------------------------------------- |
-| Spring BeanDefinition         | <bean id="user" class="org.geekbang...User"> |
-| @Bean public User user(){...} |                                              |
-| BeanDefinitionBuilder         |                                              |
-| 单例对象                      | API 实现                                     |
+| 来源                  | 配置元数据                                   |
+| --------------------- | -------------------------------------------- |
+| Spring BeanDefinition | <bean id="user" class="org.geekbang...User"> |
+|                       | @Bean public User user(){...}                |
+|                       | BeanDefinitionBuilder                        |
+| 单例对象              | API 实现                                     |
+
+
 
 ### Spring 內建 BeanDefintion  
 
@@ -2553,6 +2569,8 @@ public class LazyAnnotationDependencyInjectionDemo {
 | org.springframework.context. annotation.internalAutowire dAnnotationProcessor | AutowiredAnnotationBeanPostPro cessor 对象 | 处理 @Autowired 以及 @Value 注解                       |
 | org.springframework.context. annotation.internalCommonAn notationProcessor | CommonAnnotationBeanPostProces sor 对象    | （ 条件激活） 处理 JSR-250 注解， 如 @PostConstruct 等 |
 | org.springframework.context. event.internalEventListener Processor | EventListenerMethodProcessor 对象          | 处理标注 @EventListener 的 Spring 事件监听方法         |
+
+
 
 ### Spring 內建单例对象
 
@@ -2565,17 +2583,25 @@ public class LazyAnnotationDependencyInjectionDemo {
 | lifecycleProcessor          | LifecycleProcessor 对象           | Lifecycle Bean 处理器   |
 | applicationEventMulticaster | ApplicationEventMulticaster 对 象 | Spring 事件广播器       |
 
+
+
 ## 依赖注入的来源
 
 ### 注入来源  
 
-| 来源                          | 配置元数据                                   |
-| ----------------------------- | -------------------------------------------- |
-| Spring BeanDefinition         | <bean id="user" class="org.geekbang...User"> |
-| @Bean public User user(){...} |                                              |
-| BeanDefinitionBuilder         |                                              |
-| 单例对象                      | API 实现                                     |
-| 非 Spring 容器管理对象        |                                              |
+| 来源                   | 配置元数据                                   |
+| ---------------------- | -------------------------------------------- |
+| Spring BeanDefinition  | <bean id="user" class="org.geekbang...User"> |
+|                        | @Bean public User user(){...}                |
+|                        | BeanDefinitionBuilder                        |
+| 单例对象               | API 实现                                     |
+| 非 Spring 容器管理对象 |                                              |
+
+
+
+**Spring 依赖注入的来源比依赖查找会多一项，就是所谓的非Spring管理对象，那么对象可以通过API的方式来注册，默认情况下面Spring 它注入了四个对象，那么这四个对象其中有三个是相等的，就包括BeanFactory,ApplicationContext,ResourceLoader,以及ApplicationEventPublisher 四个对象。四个对象也可以在代码里依次通过@Autowired 方式来进行注入，当然你可以通过ObjectProvider 的方式来进行注入，都是可以的。**
+
+
 
 ## Spring容器管理和游离对象
 
@@ -2587,46 +2613,56 @@ public class LazyAnnotationDependencyInjectionDemo {
 | 单体对象              | 是               | 否           | 无         | 依赖查找、 依赖注入 |
 | Resolvable Dependency | 否               | 否           | 无         | 依赖注入            |
 
+
+
 ## Spring BeanDefinition 作为依赖来源
 
-要素
-• 元数据： BeanDefinition
-• 注册： BeanDefinitionRegistry#registerBeanDefinition
-• 类型： 延迟和非延迟
-• 顺序： Bean 生命周期顺序按照注册顺序  
+- 要素
+  -  元数据： BeanDefinition
+  - 注册： BeanDefinitionRegistry#registerBeanDefinition
+  -  类型： 延迟和非延迟
+  - 顺序： Bean 生命周期顺序按照注册顺序  
+
+
 
 ## 单例对象作为依赖来源
 
-要素
-• 来源： 外部普通 Java 对象（ 不一定是 POJO）
-• 注册： SingletonBeanRegistry#registerSingleton
-• 限制
-• 无生命周期管理
-• 无法实现延迟初始化 Bean  
+- 要素
+
+  - 来源： 外部普通 Java 对象（ 不一定是 POJO）
+  -  注册： SingletonBeanRegistry#registerSingleton
+
+-  限制
+
+  - 无生命周期管理
+  -  无法实现延迟初始化 Bean  
+
+  
 
 ## 非 Spring 容器管理对象作为依赖来源
 
-### 要素
+- 要素
 
-• 注册： ConfigurableListableBeanFactory#registerResolvableDependency
+  -  注册： ConfigurableListableBeanFactory#registerResolvableDependency
 
-### 限制
+- 限制
 
-• 无生命周期管理
-• 无法实现延迟初始化 Bean
-• 无法通过依赖查找  
+  - 无生命周期管理
+  - 无法实现延迟初始化 Bean
+  - 无法通过依赖查找  
+
+  
 
 ## 外部化配置作为依赖来源
 
-### 要素
+- 要素
+  -  类型： 非常规 Spring 对象依赖来源
+- 限制
+  - 无生命周期管理 
+  - 无法实现延迟初始化 Bean
+  - 无法通过依赖查找  
 
-• 类型： 非常规 Spring 对象依赖来源
 
-### 限制
-
-• 无生命周期管理 
-• 无法实现延迟初始化 Bean
-• 无法通过依赖查找  
 
 ```java
 /**
@@ -2671,7 +2707,9 @@ public class ExternalConfigurationDependencySourceDemo {
 }
 ```
 
-## 面试题精选
+
+
+
 
 
 
@@ -2688,6 +2726,8 @@ public class ExternalConfigurationDependencySourceDemo {
 | request     | 将 Spring Bean 存储在 ServletRequest 上下文中               |
 | session     | 将 Spring Bean 存储在 HttpSession 中                        |
 | application | 将 Spring Bean 存储在 ServletContext 中                     |
+
+
 
 ## "singleton" Bean作用域
 
@@ -2980,21 +3020,81 @@ public class User implements BeanNameAware {
 }
 ```
 
+
+
 ## "request" Bean作用域
 
-?
+
+
+- **配置**
+  - XML - <bean class="..." scope = “request" />
+  - Java 注解 - @RequestScope 或 @Scope(WebApplicationContext.SCOPE_REQUEST)Java 注解 - @RequestScope 或 @Scope(WebApplicationContext.SCOPE_REQUEST)
+- **实现**
+  - API - RequestScope
+
+
 
 ## "session" Bean作用域
 
 
 
+- 配置
+
+  - XML - <bean class="..." scope = “session" />
+  - Java 注解 - @SessionScope 或 @Scope(WebApplicationContext.SCOPE_SESSION)
+
+- 实现
+
+  - API - SessionScope
+
+  
+
 ## "application" Bean作用域
+
+
+
+- 配置
+  - XML - <bean class="..." scope = “application" />
+  - Java 注解 - @ApplicationScope 或 @Scope(WebApplicationContext.SCOPE_APPLICATION)
+- 实现
+  - API - ServletContextScope
+
+
 
 ## 自定义Bean作用域
 
+
+
+- 实现 Scope
+
+  - org.springframework.beans.factory.config.Scope
+
+- 注册 Scope
+
+  - API - org.springframework.beans.factory.config.ConfigurableBeanFactory#registerScope
+
+  - 配置
+
+    ```XML
+    <bean class="org.springframework.beans.factory.config.CustomScopeConfigurer">
+     	<property name="scopes">
+     		<map>
+    			 <entry key="...">
+     			</entry>
+     		</map>
+     	</property>
+     </bean>
+    ```
+
+    
+
 ## 课外资料
 
-## 面试题精选
+
+
+Spring Cloud RefreshScope是如何控制Bean的动态刷新？
+
+
 
 
 
