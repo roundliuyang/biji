@@ -4116,29 +4116,35 @@ BeanFactory 的默认实现为 DefaultListableBeanFactory， 其中 Bean生命�
 
 ## Spring 配置元信息
 
-### 配置元信息
+ 
 
-#### • Spring Bean 配置元信息 - BeanDefinition 
+- 配置元信息
+  - Spring Bean 配置元信息 - BeanDefinition 
+  -  Spring Bean 属性元信息 - PropertyValues
+  -  Spring 容器配置元信息
+  -  Spring 外部化配置元信息 - PropertySource
+  - Spring Profile 元信息 - @Profile  
 
-#### • Spring Bean 属性元信息 - PropertyValues
 
-#### • Spring 容器配置元信息
-
-#### • Spring 外部化配置元信息 - PropertySource
-
-#### • Spring Profile 元信息 - @Profile  
 
 ## Spring Bean 配置元信息
 
-### Bean 配置元信息 - BeanDefinition
 
-### • GenericBeanDefinition： 通用型 BeanDefinition
 
-### • RootBeanDefinition： 无 Parent 的 BeanDefinition 或者合并后 BeanDefinition
+- Bean 配置元信息 - BeanDefinition
+  -  GenericBeanDefinition： 通用型 BeanDefinition
+  - RootBeanDefinition： 无 Parent 的 BeanDefinition 或者合并后 BeanDefinition
+  - AnnotatedBeanDefinition： 注解标注的 BeanDefinition  
 
-#### • AnnotatedBeanDefinition： 注解标注的 BeanDefinition  
+
 
 ## Spring Bean 属性元信息
+
+- Bean 属性元信息 - PropertyValues
+  - 可修改实现 - MutablePropertyValues
+  - 元素成员 - PropertyValue
+- Bean 属性上下文存储 - AttributeAccessor 
+- Bean 元信息元素 - BeanMetadataElement
 
 ```java
 /**
@@ -4190,7 +4196,11 @@ public class BeanConfigurationMetadataDemo {
 }
 ```
 
+
+
 ## Spring 容器配置元信息
+
+
 
 ### Spring XML 配置元信息 - beans 元素相关
 
@@ -4204,6 +4214,8 @@ public class BeanConfigurationMetadataDemo {
 | default-init-method         | null（ 留空） | 默认 Spring Beans 自定义初始化方法                           |
 | default-destroy-method      | null（ 留空） | 默认 Spring Beans 自定义销毁方法                             |
 
+
+
 ### Spring XML 配置元信息 - 应用上下文相关
 
 | XML 元素                         | 使用场景                               |
@@ -4216,7 +4228,15 @@ public class BeanConfigurationMetadataDemo {
 | <context:property-placeholder /> | 加载外部化配置资源作为 Spring 属性配置 |
 | <context:property-override />    | 利用外部化配置资源覆盖 Spring 属性值   |
 
+
+
 ## 基于XML文件装载Spring Bean配置元信息
+
+
+
+Spring Bean 配置元信息
+
+![1696260233075](spring编程思想.assets/1696260233075.png)
 
 ```xml
 <!-- 普通 beanDefinition GenericBeanDefinition -->
@@ -4230,13 +4250,47 @@ public class BeanConfigurationMetadataDemo {
 
 ![image-20210814185247574](spring编程思想.assets/image-20210814185247574.png)
 
+
+
 ## 基于Properties文件装载Spring Bean配置元信息
 
-//
+![1696261757902](spring编程思想.assets/1696261757902.png)
+
+```java
+/**
+ * {@link PropertiesBeanDefinitionReader} 示例
+ *
+ * @author <a href="mailto:mercyblitz@gmail.com">Mercy</a>
+ * @since
+ */
+public class PropertiesBeanDefinitionReaderDemo {
+
+    public static void main(String[] args) {
+        // 创建 IoC 底层容器
+        DefaultListableBeanFactory beanFactory = new DefaultListableBeanFactory();
+        // 创建面向 Properties 资源的 BeanDefinitionReader 示例
+        PropertiesBeanDefinitionReader beanDefinitionReader = new PropertiesBeanDefinitionReader(beanFactory);
+        // Properties 资源加载默认通过 ISO-8859-1，实际存储 UTF-8
+        ResourceLoader resourceLoader = new DefaultResourceLoader();
+        // 通过指定的 ClassPath 获取 Resource 对象
+        Resource resource = resourceLoader.getResource("classpath:/META-INF/user-bean-definitions.properties");
+        // 转换成带有字符编码 EncodedResource 对象
+        EncodedResource encodedResource = new EncodedResource(resource, "UTF-8");
+        int beanDefinitionsCount = beanDefinitionReader.loadBeanDefinitions(encodedResource);
+        System.out.println(String.format("已记载 %d 个 BeanDefinition\n", beanDefinitionsCount));
+        // 通过依赖查找获取 User Bean
+        User user = beanFactory.getBean("user", User.class);
+        System.out.println(user);
+    }
+}
+
+```
 
 
 
 ## 基于Java注解装载Spring Bean配置元信息
+
+
 
 ### Spring 模式注解  
 
@@ -4259,12 +4313,14 @@ public class BeanConfigurationMetadataDemo {
 | @Role       | 替换 XML 元素 <bean role="..." />               | 3.1      |
 | @Lookup     | 替代 XML 属性 <bean lookup-method="...">        | 4.1      |
 
+
+
 ### Spring Bean 依赖注入注解  
 
-| pring 注解 | 场景说明                             | 起始版本 |
-| ---------- | ------------------------------------ | -------- |
-| @Autowired | Bean 依赖注入， 支持多种依赖查找方式 | 2.5      |
-| @Qualifier | 细粒度的 @Autowired 依赖查找         | 2.5      |
+| Spring 注解 | 场景说明                             | 起始版本 |
+| ----------- | ------------------------------------ | -------- |
+| @Autowired  | Bean 依赖注入， 支持多种依赖查找方式 | 2.5      |
+| @Qualifier  | 细粒度的 @Autowired 依赖查找         | 2.5      |
 
 
 
@@ -4273,12 +4329,16 @@ public class BeanConfigurationMetadataDemo {
 | @Resource | 类似于 @Autowired | 2.5      |
 | @Inject   | 类似于 @Autowired | 2.5      |
 
+
+
 ### Spring Bean 条件装配注解  
 
 | Spring 注解  | 场景说明       | 起始版本 |
 | ------------ | -------------- | -------- |
 | @Profile     | 配置化条件装配 | 3.1      |
 | @Conditional | 编程条件装配   | 4.0      |
+
+
 
 ### Spring Bean 生命周期回调注解  
 
@@ -4287,9 +4347,13 @@ public class BeanConfigurationMetadataDemo {
 | @PostConstruct | 替换 XML 元素 <bean init-method="..." /> 或 InitializingBean | 2.5      |
 | @PreDestroy    | 替换 XML 元素 <bean destroy-method="..." /> 或 DisposableBean | 2.5      |
 
+
+
 ## Spring Bean 配置元信息底层实现
 
-### Spring BeanDefinition 解析与注册  
+
+
+**Spring BeanDefinition 解析与注册**  
 
 | 实现场景        | 实现类                         | 起始版本 |
 | --------------- | ------------------------------ | -------- |
@@ -4297,34 +4361,28 @@ public class BeanConfigurationMetadataDemo {
 | Properties 资源 | PropertiesBeanDefinitionReader | 1.0      |
 | Java 注解       | AnnotatedBeanDefinitionReader  | 3.0      |
 
-### Spring XML 资源 BeanDefinition 解析与注册  
-
-#### 核心 API - XmlBeanDefinitionReader
-
-##### • 资源 - Resource
-
-##### • 底层 - BeanDefinitionDocumentReader
-
-​	• XML 解析 - Java DOM Level 3 API
-​	• BeanDefinition 解析 - BeanDefinitionParserDelegate
-​	• BeanDefinition 注册 - BeanDefinitionRegistry  
-
-### Spring Properties 资源 BeanDefinition 解析与注册
-
-#### • 核心 API - PropertiesBeanDefinitionReader
-
-##### • 资源
-
-​	• 字节流 - Resource
-​	• 字符流 - EncodedResouce
-
-##### • 底层
-
-​	• 存储 - java.util.Properties
-​	• BeanDefinition 解析 - API 内部实现
-​	• BeanDefinition 注册 - BeanDefinitionRegistry  
+- Spring XML 资源 BeanDefinition 解析与注册  
+  - 核心 API - XmlBeanDefinitionReader
+    - 资源 - Resource
+    - 底层 - BeanDefinitionDocumentReader
+      - XML 解析 - Java DOM Level 3 API
+      - BeanDefinition 解析 - BeanDefinitionParserDelegate
+      - BeanDefinition 注册 - BeanDefinitionRegistry  
+- Spring Properties 资源 BeanDefinition 解析与注册
+  -  核心 API - PropertiesBeanDefinitionReader
+    - 资源
+      - 字节流 - Resource
+      - 字符流 - EncodedResouce
+    - 底层
+      - 存储 - java.util.Properties
+      - BeanDefinition 解析 - API 内部实现
+      - BeanDefinition 注册 - BeanDefinitionRegistry  
 
 ![image-20210814225728332](spring编程思想.assets/image-20210814225728332.png)
+
+
+
+
 
 ## 基于XML文件装载 Spring IoC 容器配置元信息
 
@@ -4339,6 +4397,12 @@ public class BeanConfigurationMetadataDemo {
 | util     | spring-beans   | https://www.springframework.org/schema/util/spring-util.xsd  |
 | tool     | spring-beans   | https://www.springframework.org/schema/tool/spring-tool.xsd  |
 
+
+
+
+
+## 基于Java注解装载 Spring IoC 容器配置元信息
+
 ### Spring IoC 容器装配注解  
 
 | Spring 注解     | 场景说明                                    | 起始版本 |
@@ -4347,8 +4411,6 @@ public class BeanConfigurationMetadataDemo {
 | @Import         | 导入 Configuration Class                    | 3.0      |
 | @ComponentScan  | 扫描指定 package 下标注 Spring 模式注解的类 | 3.1      |
 
-## 基于Java注解装载 Spring IoC 容器配置元信息
-
 ### Spring IoC 配属属性注解  
 
 | Spring 注解      | 场景说明                         | 起始版本 |
@@ -4356,42 +4418,59 @@ public class BeanConfigurationMetadataDemo {
 | @PropertySource  | 配置属性抽象 PropertySource 注解 | 3.1      |
 | @PropertySources | @PropertySource 集合注解         | 4.0      |
 
+
+
 ## 基于 Extensible XML authoring 扩展SpringXML元素
 
-### Spring XML 扩展
-
-• 编写 XML Schema 文件： 定义 XML 结构
-• 自定义 NamespaceHandler 实现： 命名空间绑定
-• 自定义 BeanDefinitionParser 实现： XML 元素与 BeanDefinition 解析
-• 注册 XML 扩展： 命名空间与 XML Schema 映射  
+- Spring XML 扩展
+  -  编写 XML Schema 文件： 定义 XML 结构
+  - 自定义 NamespaceHandler 实现： 命名空间绑定
+  - 自定义 BeanDefinitionParser 实现： XML 元素与 BeanDefinition 解析
+  - 注册 XML 扩展： 命名空间与 XML Schema 映射  
 
 ## Extensible XML authoring扩展原理
 
 ![image-20210815015151324](spring编程思想.assets/image-20210815015151324.png)
 
+![image-20210815015214680](spring编程思想.assets/image-20210815015214680.png)
+
 ## 基于Properties文件装载外部化配置
 
-![image-20210815015214680](spring编程思想.assets/image-20210815015214680.png)
+
+
+- 注解驱动
+  - @org.springframework.context.annotation.PropertySource
+  - @org.springframework.context.annotation.PropertySources
+- API 编程
+  - org.springframework.core.env.PropertySource
+  - org.springframework.core.env.PropertySources
+
+
 
 ## 基于YAML文件装载外部化配置
 
-![image-20210815015233974](spring编程思想.assets/image-20210815015233974.png)
+- API 编程
 
-## 面试题
+  - org.springframework.beans.factory.config.YamlProcessor
+    - org.springframework.beans.factory.config.YamlMapFactoryBean
+    - org.springframework.beans.factory.config.YamlPropertiesFactoryBean
+
+  
 
 
 
-# 第十一章： Spring 资源管理
+
 
 # 第十一章： Spring 资源管理  
 
+
+
 ## 引入动机
 
-### • 为什么 Spring 不使用 Java 标准资源管理， 而选择重新发明轮子？
-
-• Java 标准资源管理强大， 然而扩展复杂， 资源存储方式并不统一
-• Spring 要自立门户（ 重要的话， 要讲三遍）
-• Spring “ 抄” 、 “ 超” 和 “ 潮  
+- 为什么 Spring 不使用 Java 标准资源管理， 而选择重新发明轮子？
+- Java 标准资源管理强大， 然而扩展复杂， 资源存储方式并不统一
+- Spring 要自立门户（ 重要的话， 要讲三遍）
+- Spring “ 抄” 、 “ 超” 和 “ 潮  
 
 
 
@@ -4419,31 +4498,35 @@ public class BeanConfigurationMetadataDemo {
 | 编码资源   | org.springframework.core.io.support.EncodedResource |
 | 上下文资源 | org.springframework.core.io.ContextResource         |
 
+
+
 ## Spring 内建 Resource 实现
 
 ### 內建实现
 
 | 资源来源       | 资源协议       | 实现类                                                       |
 | -------------- | -------------- | ------------------------------------------------------------ |
-| Bean 定义      | 无             | org.springframework.beans.factory.support.BeanDefinit ionResource |
+| Bean 定义      | 无             | org.springframework.beans.factory.support.BeanDefinitionResource |
 | 数组           | 无             | org.springframework.core.io.ByteArrayResource                |
 | 类路径         | classpath:/    | org.springframework.core.io.ClassPathResource                |
 | 文件系统       | file:/         | org.springframework.core.io.FileSystemResource               |
 | URL            | URL 支持的协议 | org.springframework.core.io.UrlResource                      |
 | ServletContext | 无             | org.springframework.web.context.support.ServletContex tResource |
 
+
+
 ## Spring Resource 接口扩展
 
-### 可写资源接口
+- 可写资源接口
+  - org.springframework.core.io.WritableResource
+    - org.springframework.core.io.FileSystemResource
+    - org.springframework.core.io.FileUrlResource（ @since 5.0.2）
+    - org.springframework.core.io.PathResource（ @since 4.0 & @Deprecated）
 
-• org.springframework.core.io.WritableResource
-• org.springframework.core.io.FileSystemResource
-• org.springframework.core.io.FileUrlResource（ @since 5.0.2）
-• org.springframework.core.io.PathResource（ @since 4.0 & @Deprecated）
+- 编码资源接口
+  - org.springframework.core.io.support.EncodedResource  
 
-### 编码资源接口
 
-• org.springframework.core.io.support.EncodedResource  
 
 ## Spring 资源加载器
 
@@ -4459,10 +4542,14 @@ public class BeanConfigurationMetadataDemo {
 
 ## 依赖注入Spring Resource
 
-### 基于 @Value 实现
+- 基于 @Value 实现
 
-	@Value(“ classpath:/...” )
-	private Resource resource;  
+  - 如：
+
+    @Value(“ classpath:/...” )
+    private Resource resource;  
+
+
 
 ```java
 /**
@@ -4509,6 +4596,8 @@ public class InjectingResourceDemo {
 ```
 
 ![image-20210826015014420](spring编程思想.assets/image-20210826015014420.png)
+
+
 
 ## 依赖注入 ResourceLoader
 
@@ -4562,7 +4651,123 @@ public class InjectingResourceLoaderDemo implements ResourceLoaderAware {
 }
 ```
 
-## 面试题精
+
+
+
+
+# 第十二章： Spring 国际化
+
+
+
+## Spring 国际化使用场景
+
+
+
+- 普通国际化文案 
+-  Bean Validation 校验国际化文案 
+- Web 站点页面渲染 
+- Web MVC 错误消息提示
+
+
+
+## Spring 国际化接口
+
+
+
+- 核心接口
+  - org.springframework.context.MessageSource
+- 主要概念
+  - 文案模板编码（code）
+  - 文案模板参数（args）
+  - 区域（Locale）
+
+
+
+## 层次性 MessageSource
+
+
+
+- Spring 层次性接口回顾
+  - org.springframework.beans.factory.HierarchicalBeanFactory
+  - org.springframework.context.ApplicationContext
+  - org.springframework.beans.factory.config.BeanDefinition
+- Spring 层次性国际化接口
+  - org.springframework.context.HierarchicalMessageSource
+
+
+
+## Java 国际化标准实现
+
+
+
+- 核心接口
+  - 抽象实现 - java.util.ResourceBundle
+  - Properties 资源实现 - java.util.PropertyResourceBundle
+  - 例举实现 - java.util.ListResourceBundle
+- ResourceBundle 核心特性
+  - Key-Value 设计
+  - 层次性设计
+  - 缓存设计
+  - 字符编码控制 - java.util.ResourceBundle.Control（@since 1.6）
+  - Control SPI 扩展 - java.util.spi.ResourceBundleControlProvider（@since 1.8）
+
+
+
+## Java 文本格式化
+
+
+
+- 核心接口
+  - java.text.MessageFormat
+- 基本用法
+  - 设置消息格式模式- new MessageFormat(...)
+  - 格式化 - format(new Object[]{...})
+- 消息格式模式
+  - 格式元素：{ArgumentIndex (,FormatType,(FormatStyle))}
+  - FormatType：消息格式类型，可选项，每种类型在 number、date、time 和 choice 类型选其一
+  - FormatStyle：消息格式风格，可选项，包括：short、medium、long、full、integer、currency、
+    percent
+- 高级特性
+  - 重置消息格式模式
+  - 重置 java.util.Locale
+  - 重置 java.text.Format
+
+
+
+
+
+## MessageSource 开箱即用实现
+
+
+
+- 基于 ResourceBundle + MessageFormat 组合 MessageSource 实现
+  - org.springframework.context.support.ResourceBundleMessageSource
+- 可重载 Properties + MessageFormat 组合 MessageSource 实现
+  - org.springframework.context.support.ReloadableResourceBundleMessageSource
+
+
+
+## MessageSource 內建依赖
+
+
+
+- MessageSource 內建 Bean 可能来源
+  - 预注册 Bean 名称为：“messageSource”，类型为：MessageSource Bean
+  - 默认內建实现 - DelegatingMessageSource
+    - 层次性查找 MessageSource 对象
+
+
+
+## 课外资料
+
+
+
+- Spring Boot 为什么要新建 MessageSource Bean？
+  - AbstractApplicationContext 的实现决定了 MessageSource 內建实现
+  - Spring Boot 通过外部化配置简化 MessageSource Bean 构建
+  - Spring Boot 基于 Bean Validation 校验非常普遍
+
+
 
 
 
@@ -4570,46 +4775,58 @@ public class InjectingResourceLoaderDemo implements ResourceLoaderAware {
 
 ## Spring 校验使用场景
 
-• Spring 常规校验（ Validator）
-• Spring 数据绑定（ DataBinder）
-• Spring Web 参数绑定（ WebDataBinder）
-• Spring WebMVC/WebFlux 处理方法参数校验  
+
+
+- Spring 常规校验（ Validator）
+- Spring 数据绑定（ DataBinder）
+- Spring Web 参数绑定（ WebDataBinder）
+- Spring WebMVC/WebFlux 处理方法参数校验  
+
+
 
 ## Validator 接口设计
 
-![image-20210815182749393](spring编程思想.assets/image-20210815182749393.png)
+![image-20210815182749393](spring编程思想.assets/image-20210815182749393.png)    	                     •   Validator 工具类：org.springframework.validation.ValidationUtils
+
+
 
 ## Errors 接口设计
 
-### • 接口职责
+-  接口职责
+  - 数据绑定和校验错误收集接口， 与 Java Bean 和其属性有强关联性
+- 核心方法
+  - reject 方法（ 重载） ： 收集错误文案
+  -  rejectValue 方法（ 重载） ： 收集对象字段中的错误文案
+- 配套组件
+  - Java Bean 错误描述： org.springframework.validation.ObjectError
+  - Java Bean 属性错误描述： org.springframework.validation.FieldError  
 
-• 数据绑定和校验错误收集接口， 与 Java Bean 和其属性有强关联性
 
-### • 核心方法
-
-• reject 方法（ 重载） ： 收集错误文案
-• rejectValue 方法（ 重载） ： 收集对象字段中的错误文案
-
-### • 配套组件
-
-• Java Bean 错误描述： org.springframework.validation.ObjectError
-• Java Bean 属性错误描述： org.springframework.validation.FieldError  
 
 ## Errors 文案来源
 
-### • Errors 文案生成步骤
 
-• 选择 Errors 实现（ 如： org.springframework.validation.BeanPropertyBindingResult）
-• 调用 reject 或 rejectValue 方法
-• 获取 Errors 对象中 ObjectError 或 FieldError
-• 将 ObjectError 或 FieldError 中的 code 和 args， 关联 MessageSource 实现（ 如：
-ResourceBundleMessageSource）  
+
+- Errors 文案生成步骤
+  - 选择 Errors 实现（ 如： org.springframework.validation.BeanPropertyBindingResult）
+  - 调用 reject 或 rejectValue 方法
+  - 获取 Errors 对象中 ObjectError 或 FieldError
+  - 将 ObjectError 或 FieldError 中的 code 和 args， 关联 MessageSource 实现（ 如：ResourceBundleMessageSource）  
+    
 
 ## 自定义 Validator
 
 ![image-20210815191408610](spring编程思想.assets/image-20210815191408610.png)
 
 ## Validator 的救赎
+
+- Bean Validation 与 Validator 适配
+
+  - 核心组件 - org.springframework.validation.beanvalidation.LocalValidatorFactoryBean
+  - 依赖 Bean Validation - JSR-303 or JSR-349 provider
+  - Bean 方法参数校验 - org.springframework.validation.beanvalidation.MethodValidationPostProcessor
+
+  
 
 ## 面试题精选
 
