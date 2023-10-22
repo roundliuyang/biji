@@ -1291,6 +1291,29 @@ supervisor> restart viking  # 交互式可以 tab 补全服务名称
 
 ### 网络管理
 
+
+
+#### nc 
+
+1. 打开终端或命令行界面。
+
+2. 使用 `nc` 连接到目标服务器的HTTP端口（通常是80）。在命令行中输入以下命令：
+
+   ```shell
+   nc cmsservice.test.mycool.tv 80
+   ```
+
+3. 在一次粘贴中输入整个HTTP GET请求，包括请求行和请求头，然后按Enter键。你可以在文本编辑器中将请求复制并粘贴到终端中，确保包括以下内容：
+
+   ```shell
+   GET /cmsservice/main/getitemstruct?deviceSerial=0XCV3TYNA00027X&hotelId=83&langId=1 HTTP/1.1
+   Host: cmsservice.test.mycool.tv
+   ```
+
+
+
+
+
 网络状态查看工具
 
 ![1656689342813](Linux基础.assets/1656689342813.png)
