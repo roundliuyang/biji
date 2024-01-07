@@ -1666,3 +1666,228 @@ public Object aroundAdvice(ProceedingJoinPoint pjp) {
   - 实现 - 
     org.springframework.aop.aspectj.annotation.BeanFactoryAspectJAdvisorsBuilder
 
+
+
+## **原型模式（Prototype）实现**
+
+
+
+- 基本概念
+
+  创建型模式的一种，其特点在于通过复制一个已经存在的实例来返回新的实例，而不是新建实例。被复制的实例就是我们所称的**[原型]**，这个原型是可定制的。
+
+  原型模式多用于创建复杂的或者耗时的实例，因为这种情况下，复制一个已经存在的实例使程序运行更高效；或者创建值相等，只是命名不一样的同类数据。
+
+- Spring AOP 举例实现
+
+  - 实现 - org.springframework.aop.target.PrototypeTargetSource
+
+
+
+## **单例模式（Singleton）实现**
+
+
+
+- 基本概念
+
+  属于创建模式的一种。在应用这个模式时，单例对象的类必须保证只有一个实例存在。许多时候整个系统只需要拥有一个全局对象，这样有利于我们协调系统系统整体的行为。比如在某个服务器程序中，该服务器的配置信息存放在一个文件中，这些配置数据由一个单例对象同一读取，然后服务进程中的其他对象再通过这个单例对象获取这些配置信息。这种方式简化了在复杂环境下的配置管理。
+
+- Spring AOP 举例实现
+
+  - 实现 - org.springframework.aop.target.SingletonTargetSource
+
+
+
+## **适配器模式（Adapter）实现**
+
+
+
+- 基本概念
+
+  有时候也称包装样式或者包装（英语：wrapper）。将一个类的接口转接成用户所期待的。一个适配使得因接口不兼容而不能在一起工作的类能在一起工作，做法是将类自己的接口包裹在一个已存在的类中。
+
+- Spring AOP 举例实现
+
+  - 实现 - org.springframework.aop.framework.adapter.AdvisorAdapter
+  - 适配对象 - org.aopalliance.aop.Advice
+  - 目标对象 - org.aopalliance.intercept.MethodInterceptor
+
+
+
+## **组合模式（Composite）实现**
+
+
+
+- 基本概念
+
+  The composite pattern describes a group of objects that are treated the same way as a single instance of the same type of object. The intent of a composite is to "compose" objects into tree structures to represent part-whole hierarchies. Implementing the composite pattern lets clients treat individual objects and compositions uniformly.
+
+- Spring AOP 举例实现
+
+  - 实现 - org.springframework.aop.support.ComposablePointcut
+
+  - 接口 - org.springframework.aop.Pointcut
+
+  - 成员 - org.springframework.aop.Pointcut
+
+    
+
+
+
+## **装饰器模式（Decorator）实现**
+
+
+
+- 基本概念
+
+  一种动态地往一个类中添加新的行为的设计模式。就功能而言，修饰模式相比生成子类更为灵活，这样可以给某个对象而不是整个类添加一些功能。
+
+- Spring AOP 举例实现
+
+  - 实现 - org.springframework.aop.aspectj.annotation.LazySingletonAspectInstanceFactoryDecor
+    ator
+
+
+
+## **享元模式（Flyweight）实现**
+
+
+
+- 基本概念
+
+  它使用物件用来尽可能减少记忆体使用量：于相似物件中分享尽可能多的资讯。当大量物件近乎重复方式存在，因而使用大量记忆体时，此法使用。通常物件中的部分状态（state）能够共享。常见做法是把它们放在资料结构外部，当需要使用时再将它们传递给享元。
+
+- Spring AOP 举例实现
+
+  - 实现 - org.springframework.aop.framework.adapter.AdvisorAdapterRegistry
+
+
+
+## **代理模式（Proxy）实现**
+
+
+
+- 基本概念
+
+  所谓的代理者是指一个类别可以作为其它东西的界面。代理者可以作任何东西的介面：网路连接、记忆体中的大物件、档案或其它昂贵或无法复制的资源。
+
+- Spring AOP 举例实现
+
+  - 实现 - org.springframework.aop.framework.AopProxy
+    - JDK - org.springframework.aop.framework.JdkDynamicAopProxy
+    - CGLIB - org.springframework.aop.framework.CglibAopProxy
+
+
+
+## **模板方法模式（Template Method）实现**
+
+
+
+- 基本概念
+
+  模板方法是一个定义在父类别的方法，在模板方法中会呼叫多个定义在父类别的其他方法，而这些方法有可能只是抽象方法并没有实作。模板方法仅决定这些抽象方法的执行顺序，这些抽象方法的实作由子类别负责，并且子类别不允许覆写模板方法。
+
+- Spring AOP 举例实现
+
+  - 模板类 - org.springframework.aop.framework.autoproxy.AbstractAutoProxyCreator
+
+  - 模板方法 - getAdvicesAndAdvisorsForBean(Class,String,TargatSource)
+
+  - 子类实现
+
+    - org.springframework.aop.framework.autoproxy.InfrastructureAdvisorAutoProxyCreator(XML)
+
+    - org.springframework.aop.aspectj.annotation.AnnotationAwareAspectJAutoProxyCreator(注解）
+
+      
+
+
+
+## **责任链模式（Chain of Responsibility）实现**
+
+
+
+- 基本概念
+
+  包含了一些命令对象和一系列的处理对象。每一个处理对象决定它能处理哪些命令对象，它也知道如何
+  将它不能处理的命令对象传递给该链中的下一个处理对象。该模式还描述了往该处理链的末尾添加新的
+  处理对象的方法。
+
+- Spring AOP 举例实现
+
+  - 接口 - org.springframework.aop.framework.AdvisorChainFactory
+  - 实现 - org.springframework.aop.framework.DefaultAdvisorChainFactory
+
+
+
+## **观察者模式（Observer）实现**
+
+
+
+- 基本概念
+
+  一个目标物件管理所有相依于它的观察者物件，并且在它本身的状态改变时主动发出通知。这通常透过呼叫各观察者所提供的方法来实现。此种模式通常被用来实时事件处理系统。
+
+- Spring AOP 举例实现
+
+  - 观察者 - org.springframework.aop.framework.ProxyCreatorSupport
+  - 被观察者 - org.springframework.aop.framework.AdvisedSupportListener
+  - 通知对象 - org.springframework.aop.framework.AdvisedSupport
+
+
+
+## **策略模式（Strategy）实现**
+
+
+
+- 基本概念
+
+  指对象有某个行为，但是在不同的场景中，该行为有不同的实现算法。比如每个人都要“交个人所得税，但是每国交个人所得税就有不同的算税方法。
+
+- Spring AOP 举例实现
+
+  - org.springframework.aop.framework.DefaultAopProxyFactory#createAopProxy
+  - org.springframework.aop.config.ConfigBeanDefinitionParser#getAdviceClass
+
+
+
+
+
+## **命令模式（Command）实现**
+
+？
+
+- 基本概念
+
+  它尝试以物件来代表实际行动。命令物件可以把行动（action） 及其参数封装起来，于是这些行动可以被：
+
+  ——重复多次
+
+  ——取消（如果该物件有实作的话）
+
+  ——取消后又再重做
+
+- Spring AOP 举例实现
+
+  - org.aopalliance.intercept.MethodInvocation
+
+  - org.aspectj.lang.ProceedingJoinPoint
+
+    
+
+## **状态模式（State）实现**
+
+
+
+- 基本概念
+
+  允许对象在内部状态发生变化时更改其行为。 这种模式接近于有限状态机的概念。 状态模式可以解释
+  为策略模式，它能够通过调用模式接口中定义的方法来切换策略。
+
+- Spring AOP 举例实现
+
+  - 状态对象 - org.springframework.aop.framework.ProxyConfig
+  - 影响对象 - org.springframework.aop.framework.AopProxy
+  - org.springframework.aop.framework.JdkDynamicAopProxy
+  - org.springframework.aop.framework.CglibAopProxy
+

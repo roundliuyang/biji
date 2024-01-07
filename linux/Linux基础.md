@@ -1201,6 +1201,22 @@ echo "Hello World" >> a.txt
 
 `more services` 分页查看 services 文件中的内容，按空格或 f 切换下一页，回车下一行,q 退出。（文件内容较多时使用）
 
+
+
+
+
+#### less 
+
+
+
+第一步:打开日志文件    less sigma.log
+第二步:定位到日志文件的最后一行:shift+g移动到最后一行
+第三步:ctrl+b往前一页一页翻页查看
+
+
+
+
+
 ### 常用服务重启命令
 
 #### service
