@@ -2,6 +2,8 @@
 
 
 
+
+
 **大纲**
 
 ![1685332972019](BFS基础知识回顾.assets/1685332972019.png)
@@ -221,3 +223,114 @@ public class 图是否是树 {
 
 
 
+# BFS进阶与最短路径算法
+
+
+
+BFS使用场景
+
+![1705148746835](BFS基础知识回顾.assets/1705148746835.png)
+
+原则：能 BFS 的别 DFS
+
+> Recursion 版本的 DFS 有 StackOverflow 的风险
+>
+> Non-Recursion 版本的 DFS 容易错+面试官未必看得懂Non-Recursion 版本的 DFS 容易错+面试官未必看得懂
+
+
+
+
+
+## BFS 通用代码模板
+
+
+
+![1705152537806](BFS基础知识回顾.assets/1705152537806.png)
+
+>层级信息 = 最短距离
+
+
+
+
+
+## 飞行棋 I (A厂)
+
+从数组的最左侧跳到最右侧，只能向右跳
+一步跳 1-6 格，有一些格子之间直接飞过去不耗费步数
+问**最少**跳**几步**
+
+
+
+### 问最少步数，可能是哪些算法？
+
+A. BFS (高概率)
+
+B. DP (次高概率)
+C. DFS (几乎没有)
+D. Shortest Path Algorithm (标准最短路面试一般不考)
+
+
+
+**BFS+BFS**
+
+```java
+    public int modernLudo(int length, int[][] connections) {
+        // 构建图
+        Map<Integer, Set<Integer>> graph = buildGraph(length, connections);
+        Queue<Integer> queue = new LinkedList<>();
+        queue.offer(1);
+        Map<Integer, Integer> distance = new HashMap<>();
+        distance.put(1, 0);
+        while (!queue.isEmpty()) {
+            int node = queue.poll();
+            int limit = Math.min(node + 7, length + 1);
+            for (int neighbor = node + 1; neighbor < limit; neighbor++) {
+                List<Integer> connectedNodes = getUnvisitedNodes(graph, distance, neighbor);
+                for (int connectedNode : connectedNodes) {
+                    distance.put(connectedNode, distance.get(node) + 1);
+                    queue.offer(connectedNode);
+                }
+            }
+        }
+
+        return distance.get(length);
+    }
+
+    private Map<Integer, Set<Integer>> buildGraph(int length, int[][] connections) {
+        HashMap<Integer, Set<Integer>> graph = new HashMap<>();
+        for (int i = 1; i <= length; i++) {
+            graph.put(i, new HashSet<Integer>());
+        }
+        for (int i = 0; i < connections.length; i++) {
+            int from = connections[i][0];
+            int to = connections[i][1];
+            graph.get(from).add(to);
+        }
+        return graph;
+    }
+
+    private List<Integer> getUnvisitedNodes(Map<Integer, Set<Integer>> graph, Map<Integer, Integer> distance, int node) {
+        List<Integer> unVisitedNodes = new ArrayList();
+        Queue<Integer> queue = new LinkedList<>();
+        queue.offer(node);
+
+        while (!queue.isEmpty()) {
+            int currentNode = queue.poll();
+            if (distance.containsKey(currentNode)) {
+                continue;
+            }
+            unVisitedNodes.add(currentNode);
+            for (int neighbor : graph.get(currentNode)) {
+                if (!distance.containsKey(neighbor)) {
+                    queue.offer(neighbor);
+                    unVisitedNodes.add(neighbor);
+                }
+            }
+        }
+        return unVisitedNodes;
+    }
+```
+
+
+
+**1:38:00**
