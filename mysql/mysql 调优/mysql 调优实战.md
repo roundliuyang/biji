@@ -56,6 +56,57 @@
 
 
 
+### possible_keys 
+
+possible_keys 字段表示可能用到的索引；
+
+
+
+### key 
+
+key 字段表示实际用的索引，如果这一项为 NULL，说明没有使用索引；
+
+
+
+### key_len
+
+key_len 表示索引的长度；
+
+
+
+### rows
+
+rows 表示扫描的数据行数。
+
+
+
+### type
+
+type 表示数据扫描类型。
+
+type 字段就是描述了找到所需数据时使用的扫描方式是什么，常见扫描类型的**执行效率从低到高的顺序为**：
+
+- All（全表扫描）；
+- index（全索引扫描）；
+- range（索引范围扫描）；
+- ref（非唯一索引扫描）；
+- eq_ref（唯一索引扫描）；
+- const（结果只有一条的主键或唯一索引扫描）。
+
+在这些情况里，all 是最坏的情况，因为采用了全表扫描的方式。index 和 all 差不多，只不过 index 对索引表进行全扫描，这样做的好处是不再需要对数据进行排序，但是开销依然很大。所以，要尽量避免全表扫描和全索引扫描。
+
+range 表示采用了索引范围扫描，一般在 where 子句中使用 < 、>、in、between 等关键词，只检索给定范围的行，属于范围查找。**从这一级别开始，索引的作用会越来越明显，因此我们需要尽量让 SQL 查询可以使用到 range 这一级别及以上的 type 访问方式**。
+
+ref 类型表示采用了非唯一索引，或者是唯一索引的非唯一性前缀，返回数据返回可能是多条。因为虽然使用了索引，但该索引列的值并不唯一，有重复。这样即使使用索引快速查找到了第一条数据，仍然不能停止，要进行目标值附近的小范围扫描。但它的好处是它并不需要扫全表，因为索引是有序的，即便有重复值，也是在一个非常小的范围内扫描。
+
+eq_ref 类型是使用主键或唯一索引时产生的访问方式，通常使用在多表联查中。比如，对两张表进行联查，关联条件是两张表的 user_id 相等，且 user_id 是唯一索引，那么使用 EXPLAIN 进行执行计划查看的时候，type 就会显示 eq_ref。
+
+const 类型表示使用了主键或者唯一索引与常量值进行比较，比如 select name from product where id=1。
+
+需要说明的是 const 类型和 eq_ref 都使用了主键或唯一索引，不过这两个类型有所区别，**const 是与常量进行比较，查询效率会更快，而 eq_ref 通常用于多表联查中**。
+
+
+
 ### Extra
 
 在 MySQL 的执行计划中，**Extra** 列是用来显示一些额外信息的。
@@ -63,6 +114,8 @@
 
 
 #### Using filesort
+
+Using filesort ：当查询语句中包含 group by 操作，而且无法利用索引完成排序操作的时候， 这时不得不选择相应的排序算法进行，甚至可能会通过文件排序，效率是很低的，所以要避免这种问题的出现。
 
 
 
@@ -108,10 +161,6 @@ max_length_for_sort_data，是 MySQL 中专门控制用于排序的行数据的�
 
 看到这里，你就了解了，MySQL 做排序是一个成本比较高的操作。那么你会问，是不是所有的 order by 都需要排序操作呢？如果不排序就能得到正确的结果，那对系统的消耗会小很多，语句的执行时间也会变得更短。
 
-
-
-#### Using index Condition
-
 其实，并不是所有的 order by 语句，都需要排序操作的。从上面分析的执行过程，我们可以看到，MySQL 之所以需要生成临时表，并且在临时表上做排序操作，**其原因是原来的数据都是无序的。**
 
 你可以设想下，如果能够保证从 city 这个索引上取出来的行，天然就是按照 name 递增排序的话，是不是就可以不用再排序了呢？
@@ -126,9 +175,19 @@ alter table t add index city_user(city, name);
 
 作为与 city 索引的对比，我们来看看这个索引的示意图。
 
-![1680330658507](mysql 调优实战.assets/1680330658507.png)
+![1680330658507](../mysql%20%E8%B0%83%E4%BC%98/mysql%20%E8%B0%83%E4%BC%98%E5%AE%9E%E6%88%98.assets/1680330658507.png)
 
 在这个索引里面，我们依然可以用树搜索的方式定位到第一个满足 city='杭州’的记录，并且额外确保了，接下来按顺序取“下一条记录”的遍历过程中，只要 city 的值是杭州，**name 的值就一定是有序的**。
+
+
+
+#### Using temporary
+
+Using temporary：使了用临时表保存中间结果，MySQL 在对查询结果排序时使用临时表，常见于排序 order by 和分组查询 group by。效率低，要避免这种问题的出现。
+
+
+
+#### Using index Condition
 
 
 
@@ -261,21 +320,21 @@ select * from t1 straight_join t2 on (t1.a=t2.a);
 
 #### 总结
 
-​        **在用explain对select语句进行执行计划分析时，我们常常会其中的Extra字段中出现Using index或Using index;Using where或Using where或Using index condition，那么这四者有什么区别呢？哪个检索的性能更好呢？**
+​        在用explain对select语句进行执行计划分析时，我们常常会其中的Extra字段中出现Using index或Using index;Using where或Using where或Using index condition，那么这四者有什么区别呢？哪个检索的性能更好呢？
 
-​        **其实顾名思义，Extra是补充说明的意思，也就是说，Extra中的值补充说明了[MySQL](https://cloud.tencent.com/product/cdb?from=20065&from_column=20065)的搜索引擎（默认为InnoDB）对当前的select语句的执行计划。因而并不是说Using index的效率就一定比Using where;Using index要好。**
+​        其实顾名思义，Extra是补充说明的意思，也就是说，Extra中的值补充说明了[MySQL](https://cloud.tencent.com/product/cdb?from=20065&from_column=20065)的搜索引擎（默认为InnoDB）对当前的select语句的执行计划。因而并不是说Using index的效率就一定比Using where;Using index要好。
 
-​        **在分别介绍以上四个值之前，我们需要知道，MySQL的架构分成了server层和存储引擎层（storage engine），server层通过调用存储引擎层来返回数据。**       
+​        在分别介绍以上四个值之前，我们需要知道，MySQL的架构分成了server层和存储引擎层（storage engine），server层通过调用存储引擎层来返回数据。       
 
-​        **其中Using index表示查询的列被索引覆盖，因而无需再回表（如果你不知道啥叫回表，请参见第3篇博客）查询，因而效率较高。例如：select id from test where id = 5;其中id为主键。**
+​        其中Using index表示查询的列被索引覆盖，因而无需再回表（如果你不知道啥叫回表，请参见第3篇博客）查询，因而效率较高。例如：select id from test where id = 5;其中id为主键。
 
-​        **Using where;Using index表示查询的列被索引覆盖，且where筛选条件是索引列前导列的一个范围，或者是索引列的非前导列，例如：select id from test where id > 5;。很明显，效率也很高。**
+​        Using where;Using index表示查询的列被索引覆盖，且where筛选条件是索引列前导列的一个范围，或者是索引列的非前导列，例如：select id from test where id > 5;。很明显，效率也很高。
 
-​        **Using where表示查询的列未被索引覆盖，且where筛选条件是索引列前导列的一个范围，或者是索引列的非前导列，或者是非索引列，例如：select * from test where id > 30; 。因为未被索引覆盖，所以需要回表，因而性能比前两者差。**
+​        Using where表示查询的列未被索引覆盖，且where筛选条件是索引列前导列的一个范围，或者是索引列的非前导列，或者是非索引列，例如：select * from test where id > 30; 。因为未被索引覆盖，所以需要回表，因而性能比前两者差。
 
-​        **Extra为null表示查询的列未被索引覆盖，且where筛选条件是索引的前导列，这意味着用到了索引，但是部分字段未被索引覆盖，必须通过“回表”来实现，因而性能也比前两者差。**
+​        Extra为null表示查询的列未被索引覆盖，且where筛选条件是索引的前导列，这意味着用到了索引，但是部分字段未被索引覆盖，必须通过“回表”来实现，因而性能也比前两者差。
 
-​        **Using index condition是MySQL 5.6中引入的一种新特性，叫做Index Condition Pushdown(ICP)，是一种在存储引擎层使用索引过滤数据的一种优化方式。这里的“下推” 是指将原来在server层进行的table filter中可以进行index filter的部分，在引擎层面使用index filter进行处理，不再需要回表进行table filter。使用ICP可以减少存储引擎层返回需要被index filter过滤掉的行记录，省去了存储引擎访问基表的次数以及MySQL[服务器](https://cloud.tencent.com/product/cvm?from=20065&from_column=20065)访问存储引擎的次数。Using index condition仅适用于二级索引，原因是ICP的目的是减少全行读取的次数，从而减少IO操作。而对于innodb聚集索引，完整的记录已被读入到innodb缓冲区，在这种情况下，ICP不会减少io，所以ICP只适用于二级索引，一般发生在查询字段无法被二级索引覆盖的场景，该场景下往往需要回表。通过ICP，可以减少存储引擎返回的行记录，从而减少了IO操作。**
+​        Using index condition是MySQL 5.6中引入的一种新特性，叫做Index Condition Pushdown(ICP)，是一种在存储引擎层使用索引过滤数据的一种优化方式。这里的“下推” 是指将原来在server层进行的table filter中可以进行index filter的部分，在引擎层面使用index filter进行处理，不再需要回表进行table filter。使用ICP可以减少存储引擎层返回需要被index filter过滤掉的行记录，省去了存储引擎访问基表的次数以及MySQL[服务器](https://cloud.tencent.com/product/cvm?from=20065&from_column=20065)访问存储引擎的次数。Using index condition仅适用于二级索引，原因是ICP的目的是减少全行读取的次数，从而减少IO操作。而对于innodb聚集索引，完整的记录已被读入到innodb缓冲区，在这种情况下，ICP不会减少io，所以ICP只适用于二级索引，一般发生在查询字段无法被二级索引覆盖的场景，该场景下往往需要回表。通过ICP，可以减少存储引擎返回的行记录，从而减少了IO操作。**
 
 
 
@@ -293,7 +352,7 @@ select * from t1 straight_join t2 on (t1.a=t2.a);
 
 
 
-### **in** **+ order by 导致排序失效**
+### ~~**in** **+ order by 导致排序失效**~~
 
 索引：
 index(col_a,col_b)
@@ -540,13 +599,12 @@ col_a和col_b都走不了索引，因为col_a在组合索引左边，但是col_a
 
 ## 5. join
 
-也就是说，BNL 算法对系统的影响主要包括三个方面：
+结论：
 
-1. 可能会多次扫描被驱动表，占用磁盘 IO 资源；
-2. 判断 join 条件需要执行 M*N 次对比（M、N 分别是两张表的行数），如果是大表就会占用非常多的 CPU 资源；
-3. 可能会导致 Buffer Pool 的热数据被淘汰，影响内存命中率。
+1. 使用 join 语句，性能比强行拆成多个单表执行 SQL 语句的性能要好；
+2. 如果使用 join 语句的话，需要让小表做驱动表。
 
-我们执行语句之前，需要通过理论分析和查看 explain 结果的方式，确认是否要使用 BNL 算法。如果确认优化器会使用 BNL 算法，就需要做优化。优化的常见做法是，给被驱动表的 join 字段加上索引，把 BNL 算法转成 BKA 算法。
+但是，你需要注意，这个结论的前提是“可以使用被驱动表的索引”。
 
 
 

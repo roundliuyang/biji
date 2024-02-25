@@ -38,6 +38,8 @@
 - 丧失了ID生成的“绝对递增性”：先访问DB 01生成0,3，再访问DB 02生成1，可能导致在非常短的时间内，ID生成不是绝对递增的（这个问题不大，目标是趋势递增，不是绝对递增
 - 数据库的写压力依然很大，每次生成ID都要访问数据库
 
+
+
 ### 方法二：单点批量ID生成服务
 
 分布式系统之所以难，很重要的原因之一是“没有一个全局时钟，难以保证绝对的时序”，要想保证绝对的时序，还是只能使用单点服务，用本地时钟保证“绝对时序”。
@@ -59,6 +61,8 @@ ID生成服务假设每次批量拉取5个ID，服务访问数据库，将当前
 
 - 服务仍然是单点
 - 如果服务挂了，服务重启起来之后，继续生成ID可能会不连续，中间出现空洞（服务内存是保存着0,1,2,3,4，数据库中max-id是4，分配到3时，服务重启了，下次会从5开始分配，3和4就成了空洞，不过这个问题也不大）
+
+
 
 ### 方法三：uuid / guid
 
@@ -102,6 +106,8 @@ ID生成服务假设每次批量拉取5个ID，服务访问数据库，将当前
 
 - 如果系统中没有Redis，还需要引入新的组件，增加系统复杂度。
 - 需要编码和配置的工作量比较大
+
+
 
 ### 方法六：Twitter 开源的 Snowflake 算法
 
@@ -286,6 +292,8 @@ Tinyid是用Java开发的一款分布式id生成系统，基于数据库号段�
 - IdGeneratorFactory是生产具体IdGenerator的工厂，每个biz_type生成一个IdGenerator实例。通过工厂，我们可以随时在db中新增biz_type，而不用重启服务
 - IdGeneratorFactory实际上有两个子类IdGeneratorFactoryServer和IdGeneratorFactoryClient，区别在于，getNextSegmentId的不同，一个是DbGet,一个是HttpGet
 - CachedIdGenerator则是具体的id生成器对象，持有currentSegmentId和nextSegmentId对象，负责nextId的核心流程。nextId最终通过AtomicLong.andAndGet(delta)方法产生。
+
+
 
 #### Tinyid的特性
 

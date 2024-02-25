@@ -358,11 +358,11 @@ ORDER BY `total` DESC,`u`.`id` DESC
 
 
 
-**使用物化优化子查询**
+**优化子查询、派生表和视图引用**
 
 我们通过给yx 表添加索引，优化执行 join 语句的算法，使得sql 耗时从50s 优化到5s左右，又通过覆盖索引，使得sql 耗时从 5s 优化到1s多。
 
-**可以不使用上面那些我们添加的优化方式，让MySQ的优化器替我们优化吗？有，那就是使用物化优化子查询**
+**可以不使用上面那些我们添加的优化方式，让MySQ的优化器替我们优化吗？有，那就是使将派生表材料化为内部临时表（Materialize the derived table to an internal temporary table）**
 
 修改sql
 
