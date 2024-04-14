@@ -113,6 +113,8 @@ public final boolean weakCompareAndSetInt(Object o, long offset, int expected, i
 
 
 
+
+
 ## CAS的实现原理（基石Unsafe）
 
 
@@ -135,4 +137,41 @@ private volatile int value;
 
 
 
+
+在`ConcurrentHashMap`类中，我们会看到这样的代码：
+
+```java
+/**
+ * 通过CAS算法添加tab数组中指定位置的数据
+ * @param tab   tab数组
+ * @param i     hash值
+ * @param c     预期值
+ * @param v     新值
+ * @return     是否添加成功
+ */
+static final <K,V> boolean casTabAt(Node<K,V>[] tab, int i,
+                                    Node<K,V> c, Node<K,V> v) {
+    return U.compareAndSwapObject(tab, ((long)i << ASHIFT) + ABASE, c, v);
+}
+```
+
+```
+int  i = 6;
+long l = (long) i << 2;
+res：l =24
+```
+
+
+
+## Unsafe类
+
+```java
+/**
+ * 更新变量值为x，如果当前值为expected
+ * o：对象 offset：偏移量 expected：期望值 x：新值
+ */
+public final native boolean compareAndSwapObject(Object o, long offset,
+                                                 Object expected,
+                                                 Object x);
+```
 

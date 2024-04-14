@@ -2178,3 +2178,67 @@ git remote add origin https://github.com/roundliuyang/perfect.git
 git branch -M master
 git push -u origin master
 ```
+
+
+
+
+
+
+
+
+
+### 疑难杂症
+
+**windows  上的git 项目复制到mac上，git查看全是未提交的文件**
+
+
+
+如果你将一个包含 `.git` 目录的 Git 项目从 Windows 复制到 Mac 上，通常情况下应该可以正常工作，因为 `.git` 目录包含了整个项目的版本控制历史和元数据。但是有时在不同的操作系统之间可能会存在换行符等方面的差异，可能会导致一些文件状态的变化。
+
+为了解决这个问题，你可以尝试执行以下步骤：
+
+1. **确认 Git 配置**： 在 Mac 上打开终端并转到你项目的根目录，确保 Git 配置正确设置。
+
+   ```
+   git config --list
+   ```
+
+   特别关注 `core.autocrlf` 和 `core.eol` 这两个配置项，它们可能会影响换行符的处理。
+
+2. **检查文件状态**： 运行 `git status` 命令，检查是否有任何更改。如果所有文件都被标记为未跟踪或未提交，那么问题可能出在换行符或文件权限上。
+
+   ```
+   git status
+   ```
+
+3. **调整换行符配置**： 如果换行符是问题所在，你可以尝试调整 Git 的换行符配置来匹配 Mac 系统的标准。
+
+   ```
+   git config --global core.autocrlf input
+   ```
+
+   这会告诉 Git 在提交时将换行符转换为 LF，并在检出时保持原样。如果你使用的是 Windows 系统，你可能需要将 `core.autocrlf` 设置为 `true`。
+
+4. **重新设置文件状态**： 有时重新设置文件的状态可能会有所帮助。你可以使用以下命令将所有更改取消暂存，并重置为最后一次提交的状态。
+
+   ```
+   git reset --hard HEAD
+   ```
+
+5. **重新提交更改**： 如果以上步骤没有解决问题，你可以尝试重新添加和提交文件。
+
+   ```
+   git add .
+   git commit -m "Fix line endings"
+   ```
+
+尝试这些步骤后，看看是否能够解决你在 Mac 上遇到的 Git 问题。如果问题仍然存在，请提供更多细节，我会尽力帮助你解决。
+
+
+
+
+
+
+
+
+  

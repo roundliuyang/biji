@@ -1808,14 +1808,18 @@ top
 
 ```shell
 1、firewall-cmd --state（查看防火墙开启状态）提示running则防火墙已启动
-2、firewall-cmd --list-ports（查看防火墙）
+2、firewall-cmd --list-ports 查看防火墙放行端口
 
 3、如果是防火墙没有开启对应端口，可使用以下命令添加需要开放的端口，参考
-firewall-cmd --add-port=8888/tcp --permanent ##永久添加80端口
+firewall-cmd --zone=public --add-port=27017/tcp --permanent  ##永久添加27017端口
 firewall-cmd --reload 之后才管用
 
 4、防火墙已开放对应端口后，检查是否有应用监听制定端口，可使用以下命令
-netstat -lnp
+netstat -lanp | grep "27017"
+
+systemctl status firewalld  防火墙状态
+systemctl start firewalld 开启防火墙
+firewall-cmd --zone=public --remove-port=27017/tcp --permanentrts 关闭防火墙端口
 ```
 
 
