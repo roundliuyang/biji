@@ -111,6 +111,59 @@ const 类型表示使用了主键或者唯一索引与常量值进行比较，�
 
 在 MySQL 的执行计划中，**Extra** 列是用来显示一些额外信息的。
 
+测试表结构
+
+```sql
+create table test_order
+(
+    id int auto_increment primary key,
+    user_id int,
+    order_id int,
+    order_status tinyint,
+    create_date datetime
+);
+
+create table test_orderdetail
+(
+    id int auto_increment primary key,
+    order_id int,
+    product_name varchar(100),
+    cnt int,
+    create_date datetime
+);
+
+create index idx_userid_order_id_createdate on test_order(user_id,order_id,create_date);
+
+create index idx_orderid_productname on test_orderdetail(order_id,product_name);
+```
+
+测试数据（50W）
+
+```sql
+CREATE DEFINER=`root`@`%` PROCEDURE `test_insertdata`(IN `loopcount` INT)
+    LANGUAGE SQL
+    NOT DETERMINISTIC
+    CONTAINS SQL
+    SQL SECURITY DEFINER
+    COMMENT ''
+BEGIN
+    declare v_uuid  varchar(50);
+    while loopcount>0 do
+        set v_uuid = uuid();
+        insert into test_order (user_id,order_id,order_status,create_date) values (rand()*1000,id,rand()*10,DATE_ADD(NOW(), INTERVAL - RAND()*20000 HOUR));
+        insert into test_orderdetail(order_id,product_name,cnt,create_date) values (rand()*100000,v_uuid,rand()*10,DATE_ADD(NOW(), INTERVAL - RAND()*20000 HOUR));
+        set loopcount = loopcount -1;
+    end while;
+END
+```
+
+Using index VS Using where Using index
+
+```
+首先，在"订单表"上，这里是一个多列复合索引
+create index idx_userid_order_id_createdate on test_order(user_id,order_id,create_date);
+```
+
 
 
 #### Using filesort
@@ -187,29 +240,66 @@ Using temporary：使了用临时表保存中间结果，MySQL 在对查询结�
 
 
 
-#### Using index Condition
-
-
-
-在 MySQL 查询执行计划中，`Using Index Condition` 表示查询优化器使用了**索引**来满足查询条件，并使用了**额外的条件**对结果进行过滤，但需要**回表**获取更多的数据。
-
-具体来说，当**查询条件无法全部通过索引中的键值匹配时**，**查询优化器会选择使用索引中可用的键值，并使用额外的条件对结果进行进一步的过滤**，以满足查询条件。因此，在使用索引的同时还需要进行额外的过滤操作，通常需要回表操作来获取满足条件的全部数据。
-
-例如，如果查询中有一个 `WHERE` 子句包含一个范围条件（例如 `WHERE age > 30`），而索引只覆盖了 `age` 字段，那么查询优化器会选择使用索引来匹配 `age` 的值，并使用额外的条件对结果进行进一步的过滤。这种情况下，在 MySQL 查询执行计划中，就会出现 `Using Index Condition` 的提示。
-
-需要注意的是，虽然 `Using Index Condition` 比使用索引更慢，但它通常比不使用索引要快，因为索引可以加速键值的匹配和过滤操作。因此，在查询执行计划中出现 `Using Index Condition` 并不一定意味着查询性能低下，但如果经常出现这种情况，可以考虑优化查询和索引，以减少回表操作，提高查询性能。
-
-
-
-
-
 #### Using index
 
-当 `Extra` 值为 `Using index` 时，表示查询可以使用**覆盖索引**的方式来完成，也就是说查询的所有需要的列都可以从**索引**中直接获取，而不需要**回表**到数据表中获取数据，性能上会快很多。。
+1，查询的列被索引覆盖，并且where筛选条件是索引的是前导列，Extra中为Using index
 
-覆盖索引的方式可以减少回表的操作，提高查询的性能。但是需要注意的是，只有在查询的字段都包含在索引中时才能使用覆盖索引的方式，否则还是需要回表到数据表中获取数据。
+![img](mysql 调优实战.assets/380271-20170815170316506-2072803280.png)
 
-当然，这里并不是说要为了每个查询能用上**覆盖索引**，就要把语句中涉及的字段都建上联合索引，毕竟索引还是有维护代价的。这是一个需要权衡的决定。
+
+
+#### Using where Using index
+
+1，查询的列被索引覆盖，并且where筛选条件是索引列之一但是不是索引的不是前导列，Extra中为Using where; Using index， 意味着无法直接通过索引查找来查询到符合条件的数据
+
+![img](mysql 调优实战.assets/380271-20170815171757756-1931180768.png)
+
+2，查询的列被索引覆盖，并且where筛选条件是索引列前导列的一个范围，同样意味着无法直接通过索引查找查询到符合条件的数据
+
+![img](mysql 调优实战.assets/380271-20170815174018521-2080780926.png)
+
+
+
+#### **NULL（既没有Using index，也没有Using where Using index，也没有using where）**
+
+1，查询的列未被索引覆盖，并且where筛选条件是索引的前导列，意味着用到了索引，但是部分字段未被索引覆盖，必须通过“回表”来实现，不是纯粹地用到了索引，也不是完全没用到索引，Extra中为NULL(没有信息)
+
+![img](mysql 调优实战.assets/380271-20170815171847287-72130108.png)
+
+
+
+#### **Using where**
+
+1，查询的列未被索引覆盖，where筛选条件非索引的前导列，Extra中为Using where
+
+![img](mysql 调优实战.assets/380271-20170815174821568-1769784435.png)
+
+2，查询的列未被索引覆盖，where筛选条件非索引列，Extra中为Using where
+
+ 　![img](mysql 调优实战.assets/380271-20170815175059756-180271422.png)
+
+using where 意味着通过索引或者表扫描的方式进程where条件的过滤，反过来说，也就是没有可用的索引查找，当然这里也要考虑索引扫描+回表与表扫描的代价。这里的type都是all，说明MySQL认为全表扫描是一种比较低的代价。
+
+
+
+#### Using index Condition
+
+1，查询的列不全在索引中，where条件中是一个前导列的范围
+
+　　**![img](mysql 调优实战.assets/380271-20170815200957850-876977644.png)**
+
+2，查询列不完全被索引覆盖，查询条件完全可以使用到索引（进行索引查找）
+
+　　![img](mysql 调优实战.assets/380271-20170815201340725-1422683870.png)
+
+参考：MySQL · 特性分析 · Index Condition Pushdown (ICP)
+using index conditoin 意味着查询列的某一部分无法直接使用索引
+上述case1中，
+如果禁用ICP（set optimizer_switch='index_condition_pushdown=off'），
+执行计划是using where，意味着全表扫描，如果启用ICP，执行计划为using index Condition，意味着在筛选的过程中实现过滤。
+上述case2中
+第二个查询条件无法直接使用索引，隐含了一个查找+筛选的过程。
+两个case的共同点就是无法直接使用索引。
 
 
 
