@@ -1,0 +1,425 @@
+<mxfile host="Electron" agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) draw.io/24.7.8 Chrome/128.0.6613.36 Electron/32.0.1 Safari/537.36" version="24.7.8">
+  <diagram name="第 1 页" id="7VD0IGcYh8gPEC9Q-h-6">
+    <mxGraphModel dx="2049" dy="1263" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="5000" pageHeight="2920" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="_Qv0BwHycbl8crCJzst7-33" value="" style="rounded=0;whiteSpace=wrap;html=1;fontFamily=Helvetica;fontSize=11;fontColor=default;labelBackgroundColor=default;fillColor=none;strokeColor=default;" parent="1" vertex="1">
+          <mxGeometry x="1520" y="1170" width="1420" height="1400" as="geometry" />
+        </mxCell>
+        <mxCell id="_Qv0BwHycbl8crCJzst7-1" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;curved=1;endSize=4;" parent="1" source="CVJSLuI4kZo8YIbZsk2f-1" target="CVJSLuI4kZo8YIbZsk2f-2" edge="1">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="970" y="260" />
+              <mxPoint x="1640" y="260" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="_Qv0BwHycbl8crCJzst7-81" style="edgeStyle=orthogonalEdgeStyle;shape=connector;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;strokeColor=default;align=center;verticalAlign=middle;fontFamily=Helvetica;fontSize=11;fontColor=default;labelBackgroundColor=default;endArrow=classic;endSize=4;curved=1;" parent="1" source="CVJSLuI4kZo8YIbZsk2f-1" target="_Qv0BwHycbl8crCJzst7-80" edge="1">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="970" y="260" />
+              <mxPoint x="390" y="260" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="CVJSLuI4kZo8YIbZsk2f-1" value="AopProxy" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;" parent="1" vertex="1">
+          <mxGeometry x="910" y="200" width="120" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="_Qv0BwHycbl8crCJzst7-3" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;strokeColor=#82B366;" parent="1" source="CVJSLuI4kZo8YIbZsk2f-2" target="_Qv0BwHycbl8crCJzst7-2" edge="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="CVJSLuI4kZo8YIbZsk2f-2" value="DynamicAdvisedInterceptor#intercept" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;" parent="1" vertex="1">
+          <mxGeometry x="1520" y="320" width="240" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="_Qv0BwHycbl8crCJzst7-6" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;strokeColor=#82B366;" parent="1" source="_Qv0BwHycbl8crCJzst7-2" target="_Qv0BwHycbl8crCJzst7-5" edge="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="i0HN7JTHfiNBLuJUNgR1-16" style="edgeStyle=orthogonalEdgeStyle;shape=connector;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;strokeColor=#0E8088;align=center;verticalAlign=middle;fontFamily=Helvetica;fontSize=11;fontColor=default;labelBackgroundColor=default;endArrow=classic;endSize=4;" edge="1" parent="1" source="_Qv0BwHycbl8crCJzst7-2" target="i0HN7JTHfiNBLuJUNgR1-14">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="_Qv0BwHycbl8crCJzst7-2" value="this.advised.getInterceptorsAndDynamicInterceptionAdvice(method, targetClass)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;" parent="1" vertex="1">
+          <mxGeometry x="1420" y="400" width="440" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="_Qv0BwHycbl8crCJzst7-4" value="&lt;font color=&quot;#82b366&quot;&gt;&lt;b&gt;从advised中获取当前方法需要织入的切面逻辑的通知链&lt;/b&gt;&lt;/font&gt;" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;" parent="1" vertex="1">
+          <mxGeometry x="1870" y="380" width="160" height="35" as="geometry" />
+        </mxCell>
+        <mxCell id="_Qv0BwHycbl8crCJzst7-8" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;endSize=4;strokeColor=#82B366;" parent="1" source="_Qv0BwHycbl8crCJzst7-5" target="_Qv0BwHycbl8crCJzst7-7" edge="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="_Qv0BwHycbl8crCJzst7-9" value="true" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];fontFamily=Helvetica;fontSize=11;fontColor=default;labelBackgroundColor=default;" parent="_Qv0BwHycbl8crCJzst7-8" vertex="1" connectable="0">
+          <mxGeometry x="-0.3619" y="2" relative="1" as="geometry">
+            <mxPoint as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="_Qv0BwHycbl8crCJzst7-12" style="edgeStyle=orthogonalEdgeStyle;shape=connector;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;strokeColor=#82B366;align=center;verticalAlign=middle;fontFamily=Helvetica;fontSize=11;fontColor=default;labelBackgroundColor=default;endArrow=classic;endSize=4;curved=1;" parent="1" source="_Qv0BwHycbl8crCJzst7-5" target="_Qv0BwHycbl8crCJzst7-11" edge="1">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="1640" y="680" />
+              <mxPoint x="970" y="680" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="_Qv0BwHycbl8crCJzst7-5" value="chain.isEmpty" style="rhombus;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;" parent="1" vertex="1">
+          <mxGeometry x="1580" y="480" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="_Qv0BwHycbl8crCJzst7-7" value="methodProxy.invoke(target, argsToUse)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;" parent="1" vertex="1">
+          <mxGeometry x="1770" y="490" width="220" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="_Qv0BwHycbl8crCJzst7-10" value="&lt;font color=&quot;#82b366&quot;&gt;&lt;b&gt;如果没有AOP通知配置，那么直接调用target对象方法&lt;/b&gt;&lt;/font&gt;" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;" parent="1" vertex="1">
+          <mxGeometry x="2010" y="490" width="170" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="_Qv0BwHycbl8crCJzst7-17" style="edgeStyle=orthogonalEdgeStyle;shape=connector;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;strokeColor=#B5739D;align=center;verticalAlign=middle;fontFamily=Helvetica;fontSize=11;fontColor=default;labelBackgroundColor=default;endArrow=classic;endSize=4;" parent="1" source="_Qv0BwHycbl8crCJzst7-11" target="_Qv0BwHycbl8crCJzst7-16" edge="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="_Qv0BwHycbl8crCJzst7-11" value="ReflectiveMethodInvocation.procced()" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#e6d0de;strokeColor=#996185;gradientColor=#d5739d;" parent="1" vertex="1">
+          <mxGeometry x="870" y="850" width="200" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="_Qv0BwHycbl8crCJzst7-13" value="&lt;font color=&quot;#82b366&quot;&gt;&lt;b&gt;由于JDK和CGLIB生成不同的AopProxy代理对象，从而构造了不同的回调方法来启动对拦截器链的调用。&amp;nbsp; 但是他们对拦截器链的调用都是使用ReflectiveMethodInvocation.procced()方法来完成的&lt;/b&gt;&lt;/font&gt;" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;" parent="1" vertex="1">
+          <mxGeometry x="1100" y="855" width="530" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="_Qv0BwHycbl8crCJzst7-23" style="edgeStyle=orthogonalEdgeStyle;shape=connector;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;strokeColor=#B5739D;align=center;verticalAlign=middle;fontFamily=Helvetica;fontSize=11;fontColor=default;labelBackgroundColor=default;endArrow=classic;endSize=4;curved=1;" parent="1" source="_Qv0BwHycbl8crCJzst7-14" target="_Qv0BwHycbl8crCJzst7-21" edge="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="_Qv0BwHycbl8crCJzst7-14" value="invokeJoinpoint" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#e6d0de;strokeColor=#996185;gradientColor=#d5739d;" parent="1" vertex="1">
+          <mxGeometry x="1130" y="970" width="120" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="_Qv0BwHycbl8crCJzst7-18" style="edgeStyle=orthogonalEdgeStyle;shape=connector;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;strokeColor=#B5739D;align=center;verticalAlign=middle;fontFamily=Helvetica;fontSize=11;fontColor=default;labelBackgroundColor=default;endArrow=classic;endSize=4;" parent="1" source="_Qv0BwHycbl8crCJzst7-16" target="_Qv0BwHycbl8crCJzst7-14" edge="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="_Qv0BwHycbl8crCJzst7-19" value="yes" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];fontFamily=Helvetica;fontSize=11;fontColor=default;labelBackgroundColor=default;" parent="_Qv0BwHycbl8crCJzst7-18" vertex="1" connectable="0">
+          <mxGeometry x="-0.0184" y="-1" relative="1" as="geometry">
+            <mxPoint as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="_Qv0BwHycbl8crCJzst7-22" style="edgeStyle=orthogonalEdgeStyle;shape=connector;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;strokeColor=#B5739D;align=center;verticalAlign=middle;fontFamily=Helvetica;fontSize=11;fontColor=default;labelBackgroundColor=default;endArrow=classic;endSize=4;" parent="1" source="_Qv0BwHycbl8crCJzst7-16" target="_Qv0BwHycbl8crCJzst7-21" edge="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="_Qv0BwHycbl8crCJzst7-16" value="&lt;span style=&quot;font-size: 12px; background-color: rgb(251, 251, 251);&quot;&gt;currentInterceptorIndex = -1&lt;/span&gt;" style="rhombus;whiteSpace=wrap;html=1;fontFamily=Helvetica;fontSize=11;labelBackgroundColor=default;fillColor=#e6d0de;gradientColor=#d5739d;strokeColor=#996185;" parent="1" vertex="1">
+          <mxGeometry x="890" y="930" width="160" height="120" as="geometry" />
+        </mxCell>
+        <mxCell id="_Qv0BwHycbl8crCJzst7-20" value="&lt;b style=&quot;&quot;&gt;&lt;font color=&quot;#b5739d&quot;&gt;拦截器链全部调用完，调用目标方法&lt;/font&gt;&lt;/b&gt;" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;" parent="1" vertex="1">
+          <mxGeometry x="1265" y="975" width="200" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="_Qv0BwHycbl8crCJzst7-26" style="edgeStyle=orthogonalEdgeStyle;shape=connector;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;strokeColor=#B5739D;align=center;verticalAlign=middle;fontFamily=Helvetica;fontSize=11;fontColor=default;labelBackgroundColor=default;endArrow=classic;endSize=4;" parent="1" source="_Qv0BwHycbl8crCJzst7-21" target="_Qv0BwHycbl8crCJzst7-25" edge="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="_Qv0BwHycbl8crCJzst7-21" value="this.interceptorsAndDynamicMethodMatchers.get(++this.currentInterceptorIndex)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#e6d0de;strokeColor=#996185;gradientColor=#d5739d;" parent="1" vertex="1">
+          <mxGeometry x="750" y="1100" width="440" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="_Qv0BwHycbl8crCJzst7-24" value="&lt;font color=&quot;#b5739d&quot;&gt;&lt;b&gt;增加计数器，得到下一个通知或者拦截器&lt;/b&gt;&lt;/font&gt;" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;" parent="1" vertex="1">
+          <mxGeometry x="1200" y="1105" width="220" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="_Qv0BwHycbl8crCJzst7-28" style="edgeStyle=orthogonalEdgeStyle;shape=connector;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;strokeColor=#B5739D;align=center;verticalAlign=middle;fontFamily=Helvetica;fontSize=11;fontColor=default;labelBackgroundColor=default;endArrow=classic;endSize=4;" parent="1" source="_Qv0BwHycbl8crCJzst7-25" target="_Qv0BwHycbl8crCJzst7-27" edge="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="_Qv0BwHycbl8crCJzst7-29" value="false" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];fontFamily=Helvetica;fontSize=11;fontColor=default;labelBackgroundColor=default;" parent="_Qv0BwHycbl8crCJzst7-28" vertex="1" connectable="0">
+          <mxGeometry x="-0.0694" relative="1" as="geometry">
+            <mxPoint as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="_Qv0BwHycbl8crCJzst7-31" style="edgeStyle=orthogonalEdgeStyle;shape=connector;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;strokeColor=#B5739D;align=center;verticalAlign=middle;fontFamily=Helvetica;fontSize=11;fontColor=default;labelBackgroundColor=default;endArrow=classic;endSize=4;" parent="1" source="_Qv0BwHycbl8crCJzst7-25" edge="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="970.2068965517242" y="1450" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="_Qv0BwHycbl8crCJzst7-32" value="yes" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];fontFamily=Helvetica;fontSize=11;fontColor=default;labelBackgroundColor=default;" parent="_Qv0BwHycbl8crCJzst7-31" vertex="1" connectable="0">
+          <mxGeometry x="-0.2337" y="-2" relative="1" as="geometry">
+            <mxPoint as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="_Qv0BwHycbl8crCJzst7-25" value="&lt;span style=&quot;font-size: 12px;&quot;&gt;instanceof&amp;nbsp;&lt;/span&gt;&lt;div&gt;&lt;span style=&quot;font-size: 12px;&quot;&gt;InterceptorAndDynamicMethodMatcher&lt;/span&gt;&lt;/div&gt;" style="rhombus;whiteSpace=wrap;html=1;fontFamily=Helvetica;fontSize=11;labelBackgroundColor=default;fillColor=#e6d0de;gradientColor=#d5739d;strokeColor=#996185;" parent="1" vertex="1">
+          <mxGeometry x="845" y="1200" width="250" height="140" as="geometry" />
+        </mxCell>
+        <mxCell id="i0HN7JTHfiNBLuJUNgR1-11" style="edgeStyle=orthogonalEdgeStyle;shape=connector;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;strokeColor=#9673A6;align=center;verticalAlign=middle;fontFamily=Helvetica;fontSize=11;fontColor=default;labelBackgroundColor=default;endArrow=classic;endSize=4;" edge="1" parent="1" source="_Qv0BwHycbl8crCJzst7-27" target="i0HN7JTHfiNBLuJUNgR1-10">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="_Qv0BwHycbl8crCJzst7-27" value="&amp;nbsp;interceptorOrInterceptionAdvice).invoke(this)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#e6d0de;strokeColor=#996185;gradientColor=#d5739d;" parent="1" vertex="1">
+          <mxGeometry x="1180" y="1250" width="250" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="_Qv0BwHycbl8crCJzst7-30" value="&lt;font color=&quot;#b5739d&quot;&gt;&lt;b&gt;调用拦截器逻辑，并传递 ReflectiveMethodInvocation 对象&lt;/b&gt;&lt;/font&gt;" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;" parent="1" vertex="1">
+          <mxGeometry x="1210" y="1210" width="190" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="_Qv0BwHycbl8crCJzst7-34" style="rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.112;entryDx=0;entryDy=0;entryPerimeter=0;strokeColor=#B5739D;align=center;verticalAlign=middle;fontFamily=Helvetica;fontSize=11;fontColor=default;labelBackgroundColor=default;endArrow=classic;edgeStyle=orthogonalEdgeStyle;curved=1;" parent="1" source="_Qv0BwHycbl8crCJzst7-27" target="_Qv0BwHycbl8crCJzst7-33" edge="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="_Qv0BwHycbl8crCJzst7-35" value="&lt;b&gt;&lt;font style=&quot;font-size: 14px;&quot; color=&quot;#10739e&quot;&gt;事务原理&lt;/font&gt;&lt;/b&gt;" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontFamily=Helvetica;fontSize=11;fontColor=default;labelBackgroundColor=default;" parent="1" vertex="1">
+          <mxGeometry x="2020" y="1175" width="60" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="_Qv0BwHycbl8crCJzst7-38" style="edgeStyle=orthogonalEdgeStyle;shape=connector;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;strokeColor=#10739E;align=center;verticalAlign=middle;fontFamily=Helvetica;fontSize=11;fontColor=default;labelBackgroundColor=default;endArrow=classic;endSize=4;" parent="1" source="_Qv0BwHycbl8crCJzst7-36" target="_Qv0BwHycbl8crCJzst7-37" edge="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="_Qv0BwHycbl8crCJzst7-36" value="TransactionInterceptor#invoke" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#b1ddf0;strokeColor=#10739e;" parent="1" vertex="1">
+          <mxGeometry x="1750" y="1205" width="190" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="_Qv0BwHycbl8crCJzst7-41" style="edgeStyle=orthogonalEdgeStyle;shape=connector;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;strokeColor=#10739E;align=center;verticalAlign=middle;fontFamily=Helvetica;fontSize=11;fontColor=default;labelBackgroundColor=default;endArrow=classic;endSize=4;" parent="1" source="_Qv0BwHycbl8crCJzst7-37" target="_Qv0BwHycbl8crCJzst7-39" edge="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="_Qv0BwHycbl8crCJzst7-37" value="TransactionAspectSupport#invokeWithinTransaction" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#b1ddf0;strokeColor=#10739e;" parent="1" vertex="1">
+          <mxGeometry x="1700" y="1280" width="290" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="_Qv0BwHycbl8crCJzst7-44" style="edgeStyle=orthogonalEdgeStyle;shape=connector;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;strokeColor=#10739E;align=center;verticalAlign=middle;fontFamily=Helvetica;fontSize=11;fontColor=default;labelBackgroundColor=default;endArrow=classic;endSize=4;" parent="1" source="_Qv0BwHycbl8crCJzst7-39" target="_Qv0BwHycbl8crCJzst7-43" edge="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="_Qv0BwHycbl8crCJzst7-39" value="tas = getTransactionAttributeSource()" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#b1ddf0;strokeColor=#10739e;" parent="1" vertex="1">
+          <mxGeometry x="1740" y="1360" width="210" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="_Qv0BwHycbl8crCJzst7-40" value="&lt;b&gt;&lt;font color=&quot;#10739e&quot;&gt;获取AnnotationTransactionAttributeSource，这个是从外面设置进TransactionInterceptor的&lt;/font&gt;&lt;/b&gt;" style="text;html=1;align=left;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontFamily=Helvetica;fontSize=11;fontColor=default;labelBackgroundColor=default;" parent="1" vertex="1">
+          <mxGeometry x="1980" y="1362.5" width="240" height="35" as="geometry" />
+        </mxCell>
+        <mxCell id="_Qv0BwHycbl8crCJzst7-48" style="edgeStyle=orthogonalEdgeStyle;shape=connector;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;strokeColor=#10739E;align=center;verticalAlign=middle;fontFamily=Helvetica;fontSize=11;fontColor=default;labelBackgroundColor=default;endArrow=classic;endSize=4;" parent="1" source="_Qv0BwHycbl8crCJzst7-42" target="_Qv0BwHycbl8crCJzst7-47" edge="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="_Qv0BwHycbl8crCJzst7-50" value="yes" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];fontFamily=Helvetica;fontSize=11;fontColor=default;labelBackgroundColor=default;" parent="_Qv0BwHycbl8crCJzst7-48" vertex="1" connectable="0">
+          <mxGeometry x="0.1405" y="-1" relative="1" as="geometry">
+            <mxPoint as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="_Qv0BwHycbl8crCJzst7-79" style="edgeStyle=orthogonalEdgeStyle;shape=connector;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;strokeColor=#10739E;align=center;verticalAlign=middle;fontFamily=Helvetica;fontSize=11;fontColor=default;labelBackgroundColor=default;endArrow=classic;endSize=4;" parent="1" source="_Qv0BwHycbl8crCJzst7-42" target="_Qv0BwHycbl8crCJzst7-78" edge="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="_Qv0BwHycbl8crCJzst7-42" value="txAttr == null || !(tm instanceof CallbackPreferringPlatformTransactionManager)" style="rhombus;whiteSpace=wrap;html=1;fontFamily=Helvetica;fontSize=11;labelBackgroundColor=default;fillColor=#b1ddf0;strokeColor=#10739e;" parent="1" vertex="1">
+          <mxGeometry x="1786.25" y="1670" width="117.5" height="100" as="geometry" />
+        </mxCell>
+        <mxCell id="_Qv0BwHycbl8crCJzst7-53" style="edgeStyle=orthogonalEdgeStyle;shape=connector;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;strokeColor=#10739E;align=center;verticalAlign=middle;fontFamily=Helvetica;fontSize=11;fontColor=default;labelBackgroundColor=default;endArrow=classic;endSize=4;" parent="1" source="_Qv0BwHycbl8crCJzst7-43" target="_Qv0BwHycbl8crCJzst7-52" edge="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="_Qv0BwHycbl8crCJzst7-43" value="&lt;span style=&quot;font-size: 11px;&quot;&gt;txAttr = tas.getTransactionAttribute(method, targetClass)&lt;/span&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#b1ddf0;strokeColor=#10739e;" parent="1" vertex="1">
+          <mxGeometry x="1695" y="1450" width="300" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="_Qv0BwHycbl8crCJzst7-45" value="&lt;font color=&quot;#10739e&quot;&gt;&lt;b&gt;获取@Transactional的属性配置(事务定义信息已经在这里获取到了)&lt;/b&gt;&lt;/font&gt;" style="text;html=1;align=left;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontFamily=Helvetica;fontSize=11;fontColor=default;labelBackgroundColor=default;" parent="1" vertex="1">
+          <mxGeometry x="2010" y="1452.5" width="240" height="35" as="geometry" />
+        </mxCell>
+        <mxCell id="_Qv0BwHycbl8crCJzst7-58" style="edgeStyle=orthogonalEdgeStyle;shape=connector;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;strokeColor=#10739E;align=center;verticalAlign=middle;fontFamily=Helvetica;fontSize=11;fontColor=default;labelBackgroundColor=default;endArrow=classic;endSize=4;" parent="1" source="_Qv0BwHycbl8crCJzst7-47" target="_Qv0BwHycbl8crCJzst7-57" edge="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="_Qv0BwHycbl8crCJzst7-47" value="&lt;span style=&quot;font-size: 11px;&quot;&gt;createTransactionIfNecessary&lt;/span&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#b1ddf0;strokeColor=#10739e;" parent="1" vertex="1">
+          <mxGeometry x="2090" y="1700" width="160" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="_Qv0BwHycbl8crCJzst7-49" value="&lt;font color=&quot;#10739e&quot;&gt;&lt;b&gt;如果是声明式事务&lt;/b&gt;&lt;/font&gt;" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontFamily=Helvetica;fontSize=11;fontColor=default;labelBackgroundColor=default;" parent="1" vertex="1">
+          <mxGeometry x="1870" y="1670" width="110" height="35" as="geometry" />
+        </mxCell>
+        <mxCell id="_Qv0BwHycbl8crCJzst7-51" value="&lt;font color=&quot;#10739e&quot;&gt;&lt;b&gt;创建事务,这里面就要考虑spring的事务传播机制&lt;/b&gt;&lt;/font&gt;" style="text;html=1;align=left;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontFamily=Helvetica;fontSize=11;fontColor=default;labelBackgroundColor=default;" parent="1" vertex="1">
+          <mxGeometry x="2270" y="1700" width="140" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="_Qv0BwHycbl8crCJzst7-56" style="edgeStyle=orthogonalEdgeStyle;shape=connector;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;strokeColor=default;align=center;verticalAlign=middle;fontFamily=Helvetica;fontSize=11;fontColor=default;labelBackgroundColor=default;endArrow=classic;endSize=4;" parent="1" source="_Qv0BwHycbl8crCJzst7-52" target="_Qv0BwHycbl8crCJzst7-42" edge="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="_Qv0BwHycbl8crCJzst7-52" value="&lt;span style=&quot;font-size: 11px;&quot;&gt;determineTransactionManager(txAttr)&lt;/span&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#b1ddf0;strokeColor=#10739e;" parent="1" vertex="1">
+          <mxGeometry x="1745" y="1540" width="200" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="_Qv0BwHycbl8crCJzst7-55" value="&lt;div style=&quot;text-align: left;&quot;&gt;&lt;b style=&quot;color: rgb(16, 115, 158);&quot;&gt;从容器中获取TransactionManager实例,&lt;/b&gt;&lt;/div&gt;&lt;div style=&quot;text-align: left;&quot;&gt;&lt;font color=&quot;#10739e&quot;&gt;&lt;b&gt;对于 Spring 项目，需要在配置类中手动注入到 IOC 容器。&lt;/b&gt;&lt;br&gt;&lt;/font&gt;&lt;/div&gt;" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontFamily=Helvetica;fontSize=11;fontColor=default;labelBackgroundColor=default;" parent="1" vertex="1">
+          <mxGeometry x="1995" y="1532.5" width="310" height="47.5" as="geometry" />
+        </mxCell>
+        <mxCell id="_Qv0BwHycbl8crCJzst7-63" style="edgeStyle=orthogonalEdgeStyle;shape=connector;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;strokeColor=#10739E;align=center;verticalAlign=middle;fontFamily=Helvetica;fontSize=11;fontColor=default;labelBackgroundColor=default;endArrow=classic;endSize=4;" parent="1" source="_Qv0BwHycbl8crCJzst7-57" target="_Qv0BwHycbl8crCJzst7-61" edge="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="_Qv0BwHycbl8crCJzst7-57" value="&lt;span style=&quot;font-size: 11px;&quot;&gt;invocation.proceedWithInvocation()&lt;/span&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#b1ddf0;strokeColor=#10739e;" parent="1" vertex="1">
+          <mxGeometry x="2080" y="1800" width="180" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="_Qv0BwHycbl8crCJzst7-59" value="&lt;font color=&quot;#10739e&quot;&gt;&lt;b&gt;执行目标方法&lt;/b&gt;&lt;/font&gt;" style="text;html=1;align=left;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontFamily=Helvetica;fontSize=11;fontColor=default;labelBackgroundColor=default;" parent="1" vertex="1">
+          <mxGeometry x="2290" y="1800" width="140" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="_Qv0BwHycbl8crCJzst7-65" style="edgeStyle=orthogonalEdgeStyle;shape=connector;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;strokeColor=#10739E;align=center;verticalAlign=middle;fontFamily=Helvetica;fontSize=11;fontColor=default;labelBackgroundColor=default;endArrow=classic;endSize=4;" parent="1" source="_Qv0BwHycbl8crCJzst7-61" target="_Qv0BwHycbl8crCJzst7-64" edge="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="_Qv0BwHycbl8crCJzst7-66" value="false" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];fontFamily=Helvetica;fontSize=11;fontColor=default;labelBackgroundColor=default;" parent="_Qv0BwHycbl8crCJzst7-65" vertex="1" connectable="0">
+          <mxGeometry x="-0.3258" y="3" relative="1" as="geometry">
+            <mxPoint as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="_Qv0BwHycbl8crCJzst7-72" style="edgeStyle=orthogonalEdgeStyle;shape=connector;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;strokeColor=#10739E;align=center;verticalAlign=middle;fontFamily=Helvetica;fontSize=11;fontColor=default;labelBackgroundColor=default;endArrow=classic;endSize=4;" parent="1" source="_Qv0BwHycbl8crCJzst7-61" target="_Qv0BwHycbl8crCJzst7-71" edge="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="_Qv0BwHycbl8crCJzst7-61" value="catch (Throwable ex)？" style="rhombus;whiteSpace=wrap;html=1;fontFamily=Helvetica;fontSize=11;labelBackgroundColor=default;fillColor=#b1ddf0;strokeColor=#10739e;" parent="1" vertex="1">
+          <mxGeometry x="2100.63" y="1910" width="138.75" height="100" as="geometry" />
+        </mxCell>
+        <mxCell id="_Qv0BwHycbl8crCJzst7-62" value="&lt;font color=&quot;#10739e&quot;&gt;&lt;b&gt;执行目标方法是否有异常&lt;/b&gt;&lt;/font&gt;" style="text;html=1;align=left;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontFamily=Helvetica;fontSize=11;fontColor=default;labelBackgroundColor=default;" parent="1" vertex="1">
+          <mxGeometry x="2190" y="1890" width="140" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="_Qv0BwHycbl8crCJzst7-68" style="edgeStyle=orthogonalEdgeStyle;shape=connector;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;strokeColor=#10739E;align=center;verticalAlign=middle;fontFamily=Helvetica;fontSize=11;fontColor=default;labelBackgroundColor=default;endArrow=classic;endSize=4;" parent="1" source="_Qv0BwHycbl8crCJzst7-64" target="_Qv0BwHycbl8crCJzst7-67" edge="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="_Qv0BwHycbl8crCJzst7-64" value="&lt;span style=&quot;font-size: 11px;&quot;&gt;cleanupTransactionInfo&lt;/span&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#b1ddf0;strokeColor=#10739e;" parent="1" vertex="1">
+          <mxGeometry x="2099.38" y="2090" width="140" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="_Qv0BwHycbl8crCJzst7-67" value="&lt;span style=&quot;font-size: 11px;&quot;&gt;commitTransactionAfterReturning&lt;/span&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#b1ddf0;strokeColor=#10739e;" parent="1" vertex="1">
+          <mxGeometry x="2085.32" y="2180" width="169.37" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="_Qv0BwHycbl8crCJzst7-69" value="&lt;font color=&quot;#10739e&quot;&gt;&lt;b&gt;&amp;nbsp;清除当前事务的相关信息&lt;/b&gt;&lt;/font&gt;" style="text;html=1;align=left;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontFamily=Helvetica;fontSize=11;fontColor=default;labelBackgroundColor=default;" parent="1" vertex="1">
+          <mxGeometry x="2250" y="2090" width="140" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="_Qv0BwHycbl8crCJzst7-70" value="&lt;font color=&quot;#10739e&quot;&gt;&lt;b&gt;提交事务&lt;/b&gt;&lt;/font&gt;" style="text;html=1;align=left;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontFamily=Helvetica;fontSize=11;fontColor=default;labelBackgroundColor=default;" parent="1" vertex="1">
+          <mxGeometry x="2270" y="2180" width="50" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="_Qv0BwHycbl8crCJzst7-75" style="edgeStyle=orthogonalEdgeStyle;shape=connector;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;strokeColor=#10739E;align=center;verticalAlign=middle;fontFamily=Helvetica;fontSize=11;fontColor=default;labelBackgroundColor=default;endArrow=classic;endSize=4;" parent="1" source="_Qv0BwHycbl8crCJzst7-71" target="_Qv0BwHycbl8crCJzst7-74" edge="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="_Qv0BwHycbl8crCJzst7-77" style="edgeStyle=orthogonalEdgeStyle;shape=connector;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;strokeColor=#10739E;align=center;verticalAlign=middle;fontFamily=Helvetica;fontSize=11;fontColor=default;labelBackgroundColor=default;endArrow=classic;endSize=4;" parent="1" source="_Qv0BwHycbl8crCJzst7-71" target="_Qv0BwHycbl8crCJzst7-76" edge="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="_Qv0BwHycbl8crCJzst7-71" value="&lt;span style=&quot;font-size: 11px;&quot;&gt;completeTransactionAfterThrowing&lt;/span&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#b1ddf0;strokeColor=#10739e;" parent="1" vertex="1">
+          <mxGeometry x="2440" y="1940" width="180" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="_Qv0BwHycbl8crCJzst7-73" value="&lt;font color=&quot;#10739e&quot;&gt;&lt;b&gt;遇到异常的情况如何处理事务，要结合事务的传播机制来看。&lt;/b&gt;&lt;/font&gt;" style="text;html=1;align=left;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontFamily=Helvetica;fontSize=11;fontColor=default;labelBackgroundColor=default;" parent="1" vertex="1">
+          <mxGeometry x="2450" y="1900" width="160" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="_Qv0BwHycbl8crCJzst7-74" value="&lt;span style=&quot;font-size: 11px;&quot;&gt;throw ex&lt;/span&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#b1ddf0;strokeColor=#10739e;" parent="1" vertex="1">
+          <mxGeometry x="2480" y="2030" width="100" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="_Qv0BwHycbl8crCJzst7-76" value="&lt;span style=&quot;font-size: 11px;&quot;&gt;...以后拓展吧&lt;/span&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=none;" parent="1" vertex="1">
+          <mxGeometry x="2700" y="1940" width="180" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="_Qv0BwHycbl8crCJzst7-78" value="&lt;span style=&quot;font-size: 11px;&quot;&gt;编程式事务&lt;/span&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#b1ddf0;strokeColor=#10739e;" parent="1" vertex="1">
+          <mxGeometry x="1765" y="1820" width="160" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="i0HN7JTHfiNBLuJUNgR1-2" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;strokeColor=#9673A6;endSize=4;" edge="1" parent="1" source="_Qv0BwHycbl8crCJzst7-80" target="i0HN7JTHfiNBLuJUNgR1-1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="_Qv0BwHycbl8crCJzst7-80" value="JdkDynamicAopProxy#invoke" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#e1d5e7;strokeColor=#9673a6;" parent="1" vertex="1">
+          <mxGeometry x="280" y="320" width="210" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="i0HN7JTHfiNBLuJUNgR1-5" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;strokeColor=#9673A6;endSize=4;" edge="1" parent="1" source="i0HN7JTHfiNBLuJUNgR1-1" target="i0HN7JTHfiNBLuJUNgR1-4">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="i0HN7JTHfiNBLuJUNgR1-1" value="this.advised.getInterceptorsAndDynamicInterceptionAdvice(method, targetClass)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#e1d5e7;strokeColor=#9673a6;" vertex="1" parent="1">
+          <mxGeometry x="165" y="390" width="440" height="37.5" as="geometry" />
+        </mxCell>
+        <mxCell id="i0HN7JTHfiNBLuJUNgR1-3" value="&lt;b style=&quot;&quot;&gt;&lt;font color=&quot;#9673a6&quot;&gt;获取适合当前方法的拦截器，即当前方法需要织入的切面逻辑的调用链&lt;/font&gt;&lt;/b&gt;" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;" vertex="1" parent="1">
+          <mxGeometry x="610" y="387.5" width="200" height="52.5" as="geometry" />
+        </mxCell>
+        <mxCell id="i0HN7JTHfiNBLuJUNgR1-7" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;endSize=4;strokeColor=#9673A6;" edge="1" parent="1" source="i0HN7JTHfiNBLuJUNgR1-4" target="i0HN7JTHfiNBLuJUNgR1-6">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="i0HN7JTHfiNBLuJUNgR1-9" style="edgeStyle=orthogonalEdgeStyle;shape=connector;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;strokeColor=#9673A6;align=center;verticalAlign=middle;fontFamily=Helvetica;fontSize=11;fontColor=default;labelBackgroundColor=default;endArrow=classic;endSize=4;curved=1;" edge="1" parent="1" source="i0HN7JTHfiNBLuJUNgR1-4" target="_Qv0BwHycbl8crCJzst7-11">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="385" y="670" />
+              <mxPoint x="970" y="670" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="i0HN7JTHfiNBLuJUNgR1-4" value="chain.isEmpty" style="rhombus;whiteSpace=wrap;html=1;fillColor=#e1d5e7;strokeColor=#9673a6;" vertex="1" parent="1">
+          <mxGeometry x="325" y="480" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="i0HN7JTHfiNBLuJUNgR1-6" value="AopUtils.invokeJoinpointUsingReflection(target, method, argsToUse)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#e1d5e7;strokeColor=#9673a6;" vertex="1" parent="1">
+          <mxGeometry x="520" y="490" width="370" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="i0HN7JTHfiNBLuJUNgR1-8" value="&lt;font color=&quot;#9673a6&quot;&gt;&lt;b&gt;如果拦截器列表为空，直接执行目标方法&lt;/b&gt;&lt;/font&gt;" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;" vertex="1" parent="1">
+          <mxGeometry x="900" y="483.75" width="220" height="52.5" as="geometry" />
+        </mxCell>
+        <mxCell id="i0HN7JTHfiNBLuJUNgR1-13" style="edgeStyle=orthogonalEdgeStyle;shape=connector;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;strokeColor=#9673A6;align=center;verticalAlign=middle;fontFamily=Helvetica;fontSize=11;fontColor=default;labelBackgroundColor=default;endArrow=classic;endSize=4;" edge="1" parent="1" source="i0HN7JTHfiNBLuJUNgR1-10" target="_Qv0BwHycbl8crCJzst7-11">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="1305" y="1400" />
+              <mxPoint x="600" y="1400" />
+              <mxPoint x="600" y="870" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="i0HN7JTHfiNBLuJUNgR1-10" value="...&lt;div&gt;mi.proceed()&lt;br&gt;&lt;/div&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#e6d0de;strokeColor=#996185;gradientColor=#d5739d;" vertex="1" parent="1">
+          <mxGeometry x="1255" y="1340" width="100" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="i0HN7JTHfiNBLuJUNgR1-12" value="&lt;font color=&quot;#b5739d&quot;&gt;&lt;b&gt;通过 MethodInvocation 调用下一个拦截器，若所有拦截器均执行完，则调用目标方法&lt;/b&gt;&lt;/font&gt;" style="text;html=1;align=left;verticalAlign=middle;whiteSpace=wrap;rounded=0;" vertex="1" parent="1">
+          <mxGeometry x="1000" y="1345" width="250" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="i0HN7JTHfiNBLuJUNgR1-18" style="edgeStyle=orthogonalEdgeStyle;shape=connector;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;strokeColor=#0E8088;align=center;verticalAlign=middle;fontFamily=Helvetica;fontSize=11;fontColor=default;labelBackgroundColor=default;endArrow=classic;endSize=4;" edge="1" parent="1" source="i0HN7JTHfiNBLuJUNgR1-14" target="i0HN7JTHfiNBLuJUNgR1-17">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="i0HN7JTHfiNBLuJUNgR1-14" value="AdvisedSupport#getInterceptorsAndDynamicInterceptionAdvice" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#b0e3e6;strokeColor=#0e8088;" vertex="1" parent="1">
+          <mxGeometry x="2305" y="400" width="360" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="i0HN7JTHfiNBLuJUNgR1-21" style="edgeStyle=orthogonalEdgeStyle;shape=connector;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;strokeColor=#EA851F;align=center;verticalAlign=middle;fontFamily=Helvetica;fontSize=11;fontColor=default;labelBackgroundColor=default;endArrow=classic;endSize=4;" edge="1" parent="1" source="i0HN7JTHfiNBLuJUNgR1-17" target="i0HN7JTHfiNBLuJUNgR1-19">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="i0HN7JTHfiNBLuJUNgR1-17" value="this.advisorChainFactory.getInterceptorsAndDynamicInterceptionAdvice(this, method, targetClass)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#b0e3e6;strokeColor=#0e8088;" vertex="1" parent="1">
+          <mxGeometry x="2220" y="490" width="530" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="i0HN7JTHfiNBLuJUNgR1-23" style="edgeStyle=orthogonalEdgeStyle;shape=connector;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;strokeColor=#EA851F;align=center;verticalAlign=middle;fontFamily=Helvetica;fontSize=11;fontColor=default;labelBackgroundColor=default;endArrow=classic;endSize=4;" edge="1" parent="1" source="i0HN7JTHfiNBLuJUNgR1-19" target="i0HN7JTHfiNBLuJUNgR1-22">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="i0HN7JTHfiNBLuJUNgR1-19" value="DefaultAdvisorChainFactory#getInterceptorsAndDynamicInterceptionAdvice" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffcc99;strokeColor=#36393d;" vertex="1" parent="1">
+          <mxGeometry x="3000" y="490" width="420" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="i0HN7JTHfiNBLuJUNgR1-30" style="edgeStyle=orthogonalEdgeStyle;shape=connector;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;strokeColor=#EA851F;align=center;verticalAlign=middle;fontFamily=Helvetica;fontSize=11;fontColor=default;labelBackgroundColor=default;endArrow=classic;endSize=4;" edge="1" parent="1" source="i0HN7JTHfiNBLuJUNgR1-22" target="i0HN7JTHfiNBLuJUNgR1-29">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="i0HN7JTHfiNBLuJUNgR1-22" value="for (Advisor advisor : config.getAdvisors())" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffcc99;strokeColor=#36393d;" vertex="1" parent="1">
+          <mxGeometry x="3090" y="580" width="240" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="i0HN7JTHfiNBLuJUNgR1-24" value="&lt;b style=&quot;&quot;&gt;&lt;font color=&quot;#ea851f&quot;&gt;遍历通知器列表&lt;/font&gt;&lt;/b&gt;" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;" vertex="1" parent="1">
+          <mxGeometry x="3350" y="580" width="120" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="i0HN7JTHfiNBLuJUNgR1-38" style="edgeStyle=orthogonalEdgeStyle;shape=connector;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;strokeColor=default;align=center;verticalAlign=middle;fontFamily=Helvetica;fontSize=11;fontColor=default;labelBackgroundColor=default;endArrow=classic;endSize=4;" edge="1" parent="1" source="i0HN7JTHfiNBLuJUNgR1-25" target="i0HN7JTHfiNBLuJUNgR1-28">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="i0HN7JTHfiNBLuJUNgR1-25" value="registry.getInterceptors(advisor)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffcc99;strokeColor=#36393d;" vertex="1" parent="1">
+          <mxGeometry x="3117.5" y="1020" width="185" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="i0HN7JTHfiNBLuJUNgR1-27" value="&lt;font color=&quot;#ea851f&quot;&gt;&lt;b&gt;调用 ClassFilter 对 bean 类型进行匹配，无法匹配则说明当前通知器不适合应用在当前 bean 上&lt;/b&gt;&lt;/font&gt;" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;" vertex="1" parent="1">
+          <mxGeometry x="3240" y="680" width="260" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="i0HN7JTHfiNBLuJUNgR1-28" value="interceptorList.addAll(Arrays.asList(interceptors))" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffcc99;strokeColor=#36393d;" vertex="1" parent="1">
+          <mxGeometry x="3075" y="1105" width="270" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="i0HN7JTHfiNBLuJUNgR1-32" style="edgeStyle=orthogonalEdgeStyle;shape=connector;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;strokeColor=#EA851F;align=center;verticalAlign=middle;fontFamily=Helvetica;fontSize=11;fontColor=default;labelBackgroundColor=default;endArrow=classic;endSize=4;" edge="1" parent="1" source="i0HN7JTHfiNBLuJUNgR1-29" target="i0HN7JTHfiNBLuJUNgR1-31">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="i0HN7JTHfiNBLuJUNgR1-33" value="true" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];fontFamily=Helvetica;fontSize=11;fontColor=default;labelBackgroundColor=default;" vertex="1" connectable="0" parent="i0HN7JTHfiNBLuJUNgR1-32">
+          <mxGeometry x="0.0182" y="3" relative="1" as="geometry">
+            <mxPoint x="-1" as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="i0HN7JTHfiNBLuJUNgR1-40" style="edgeStyle=orthogonalEdgeStyle;shape=connector;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=1;entryY=0.5;entryDx=0;entryDy=0;strokeColor=#EA851F;align=center;verticalAlign=middle;fontFamily=Helvetica;fontSize=11;fontColor=default;labelBackgroundColor=default;endArrow=classic;endSize=4;" edge="1" parent="1" source="i0HN7JTHfiNBLuJUNgR1-29" target="i0HN7JTHfiNBLuJUNgR1-22">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="3620" y="740" />
+              <mxPoint x="3620" y="600" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="i0HN7JTHfiNBLuJUNgR1-41" value="false" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];fontFamily=Helvetica;fontSize=11;fontColor=default;labelBackgroundColor=default;" vertex="1" connectable="0" parent="i0HN7JTHfiNBLuJUNgR1-40">
+          <mxGeometry x="0.0561" y="-3" relative="1" as="geometry">
+            <mxPoint as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="i0HN7JTHfiNBLuJUNgR1-29" value="&lt;span style=&quot;font-size: 12px; background-color: rgb(251, 251, 251);&quot;&gt;pointcutAdvisor.getPointcut().getClassFilter().matches(actualClass)&lt;/span&gt;" style="rhombus;whiteSpace=wrap;html=1;fontFamily=Helvetica;fontSize=11;fontColor=default;labelBackgroundColor=default;fillColor=#FFCC99;" vertex="1" parent="1">
+          <mxGeometry x="3155" y="680" width="110" height="120" as="geometry" />
+        </mxCell>
+        <mxCell id="i0HN7JTHfiNBLuJUNgR1-35" style="edgeStyle=orthogonalEdgeStyle;shape=connector;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;strokeColor=#EA851F;align=center;verticalAlign=middle;fontFamily=Helvetica;fontSize=11;fontColor=default;labelBackgroundColor=default;endArrow=classic;endSize=4;" edge="1" parent="1" source="i0HN7JTHfiNBLuJUNgR1-31" target="i0HN7JTHfiNBLuJUNgR1-25">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="i0HN7JTHfiNBLuJUNgR1-36" value="true" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];fontFamily=Helvetica;fontSize=11;fontColor=default;labelBackgroundColor=default;" vertex="1" connectable="0" parent="i0HN7JTHfiNBLuJUNgR1-35">
+          <mxGeometry x="-0.2311" y="2" relative="1" as="geometry">
+            <mxPoint as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="i0HN7JTHfiNBLuJUNgR1-42" style="edgeStyle=orthogonalEdgeStyle;shape=connector;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=1;entryY=0.5;entryDx=0;entryDy=0;strokeColor=#EA851F;align=center;verticalAlign=middle;fontFamily=Helvetica;fontSize=11;fontColor=default;labelBackgroundColor=default;endArrow=classic;endSize=4;" edge="1" parent="1" source="i0HN7JTHfiNBLuJUNgR1-31" target="i0HN7JTHfiNBLuJUNgR1-22">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="3620" y="910" />
+              <mxPoint x="3620" y="600" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="i0HN7JTHfiNBLuJUNgR1-43" value="false" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];fontFamily=Helvetica;fontSize=11;fontColor=default;labelBackgroundColor=default;" vertex="1" connectable="0" parent="i0HN7JTHfiNBLuJUNgR1-42">
+          <mxGeometry x="-0.1948" y="1" relative="1" as="geometry">
+            <mxPoint as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="i0HN7JTHfiNBLuJUNgR1-31" value="&lt;span style=&quot;font-size: 12px; background-color: rgb(251, 251, 251);&quot;&gt;pointcutAdvisor.getPointcut().getClassFilter().matches(actualClass)&lt;/span&gt;" style="rhombus;whiteSpace=wrap;html=1;fontFamily=Helvetica;fontSize=11;fontColor=default;labelBackgroundColor=default;fillColor=#FFCC99;" vertex="1" parent="1">
+          <mxGeometry x="3155" y="850" width="110" height="120" as="geometry" />
+        </mxCell>
+        <mxCell id="i0HN7JTHfiNBLuJUNgR1-34" value="&lt;font color=&quot;#ea851f&quot;&gt;&lt;b&gt;通过方法匹配器对目标方法进行匹配,匹配成功说明应向当前方法织入通知逻辑&lt;/b&gt;&lt;/font&gt;" style="text;html=1;align=left;verticalAlign=middle;whiteSpace=wrap;rounded=0;" vertex="1" parent="1">
+          <mxGeometry x="3250" y="855" width="230" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="i0HN7JTHfiNBLuJUNgR1-37" value="&lt;font color=&quot;#ea851f&quot;&gt;&lt;b&gt;将 advisor 中的 advice 转成相应的拦截器&lt;/b&gt;&lt;/font&gt;" style="text;html=1;align=left;verticalAlign=middle;whiteSpace=wrap;rounded=0;" vertex="1" parent="1">
+          <mxGeometry x="3310" y="1020" width="230" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="i0HN7JTHfiNBLuJUNgR1-39" value="&lt;font color=&quot;#ea851f&quot;&gt;&lt;b&gt;添加到结果中&lt;/b&gt;&lt;/font&gt;" style="text;html=1;align=left;verticalAlign=middle;whiteSpace=wrap;rounded=0;" vertex="1" parent="1">
+          <mxGeometry x="3360" y="1105" width="90" height="40" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>

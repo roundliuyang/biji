@@ -1,12 +1,22 @@
 # AOP：jdk动态代理&Cglib的执行调用链
 
-## 5.目标方法执行的调用链
+## 设计原理
 
-经过代理之后的代理对象被放在IOC容器后，再调用目标方法，将会按照代理后的对象的调用链来执行。
+在Spring AOP通过JDK或CGLIB的方式生成代理对象的时候，相关的拦截器已经配置到代理对象中，拦截器在
+
+代理对象中起作用是通过对这些方法的回调来完成的。
+
+如果使用JDK动态代理来生成代理对象，通过InvocationHandler来设置拦截器回调；
+
+如果使用CGLIB动态代理生成代理对象，通过DynamicAdvisedInterceptor来完成回调；
+
+![1658337364541](AOP：jdk动态代理&Cglib的执行调用链.assets/1658337364541.png)
 
 
 
-### 5.1 jdk的invoke方法 - JdkDynamicAopProxy
+
+
+## JdkDynamicAopProxy的invoke拦截
 
 ```java
 public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
@@ -110,92 +120,16 @@ public Object invoke(Object proxy, Method method, Object[] args) throws Throwabl
 
 源码中前面的一组if-else if中出现了一个很陌生的概念：DecoratingProxy 。为了研究它，我们要先回到上一篇的最后部分，来看看 getProxy 方法还有什么名堂。 
 
-#### 5.1.0 getProxy与DecoratingProxy
+
+
+
+
+### 获取增强器调用链
 
 ```java
-public Object getProxy(@Nullable ClassLoader classLoader) {
-    if (logger.isTraceEnabled()) {
-        logger.trace("Creating JDK dynamic proxy: " + this.advised.getTargetSource());
-    }
-    Class<?>[] proxiedInterfaces = AopProxyUtils.completeProxiedInterfaces(this.advised, true);
-    findDefinedEqualsAndHashCodeMethods(proxiedInterfaces);
-    return Proxy.newProxyInstance(classLoader, proxiedInterfaces, this);
-}
-```
-
-除了最后一句话我们很熟悉以外，注意倒数第三行，它获取了一组 proxiedInterfaces ，通过Debug发现它除了目标对象实现的接口以外，还有3个新的接口：
-
-![1658335880596](AOP：jdk动态代理&Cglib的执行调用链.assets/1658335880596.png)
-
-里面发现了上面咱看到的那个陌生的 DecoratingProxy 接口。咱先来研究研究这三个新的接口都是什么吧。
-
-
-
-##### 5.1.0.1 SpringProxy
-
->文档注释原文翻译：
->
->
->Marker interface implemented by all AOP proxies. Used to detect whether or not objects are Spring-generated proxies. 
->
->由所有AOP代理实现的标记接口。用于检测对象是否是Spring生成的代理。 很简单，用它来标记这是SpringAOP生成的代理对象。
-
-
-
-##### 5.1.0.2 Advised
-
-文档注释原文翻译：
-
->Interface to be implemented by classes that hold the configuration of a factory of AOP proxies. This configuration includes the Interceptors and other advice, Advisors, and the proxied interfaces. Any AOP proxy obtained from Spring can be cast to this interface to allow manipulation of its AOP advice.
->
->由包含AOP代理工厂配置的类实现的接口。此配置包括拦截器和其他通知，增强器以及代理接口。
->
->从Spring获得的任何AOP代理都可以转换为该接口，以允许对其AOP通知进行操作。
->注释中描述的意思大概可以这样理解：它封装了生成代理对象所需要的所有信息，包括拦截器、通知、增强器等。
-
-
-
-##### 5.1.0.3 DecoratingProxy
-
->Interface to be implemented by decorating proxies, in particular Spring AOP proxies but potentially also custom proxies with decorator semantics. Note that this interface should just be implemented if the decorated class is not within the hierarchy of the proxy class to begin with. In particular, a "target-class" proxy such as a Spring AOP CGLIB proxy should not implement it since any lookup on the target class can simply be performed on the proxy class there anyway.
->
->通过装饰代理（尤其是Spring的AOP代理）实现的接口，但也可能具有装饰器语义的自定义代理。 
->
->请注意，仅当装饰的类不在代理类的层次结构中时才应实现此接口。特别是，诸如SpringAOP的CGLIB代理之类的“目标类”代理不应该实现它，因为无论如何都可以在该代理类上简单地对目标类进行任何查找。
->这段文档注释不是很好理解，咱来看看接口中的定义：
-
-```java
-public interface DecoratingProxy {
-
-	// 返回当前代理对象的目标对象的Class类型
-	Class<?> getDecoratedClass();
-
-}
-```
-
-看到这个方法，这下可以很容易理解了，实现了这个接口，可以保证能从代理对象中很方便的取到目标对象的所属类。
-
-知道了这三个接口的意义，那回到那段if-else中：
-
-```java
-        else if (method.getDeclaringClass() == DecoratingProxy.class) {
-            // There is only getDecoratedClass() declared -> dispatch to proxy config.
-            return AopProxyUtils.ultimateTargetClass(this.advised);
-        }
-```
-
-自然就可以看懂了：如果当前方法是Spring织入的 DecoratingProxy 接口中的方法，则返回目标对象的Class类型。
-
-
-
-
-
-#### 5.1.1 获取增强器调用链
-
-```java
-    // Get the interception chain for this method.
-    // 获取当前方法需要织入的切面逻辑的调用链
-    List<Object> chain = this.advised.getInterceptorsAndDynamicInterceptionAdvice(method, targetClass);
+// Get the interception chain for this method.
+// 获取当前方法需要织入的切面逻辑的调用链
+List<Object> chain = this.advised.getInterceptorsAndDynamicInterceptionAdvice(method, targetClass);
 ```
 
 进入到 AdvisedSupport 中： 
@@ -304,42 +238,19 @@ public List<Object> getInterceptorsAndDynamicInterceptionAdvice(
 
 
 
-##### 5.1.1.1 registry.getInterceptors
-
-```java
-public MethodInterceptor[] getInterceptors(Advisor advisor) throws UnknownAdviceTypeException {
-    List<MethodInterceptor> interceptors = new ArrayList<>(3);
-    Advice advice = advisor.getAdvice();
-    if (advice instanceof MethodInterceptor) {
-        interceptors.add((MethodInterceptor) advice);
-    }
-    for (AdvisorAdapter adapter : this.adapters) {
-        if (adapter.supportsAdvice(advice)) {
-            interceptors.add(adapter.getInterceptor(advisor));
-        }
-    }
-    if (interceptors.isEmpty()) {
-        throw new UnknownAdviceTypeException(advisor.getAdvice());
-    }
-    return interceptors.toArray(new MethodInterceptor[0]);
-}
-```
-
-  源码逻辑也比较简单，通知本身就是 MethodInterceptor 对象时，不需要转换；如果通知能被 AdvisorAdapter 适配，也可以添加进去。
 
 
-
-#### 5.1.2 核心调用逻辑 
+### 核心调用逻辑 
 
 方法拦截器都获取好了，下面来看核心的增强器链的调用逻辑： 
 
 ```java
-    // We need to create a method invocation...
-    // 获取目标对象的调用链逻辑，并且对该增强器链进行调用
-    MethodInvocation invocation =
-            new ReflectiveMethodInvocation(proxy, target, method, args, targetClass, chain);
-    // Proceed to the joinpoint through the interceptor chain.
-    retVal = invocation.proceed();
+// We need to create a method invocation...
+// 获取目标对象的调用链逻辑，并且对该增强器链进行调用
+MethodInvocation invocation =
+        new ReflectiveMethodInvocation(proxy, target, method, args, targetClass, chain);
+// Proceed to the joinpoint through the interceptor chain.
+retVal = invocation.proceed();
 ```
 
 进入到 ReflectiveMethodInvocation 的 proceed 方法：
@@ -381,220 +292,23 @@ public Object proceed() throws Throwable {
 
 这段方法看上去逻辑有点复杂但又不太复杂。它提到了一个计数器的概念，用于记录当前拦截器链中调用的位置，以便拦截器链中的拦截器可以有序地调用。 
 
-
-
-##### 5.1.2.1 proceed方法进入
-
-```
-public Object proceed() throws Throwable {
-    if (this.currentInterceptorIndex == this.interceptorsAndDynamicMethodMatchers.size() - 1) {
-        return invokeJoinpoint();
-    }
-```
-
-  ![1658336762806](AOP：jdk动态代理&Cglib的执行调用链.assets/1658336762806.png)
-
-此时 -1 ≠ (2 -1) ，不进入 invokeJoinpoint 方法。
-
-
-
-##### 5.1.2.2 下标索引值++
-
-```java
-    if (this.currentInterceptorIndex == this.interceptorsAndDynamicMethodMatchers.size() - 1) {
-        return invokeJoinpoint();
-    }
-
-    Object interceptorOrInterceptionAdvice =
-           this.interceptorsAndDynamicMethodMatchers.get(++this.currentInterceptorIndex);
-    if (interceptorOrInterceptionAdvice instanceof InterceptorAndDynamicMethodMatcher) {
-```
-
-中间的代码中有对 currentInterceptorIndex 的+1操作，此时 currentInterceptorIndex = 0 。
-
-![1658336849012](AOP：jdk动态代理&Cglib的执行调用链.assets/1658336849012.png)
-
-
-
-##### 5.1.2.3 下面的if判断
-
-看上图，此时取出的拦截器是 ExposeInvocationInterceptor ，而它的类定义：
-
-```java
-public final class ExposeInvocationInterceptor implements MethodInterceptor, PriorityOrdered, Serializable
-```
-
-很明显它不是 InterceptorAndDynamicMethodMatcher ，跳过，进入else结构：
-
-```
-    else {
-        return ((MethodInterceptor) interceptorOrInterceptionAdvice).invoke(this);
-    }
-```
-
-它要执行当前的这个拦截器： 
-
-```java
-// ExposeInvocationInterceptor
-public Object invoke(MethodInvocation mi) throws Throwable {
-    MethodInvocation oldInvocation = invocation.get();
-    invocation.set(mi);
-    try {
-        return mi.proceed();
-    }
-    finally {
-        invocation.set(oldInvocation);
-    }
-}
-```
-
-
-
-执行方法之后，进入try块，继续执行 MethodInvocation 的 proceed 方法。
-
-
-
-##### 5.1.2.4 回到proceed方法
-
-```
-public Object proceed() throws Throwable {
-    if (this.currentInterceptorIndex == this.interceptorsAndDynamicMethodMatchers.size() - 1) {
-        return invokeJoinpoint();
-    }
-```
-
-![1658336942580](AOP：jdk动态代理&Cglib的执行调用链.assets/1658336942580.png)
-
-
-
-此时 0 ≠ (2 -1) ，不进入 invokeJoinpoint 方法。
-
-
-
-##### 5.1.2.5 下标索引值++
-
-```java
-    Object interceptorOrInterceptionAdvice =
-           this.interceptorsAndDynamicMethodMatchers.get(++this.currentInterceptorIndex);
-    if (interceptorOrInterceptionAdvice instanceof InterceptorAndDynamicMethodMatcher) {
-```
-
-如前面一样的操作，又对 currentInterceptorIndex 进行+1操作后，此时 currentInterceptorIndex = 1 。
-
-![1658337018619](AOP：jdk动态代理&Cglib的执行调用链.assets/1658337018619.png)
-
-
-
-
-
-
-
-##### 5.1.2.6 下面的if判断
-
-
-
-看上图，此时取出的拦截器是 MethodBeforeAdviceInterceptor ，而它的类定义： 
-
-```
-public class MethodBeforeAdviceInterceptor implements MethodInterceptor, BeforeAdvice, Serializable
-```
-
-很明显它也不是 InterceptorAndDynamicMethodMatcher ，跳过，进入else结构
-
-```java
-    else {
-        return ((MethodInterceptor) interceptorOrInterceptionAdvice).invoke(this);
-    }
-```
-
-它要执行当前的这个拦截器：
-
-```
-// MethodBeforeAdviceInterceptor
-public Object invoke(MethodInvocation mi) throws Throwable {
-    this.advice.before(mi.getMethod(), mi.getArguments(), mi.getThis());
-    return mi.proceed();
-}
-```
-
-执行方法之后，进入try块，继续执行 MethodInvocation 的 proceed 方法。
-
-
-
-##### 5.1.2.7 又回到proceed方法
-
-```java
-public Object proceed() throws Throwable {
-    if (this.currentInterceptorIndex == this.interceptorsAndDynamicMethodMatchers.size() - 1) {
-        return invokeJoinpoint();
-    }
-```
-
-![1658337127109](AOP：jdk动态代理&Cglib的执行调用链.assets/1658337127109.png)
-
-
-
-此时 1 = 1 ，进入 invokeJoinpoint 方法：
-
-
-
-##### 5.1.2.8 执行目标对象的切入点
-
-```java
-protected Object invokeJoinpoint() throws Throwable {
-    return AopUtils.invokeJoinpointUsingReflection(this.target, this.method, this.arguments);
-}
-```
-
-它利用AOP的工具类，来反射执行切入点方法：
-
-```java
-public static Object invokeJoinpointUsingReflection(@Nullable Object target, Method method, Object[] args)
-        throws Throwable {
-
-    // Use reflection to invoke the method.
-    try {
-        ReflectionUtils.makeAccessible(method);
-        return method.invoke(target, args);
-    }
-    // catch ...
-}
-```
-
-
-
-##### 5.1.2.9 执行切入点
-
-```java
-@Service
-public class DemoService implements IService {
-    
-    @Override
-    public void test() {
-        System.out.println("test run...");
-    }
-    
-}
-```
-
 ![1658337208490](AOP：jdk动态代理&Cglib的执行调用链.assets/1658337208490.png)
 
 
 
 此时才真正的执行test方法。好了走完这个全程，由此我们可以得出算法逻辑：利用一个全局索引值，决定每次执行的拦截器，当所有拦截器都执行完时，索引值刚好等于 size() - 1，此时就可以执行真正的目标方法了 。
-最后用一张图来更好地理解这段逻辑：
 
 
 
 
 
+## CglibAopProxy的intercept拦截
 
+在分析CglibAopProxy的AopProxy代理对象生成的时候，我们了解到对于AOP的拦截调用，其回调是在
 
-下面咱再来看cglib的调用链原理：
+DynamicAdvisedInterceptor对象中实现的，这个回调的实现在intercept()方法中。
 
-### 5.2 cglib的intercept方法 - CglibAopProxy.DynamicAdvisedInterceptor
-
-
+DynamicAdvisedInterceptor.intercept()方法源码：
 
 ```java
 @Nullable
@@ -649,11 +363,11 @@ public Object intercept(Object proxy, Method method, Object[] args, MethodProxy 
 
 
 
-### 5.3 Aspect中的四种通知在源码中的实现
 
 
+## Aspect中的四种通知在源码中的实现
 
-#### 5.3.1 @Before
+### @Before
 
 ```
 public class MethodBeforeAdviceInterceptor implements MethodInterceptor, Serializable {
@@ -672,6 +386,5 @@ public class MethodBeforeAdviceInterceptor implements MethodInterceptor, Seriali
 
 ......
 
-## 小结
 
-![1658337364541](AOP：jdk动态代理&Cglib的执行调用链.assets/1658337364541.png)
+
