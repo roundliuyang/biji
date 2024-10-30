@@ -1,0 +1,365 @@
+<mxfile host="Electron" agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) draw.io/24.7.8 Chrome/128.0.6613.36 Electron/32.0.1 Safari/537.36" version="24.7.8">
+  <diagram name="第 1 页" id="JM-k6H0gmeoRxtbq_64H">
+    <mxGraphModel dx="1434" dy="884" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="9000" pageHeight="7920" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="KR_uWyaKQPh9WPraSUBd-66" value="&lt;pre style=&quot;background-color:#2b2b2b;color:#a9b7c6;font-family:&#39;JetBrains Mono&#39;,monospace;font-size:9.8pt;&quot;&gt;environment&lt;/pre&gt;" style="rounded=0;whiteSpace=wrap;html=1;fontFamily=Helvetica;fontSize=11;labelBackgroundColor=default;" parent="1" vertex="1">
+          <mxGeometry x="2290" y="1230" width="570" height="430" as="geometry" />
+        </mxCell>
+        <mxCell id="KR_uWyaKQPh9WPraSUBd-16" value="" style="rounded=0;whiteSpace=wrap;html=1;fontFamily=Helvetica;fontSize=11;labelBackgroundColor=default;fillColor=#b1ddf0;strokeColor=#10739e;" parent="1" vertex="1">
+          <mxGeometry x="980" y="1300" width="580" height="300" as="geometry" />
+        </mxCell>
+        <mxCell id="IbGjKH9amUDo3Yij2O7V-24" style="edgeStyle=orthogonalEdgeStyle;shape=connector;rounded=0;jumpSize=6;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;strokeColor=default;align=center;verticalAlign=middle;fontFamily=Helvetica;fontSize=11;fontColor=default;labelBackgroundColor=default;startSize=6;endArrow=classic;endSize=4;" parent="1" source="IbGjKH9amUDo3Yij2O7V-1" target="IbGjKH9amUDo3Yij2O7V-21" edge="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="IbGjKH9amUDo3Yij2O7V-1" value="main方法/命令行" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#e51400;strokeColor=#B20000;fontColor=#ffffff;" parent="1" vertex="1">
+          <mxGeometry x="640" y="310" width="100" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="IbGjKH9amUDo3Yij2O7V-26" style="edgeStyle=orthogonalEdgeStyle;shape=connector;rounded=0;jumpSize=6;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;strokeColor=default;align=center;verticalAlign=middle;fontFamily=Helvetica;fontSize=11;fontColor=default;labelBackgroundColor=default;startSize=6;endArrow=classic;endSize=4;dashed=1;dashPattern=8 8;" parent="1" source="IbGjKH9amUDo3Yij2O7V-2" target="IbGjKH9amUDo3Yij2O7V-8" edge="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="IbGjKH9amUDo3Yij2O7V-27" style="edgeStyle=orthogonalEdgeStyle;shape=connector;rounded=0;jumpSize=6;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;strokeColor=default;align=center;verticalAlign=middle;fontFamily=Helvetica;fontSize=11;fontColor=default;labelBackgroundColor=default;startSize=6;endArrow=classic;endSize=4;" parent="1" source="IbGjKH9amUDo3Yij2O7V-2" target="IbGjKH9amUDo3Yij2O7V-5" edge="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="IbGjKH9amUDo3Yij2O7V-2" value="new SpringApplication().run(args)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f0a30a;strokeColor=#BD7000;fontColor=#000000;" parent="1" vertex="1">
+          <mxGeometry x="605" y="460" width="190" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="IbGjKH9amUDo3Yij2O7V-28" style="edgeStyle=orthogonalEdgeStyle;shape=connector;rounded=0;jumpSize=6;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;strokeColor=default;align=center;verticalAlign=middle;fontFamily=Helvetica;fontSize=11;fontColor=default;labelBackgroundColor=default;startSize=6;endArrow=classic;endSize=4;" parent="1" source="IbGjKH9amUDo3Yij2O7V-5" target="IbGjKH9amUDo3Yij2O7V-10" edge="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="IbGjKH9amUDo3Yij2O7V-5" value="启动.run(args)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;gradientColor=#ea6b66;" parent="1" vertex="1">
+          <mxGeometry x="1730" y="460" width="140" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="KR_uWyaKQPh9WPraSUBd-10" style="edgeStyle=orthogonalEdgeStyle;shape=connector;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;strokeColor=default;align=center;verticalAlign=middle;fontFamily=Helvetica;fontSize=11;fontColor=default;labelBackgroundColor=default;endArrow=classic;endSize=4;" parent="1" source="IbGjKH9amUDo3Yij2O7V-8" target="KR_uWyaKQPh9WPraSUBd-9" edge="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="IbGjKH9amUDo3Yij2O7V-8" value="初始化模块SpringApplication&lt;br&gt;new SpringApplication(Class&amp;lt;?&amp;gt;... primarySources)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;gradientColor=#ea6b66;" parent="1" vertex="1">
+          <mxGeometry x="557.5" y="570" width="285" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="IbGjKH9amUDo3Yij2O7V-29" style="edgeStyle=orthogonalEdgeStyle;shape=connector;rounded=0;jumpSize=6;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;strokeColor=default;align=center;verticalAlign=middle;fontFamily=Helvetica;fontSize=11;fontColor=default;labelBackgroundColor=default;startSize=6;endArrow=classic;endSize=4;" parent="1" source="IbGjKH9amUDo3Yij2O7V-10" target="IbGjKH9amUDo3Yij2O7V-13" edge="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="IbGjKH9amUDo3Yij2O7V-10" value="创建计时器对象，开始计时：&lt;br&gt;stopWatch.start();" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#1ba1e2;strokeColor=#006EAF;fontColor=#ffffff;" parent="1" vertex="1">
+          <mxGeometry x="1720" y="550" width="160" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="IbGjKH9amUDo3Yij2O7V-30" style="edgeStyle=orthogonalEdgeStyle;shape=connector;rounded=0;jumpSize=6;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;strokeColor=default;align=center;verticalAlign=middle;fontFamily=Helvetica;fontSize=11;fontColor=default;labelBackgroundColor=default;startSize=6;endArrow=classic;endSize=4;" parent="1" source="IbGjKH9amUDo3Yij2O7V-13" target="IbGjKH9amUDo3Yij2O7V-15" edge="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="IbGjKH9amUDo3Yij2O7V-13" value="配置headless属性并设置到系统属性中" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#eeeeee;strokeColor=#36393d;" parent="1" vertex="1">
+          <mxGeometry x="1735" y="630" width="130" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="IbGjKH9amUDo3Yij2O7V-31" style="edgeStyle=orthogonalEdgeStyle;shape=connector;rounded=0;jumpSize=6;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;strokeColor=default;align=center;verticalAlign=middle;fontFamily=Helvetica;fontSize=11;fontColor=default;labelBackgroundColor=default;startSize=6;endArrow=classic;endSize=4;" parent="1" source="IbGjKH9amUDo3Yij2O7V-15" target="IbGjKH9amUDo3Yij2O7V-17" edge="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="KR_uWyaKQPh9WPraSUBd-43" style="edgeStyle=orthogonalEdgeStyle;shape=connector;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0;exitY=0.5;exitDx=0;exitDy=0;strokeColor=default;align=center;verticalAlign=middle;fontFamily=Helvetica;fontSize=11;fontColor=default;labelBackgroundColor=default;endArrow=classic;endSize=4;dashed=1;strokeWidth=2;" parent="1" source="IbGjKH9amUDo3Yij2O7V-15" target="KR_uWyaKQPh9WPraSUBd-19" edge="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="KR_uWyaKQPh9WPraSUBd-45" value="&lt;div style=&quot;text-align: left;&quot;&gt;&lt;b style=&quot;background-color: rgb(255, 255, 255);&quot;&gt;&lt;span style=&quot;color: rgb(255, 51, 51);&quot;&gt;type:&amp;nbsp;&lt;/span&gt;&lt;font style=&quot;&quot; color=&quot;#ff3333&quot;&gt;&lt;span style=&quot;font-size: 12px; text-wrap: wrap;&quot;&gt;SpringApplicationRunListener.class&lt;/span&gt;&lt;/font&gt;&lt;/b&gt;&lt;/div&gt;" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];fontFamily=Helvetica;fontSize=11;fontColor=default;labelBackgroundColor=default;" parent="KR_uWyaKQPh9WPraSUBd-43" vertex="1" connectable="0">
+          <mxGeometry x="-0.3932" y="1" relative="1" as="geometry">
+            <mxPoint as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="IbGjKH9amUDo3Yij2O7V-15" value="初始化监听器&lt;br&gt;this.getRunListeners(args)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#e6d0de;strokeColor=#996185;gradientColor=#d5739d;" parent="1" vertex="1">
+          <mxGeometry x="1720" y="710" width="160" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="KR_uWyaKQPh9WPraSUBd-47" style="edgeStyle=orthogonalEdgeStyle;shape=connector;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;strokeColor=default;align=center;verticalAlign=middle;fontFamily=Helvetica;fontSize=11;fontColor=default;labelBackgroundColor=default;endArrow=classic;endSize=4;" parent="1" source="IbGjKH9amUDo3Yij2O7V-17" target="KR_uWyaKQPh9WPraSUBd-46" edge="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="IbGjKH9amUDo3Yij2O7V-17" value="启动监听器&lt;br&gt;listeners.starting()" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#e6d0de;strokeColor=#996185;gradientColor=#d5739d;" parent="1" vertex="1">
+          <mxGeometry x="1735" y="800" width="130" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="IbGjKH9amUDo3Yij2O7V-25" style="edgeStyle=orthogonalEdgeStyle;shape=connector;rounded=0;jumpSize=6;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;strokeColor=default;align=center;verticalAlign=middle;fontFamily=Helvetica;fontSize=11;fontColor=default;labelBackgroundColor=default;startSize=6;endArrow=classic;endSize=4;" parent="1" source="IbGjKH9amUDo3Yij2O7V-21" target="IbGjKH9amUDo3Yij2O7V-2" edge="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="IbGjKH9amUDo3Yij2O7V-21" value="SpringApplication.run(Class&amp;lt;?&amp;gt; primarySource, String... args)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f0a30a;strokeColor=#BD7000;fontColor=#000000;" parent="1" vertex="1">
+          <mxGeometry x="550" y="380" width="300" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="KR_uWyaKQPh9WPraSUBd-2" value="&lt;span style=&quot;font-size: 11px;&quot;&gt;SpringBoot主启动类启动后会进入main方法中，并在方法中由SpringApplication调用run()；方法中传入当前类的class对象以及main方法的args参数&lt;/span&gt;" style="shape=note;whiteSpace=wrap;html=1;backgroundOutline=1;darkOpacity=0.05;fillColor=#ffff88;strokeColor=#36393d;align=left;size=16;" parent="1" vertex="1">
+          <mxGeometry x="510" y="240" width="410" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="KR_uWyaKQPh9WPraSUBd-4" value="&lt;span style=&quot;font-size: 11px;&quot;&gt;1.获取启动类&lt;/span&gt;&lt;div&gt;&lt;span style=&quot;font-size: 11px;&quot;&gt;2.获取web应用类型&lt;/span&gt;&lt;/div&gt;&lt;div&gt;&lt;span style=&quot;font-size: 11px;&quot;&gt;3.加载所有初始化器&lt;/span&gt;&lt;span style=&quot;background-color: initial; font-size: 11px;&quot;&gt;ApplicationContextInitializer&lt;/span&gt;&lt;/div&gt;&lt;div&gt;&lt;span style=&quot;background-color: initial; font-size: 11px;&quot;&gt;4.加载所有的监听器&lt;/span&gt;&lt;span style=&quot;background-color: initial; font-size: 11px;&quot;&gt;ApplicationListener&lt;/span&gt;&lt;/div&gt;&lt;div&gt;&lt;span style=&quot;background-color: initial; font-size: 11px;&quot;&gt;5.根据main推算出所在的类&lt;/span&gt;&lt;/div&gt;" style="shape=note;whiteSpace=wrap;html=1;backgroundOutline=1;darkOpacity=0.05;fillColor=#ffff88;strokeColor=#36393d;align=left;size=16;" parent="1" vertex="1">
+          <mxGeometry x="240" y="545" width="240" height="90" as="geometry" />
+        </mxCell>
+        <mxCell id="KR_uWyaKQPh9WPraSUBd-8" style="edgeStyle=orthogonalEdgeStyle;shape=connector;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;strokeColor=default;align=center;verticalAlign=middle;fontFamily=Helvetica;fontSize=11;fontColor=default;labelBackgroundColor=default;endArrow=classic;endSize=4;" parent="1" source="KR_uWyaKQPh9WPraSUBd-5" target="KR_uWyaKQPh9WPraSUBd-7" edge="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="KR_uWyaKQPh9WPraSUBd-5" value="推断 web 应用类型" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#cce5ff;strokeColor=#36393d;" parent="1" vertex="1">
+          <mxGeometry x="628.75" y="760" width="142.5" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="KR_uWyaKQPh9WPraSUBd-13" style="edgeStyle=orthogonalEdgeStyle;shape=connector;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;strokeColor=default;align=center;verticalAlign=middle;fontFamily=Helvetica;fontSize=11;fontColor=default;labelBackgroundColor=default;endArrow=classic;endSize=4;" parent="1" source="KR_uWyaKQPh9WPraSUBd-7" target="KR_uWyaKQPh9WPraSUBd-12" edge="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="KR_uWyaKQPh9WPraSUBd-38" style="edgeStyle=orthogonalEdgeStyle;shape=connector;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;strokeColor=default;align=center;verticalAlign=middle;fontFamily=Helvetica;fontSize=11;fontColor=default;labelBackgroundColor=default;endArrow=classic;endSize=4;strokeWidth=2;dashed=1;" parent="1" source="KR_uWyaKQPh9WPraSUBd-7" target="KR_uWyaKQPh9WPraSUBd-19" edge="1">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="450" y="865" />
+              <mxPoint x="450" y="1395" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="KR_uWyaKQPh9WPraSUBd-39" value="&lt;font color=&quot;#ff3333&quot;&gt;&lt;b&gt;type:&amp;nbsp;&lt;span style=&quot;font-size: 12px; text-align: left; text-wrap: wrap; background-color: rgb(251, 251, 251);&quot;&gt;ApplicationContextInitializer&lt;/span&gt;&lt;/b&gt;&lt;/font&gt;" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];fontFamily=Helvetica;fontSize=11;fontColor=default;labelBackgroundColor=default;" parent="KR_uWyaKQPh9WPraSUBd-38" vertex="1" connectable="0">
+          <mxGeometry x="-0.5243" y="2" relative="1" as="geometry">
+            <mxPoint as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="KR_uWyaKQPh9WPraSUBd-7" value="从spring.factorties中加载所有的初始化器：&lt;br&gt;getSpringFactoriesInstances(ApplicationContextInitializer.class)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#cce5ff;strokeColor=#36393d;align=left;" parent="1" vertex="1">
+          <mxGeometry x="527.1899999999999" y="840" width="345.62" height="50" as="geometry" />
+        </mxCell>
+        <mxCell id="KR_uWyaKQPh9WPraSUBd-11" style="edgeStyle=orthogonalEdgeStyle;shape=connector;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;strokeColor=default;align=center;verticalAlign=middle;fontFamily=Helvetica;fontSize=11;fontColor=default;labelBackgroundColor=default;endArrow=classic;endSize=4;" parent="1" source="KR_uWyaKQPh9WPraSUBd-9" target="KR_uWyaKQPh9WPraSUBd-5" edge="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="KR_uWyaKQPh9WPraSUBd-9" value="将启动类作为配置类放入primarySource:&lt;br&gt;new LinkedHashSet&amp;lt;&amp;gt;(Arrays.asList(primarySources))" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#cce5ff;strokeColor=#36393d;align=left;" parent="1" vertex="1">
+          <mxGeometry x="548.75" y="660" width="301.25" height="50" as="geometry" />
+        </mxCell>
+        <mxCell id="KR_uWyaKQPh9WPraSUBd-15" style="edgeStyle=orthogonalEdgeStyle;shape=connector;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;strokeColor=default;align=center;verticalAlign=middle;fontFamily=Helvetica;fontSize=11;fontColor=default;labelBackgroundColor=default;endArrow=classic;endSize=4;" parent="1" source="KR_uWyaKQPh9WPraSUBd-12" target="KR_uWyaKQPh9WPraSUBd-14" edge="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="KR_uWyaKQPh9WPraSUBd-36" style="shape=connector;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;strokeColor=default;align=center;verticalAlign=middle;fontFamily=Helvetica;fontSize=11;fontColor=default;labelBackgroundColor=default;endArrow=classic;endSize=4;dashed=1;strokeWidth=2;" parent="1" source="KR_uWyaKQPh9WPraSUBd-12" target="KR_uWyaKQPh9WPraSUBd-19" edge="1">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="910" y="965" />
+              <mxPoint x="960" y="965" />
+              <mxPoint x="960" y="1340" />
+              <mxPoint x="1080" y="1340" />
+              <mxPoint x="1157" y="1340" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="KR_uWyaKQPh9WPraSUBd-37" value="&lt;span style=&quot;background-color: rgb(255, 255, 255);&quot;&gt;&lt;font color=&quot;#ff3333&quot;&gt;&lt;b&gt;type:&amp;nbsp;&lt;span style=&quot;font-size: 12px; text-align: left; text-wrap: wrap;&quot;&gt;ApplicationListener&lt;/span&gt;&lt;/b&gt;&lt;/font&gt;&lt;/span&gt;" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];fontFamily=Helvetica;fontSize=11;fontColor=default;labelBackgroundColor=default;" parent="KR_uWyaKQPh9WPraSUBd-36" vertex="1" connectable="0">
+          <mxGeometry x="-0.2839" y="1" relative="1" as="geometry">
+            <mxPoint as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="KR_uWyaKQPh9WPraSUBd-12" value="从spring.factorties中加载所有的监听器：&lt;br&gt;getSpringFactoriesInstances(ApplicationListener.class)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#cce5ff;strokeColor=#36393d;align=left;" parent="1" vertex="1">
+          <mxGeometry x="548.2800000000001" y="940" width="303.43" height="50" as="geometry" />
+        </mxCell>
+        <mxCell id="KR_uWyaKQPh9WPraSUBd-14" value="推断 main 方法 Class 类（进行入口类推断）&lt;br&gt;this.mainApplicationClass = deduceMainApplicationClass();" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#cce5ff;strokeColor=#36393d;align=left;" parent="1" vertex="1">
+          <mxGeometry x="538.75" y="1040" width="321.25" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="KR_uWyaKQPh9WPraSUBd-18" value="getSpringFactoriesInstances" style="swimlane;horizontal=0;whiteSpace=wrap;html=1;fontFamily=Helvetica;fontSize=11;fontColor=default;labelBackgroundColor=default;" parent="1" vertex="1">
+          <mxGeometry x="1018.75" y="1330" width="511.25" height="240" as="geometry" />
+        </mxCell>
+        <mxCell id="KR_uWyaKQPh9WPraSUBd-19" value="type 要实例化类的继承的接口&lt;br&gt;parameterTypes用于查找构造方法的args 实例化参数" style="rounded=1;whiteSpace=wrap;html=1;fontFamily=Helvetica;fontSize=11;fontColor=default;labelBackgroundColor=default;align=left;" parent="KR_uWyaKQPh9WPraSUBd-18" vertex="1">
+          <mxGeometry x="46.25" y="40" width="183.75" height="50" as="geometry" />
+        </mxCell>
+        <mxCell id="KR_uWyaKQPh9WPraSUBd-26" style="edgeStyle=orthogonalEdgeStyle;shape=connector;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;strokeColor=default;align=center;verticalAlign=middle;fontFamily=Helvetica;fontSize=11;fontColor=default;labelBackgroundColor=default;endArrow=classic;endSize=4;" parent="KR_uWyaKQPh9WPraSUBd-18" source="KR_uWyaKQPh9WPraSUBd-22" target="KR_uWyaKQPh9WPraSUBd-25" edge="1">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="261" y="180" />
+              <mxPoint x="261" y="65" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="KR_uWyaKQPh9WPraSUBd-22" value="&amp;nbsp;加载指定类型对应的，在 META-INF/spring.factories 里的类名的数组" style="shape=document;whiteSpace=wrap;html=1;boundedLbl=1;fontFamily=Helvetica;fontSize=11;fontColor=default;labelBackgroundColor=default;align=left;" parent="KR_uWyaKQPh9WPraSUBd-18" vertex="1">
+          <mxGeometry x="63.13" y="140" width="150" height="80" as="geometry" />
+        </mxCell>
+        <mxCell id="KR_uWyaKQPh9WPraSUBd-24" style="edgeStyle=orthogonalEdgeStyle;shape=connector;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;strokeColor=default;align=center;verticalAlign=middle;fontFamily=Helvetica;fontSize=11;fontColor=default;labelBackgroundColor=default;endArrow=classic;endSize=4;" parent="KR_uWyaKQPh9WPraSUBd-18" source="KR_uWyaKQPh9WPraSUBd-19" target="KR_uWyaKQPh9WPraSUBd-22" edge="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="KR_uWyaKQPh9WPraSUBd-29" style="edgeStyle=orthogonalEdgeStyle;shape=connector;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;strokeColor=default;align=center;verticalAlign=middle;fontFamily=Helvetica;fontSize=11;fontColor=default;labelBackgroundColor=default;endArrow=classic;endSize=4;" parent="KR_uWyaKQPh9WPraSUBd-18" source="KR_uWyaKQPh9WPraSUBd-25" target="KR_uWyaKQPh9WPraSUBd-27" edge="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="KR_uWyaKQPh9WPraSUBd-25" value="通过类名及parameterTypes，args参数实例化该类，并添加到集合中" style="rounded=1;whiteSpace=wrap;html=1;fontFamily=Helvetica;fontSize=11;fontColor=default;labelBackgroundColor=default;align=left;" parent="KR_uWyaKQPh9WPraSUBd-18" vertex="1">
+          <mxGeometry x="291.25" y="40" width="178.75" height="50" as="geometry" />
+        </mxCell>
+        <mxCell id="KR_uWyaKQPh9WPraSUBd-27" value="集合排序" style="rounded=1;whiteSpace=wrap;html=1;fontFamily=Helvetica;fontSize=11;fontColor=default;labelBackgroundColor=default;align=center;" parent="KR_uWyaKQPh9WPraSUBd-18" vertex="1">
+          <mxGeometry x="340.63" y="120" width="80" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="KR_uWyaKQPh9WPraSUBd-28" value="返回集合" style="rounded=1;whiteSpace=wrap;html=1;fontFamily=Helvetica;fontSize=11;fontColor=default;labelBackgroundColor=default;align=center;" parent="1" vertex="1">
+          <mxGeometry x="1360" y="1520" width="80" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="KR_uWyaKQPh9WPraSUBd-30" style="edgeStyle=orthogonalEdgeStyle;shape=connector;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;strokeColor=default;align=center;verticalAlign=middle;fontFamily=Helvetica;fontSize=11;fontColor=default;labelBackgroundColor=default;endArrow=classic;endSize=4;" parent="1" source="KR_uWyaKQPh9WPraSUBd-27" target="KR_uWyaKQPh9WPraSUBd-28" edge="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="KR_uWyaKQPh9WPraSUBd-41" value="&lt;span style=&quot;font-size: 11px;&quot;&gt;1.根据传入的类得到需要的实体类的集合&lt;/span&gt;&lt;div&gt;&lt;span style=&quot;font-size: 11px;&quot;&gt;2.通过类加载器加载spring.factories的属性&lt;/span&gt;&lt;/div&gt;&lt;div&gt;&lt;span style=&quot;font-size: 11px;&quot;&gt;3.获取文件中类的路径&lt;br&gt;4.通过反射获取到具体的实例化对象&lt;/span&gt;&lt;/div&gt;" style="shape=note;whiteSpace=wrap;html=1;backgroundOutline=1;darkOpacity=0.05;fillColor=#ffff88;strokeColor=#36393d;align=left;size=16;" parent="1" vertex="1">
+          <mxGeometry x="980" y="1630" width="230" height="80" as="geometry" />
+        </mxCell>
+        <mxCell id="KR_uWyaKQPh9WPraSUBd-49" style="edgeStyle=orthogonalEdgeStyle;shape=connector;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;strokeColor=default;align=center;verticalAlign=middle;fontFamily=Helvetica;fontSize=11;fontColor=default;labelBackgroundColor=default;endArrow=classic;endSize=4;" parent="1" source="KR_uWyaKQPh9WPraSUBd-46" target="KR_uWyaKQPh9WPraSUBd-48" edge="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="KR_uWyaKQPh9WPraSUBd-46" value="把输入参数转成DefaultApplicationArguments" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#e6d0de;strokeColor=#996185;gradientColor=#d5739d;" parent="1" vertex="1">
+          <mxGeometry x="1675" y="890" width="250" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="KR_uWyaKQPh9WPraSUBd-52" style="edgeStyle=orthogonalEdgeStyle;shape=connector;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;strokeColor=default;align=center;verticalAlign=middle;fontFamily=Helvetica;fontSize=11;fontColor=default;labelBackgroundColor=default;endArrow=classic;endSize=4;dashed=1;" parent="1" source="KR_uWyaKQPh9WPraSUBd-48" target="KR_uWyaKQPh9WPraSUBd-51" edge="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="KR_uWyaKQPh9WPraSUBd-58" style="edgeStyle=orthogonalEdgeStyle;shape=connector;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;strokeColor=default;align=center;verticalAlign=middle;fontFamily=Helvetica;fontSize=11;fontColor=default;labelBackgroundColor=default;endArrow=classic;endSize=4;" parent="1" source="KR_uWyaKQPh9WPraSUBd-48" target="KR_uWyaKQPh9WPraSUBd-57" edge="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="KR_uWyaKQPh9WPraSUBd-48" value="prepareEnvironment(listeners, applicationArguments)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffe6cc;strokeColor=#d79b00;" parent="1" vertex="1">
+          <mxGeometry x="1652.5" y="1010" width="295" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="KR_uWyaKQPh9WPraSUBd-50" value="&lt;font color=&quot;#d79b00&quot;&gt;&lt;b&gt;加载属性配置。执行完成后，所有的 environment 的属性都会加载进来，包括 application.properties 和外部的属性配置。&lt;/b&gt;&lt;/font&gt;" style="text;html=1;align=left;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontFamily=Helvetica;fontSize=11;fontColor=default;labelBackgroundColor=default;" parent="1" vertex="1">
+          <mxGeometry x="1820" y="960" width="310" height="50" as="geometry" />
+        </mxCell>
+        <mxCell id="KR_uWyaKQPh9WPraSUBd-54" style="edgeStyle=orthogonalEdgeStyle;shape=connector;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;strokeColor=default;align=center;verticalAlign=middle;fontFamily=Helvetica;fontSize=11;fontColor=default;labelBackgroundColor=default;endArrow=classic;endSize=4;" parent="1" source="KR_uWyaKQPh9WPraSUBd-51" target="KR_uWyaKQPh9WPraSUBd-53" edge="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="KR_uWyaKQPh9WPraSUBd-51" value="创建环境对象" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffe6cc;strokeColor=#d79b00;" parent="1" vertex="1">
+          <mxGeometry x="2010" y="1010" width="90" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="KR_uWyaKQPh9WPraSUBd-56" style="edgeStyle=orthogonalEdgeStyle;shape=connector;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;strokeColor=default;align=center;verticalAlign=middle;fontFamily=Helvetica;fontSize=11;fontColor=default;labelBackgroundColor=default;endArrow=classic;endSize=4;" parent="1" source="KR_uWyaKQPh9WPraSUBd-53" target="KR_uWyaKQPh9WPraSUBd-55" edge="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="KR_uWyaKQPh9WPraSUBd-53" value="加载系统参数" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffe6cc;strokeColor=#d79b00;" parent="1" vertex="1">
+          <mxGeometry x="2130" y="1010" width="90" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="KR_uWyaKQPh9WPraSUBd-55" value="设置环境监听器集合" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffe6cc;strokeColor=#d79b00;" parent="1" vertex="1">
+          <mxGeometry x="2250" y="1010" width="110" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="KR_uWyaKQPh9WPraSUBd-60" style="edgeStyle=orthogonalEdgeStyle;shape=connector;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;strokeColor=default;align=center;verticalAlign=middle;fontFamily=Helvetica;fontSize=11;fontColor=default;labelBackgroundColor=default;endArrow=classic;endSize=4;" parent="1" source="KR_uWyaKQPh9WPraSUBd-57" target="KR_uWyaKQPh9WPraSUBd-59" edge="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="KR_uWyaKQPh9WPraSUBd-57" value="控制台打印启动标记&lt;br&gt;printBanner(environment)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffe6cc;strokeColor=#d79b00;" parent="1" vertex="1">
+          <mxGeometry x="1711.25" y="1080" width="177.5" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="KR_uWyaKQPh9WPraSUBd-62" style="edgeStyle=orthogonalEdgeStyle;shape=connector;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;strokeColor=default;align=center;verticalAlign=middle;fontFamily=Helvetica;fontSize=11;fontColor=default;labelBackgroundColor=default;endArrow=classic;endSize=4;" parent="1" source="KR_uWyaKQPh9WPraSUBd-59" target="KR_uWyaKQPh9WPraSUBd-61" edge="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="KR_uWyaKQPh9WPraSUBd-59" value="创建Spring容器&lt;br&gt;context = createApplicationContext()" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffe6cc;strokeColor=#d79b00;" parent="1" vertex="1">
+          <mxGeometry x="1695.63" y="1160" width="208.75" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="KR_uWyaKQPh9WPraSUBd-63" style="edgeStyle=orthogonalEdgeStyle;shape=connector;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0;exitY=0.5;exitDx=0;exitDy=0;strokeColor=default;align=center;verticalAlign=middle;fontFamily=Helvetica;fontSize=11;fontColor=default;labelBackgroundColor=default;endArrow=classic;endSize=4;dashed=1;strokeWidth=2;" parent="1" source="KR_uWyaKQPh9WPraSUBd-61" target="KR_uWyaKQPh9WPraSUBd-19" edge="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="KR_uWyaKQPh9WPraSUBd-65" style="edgeStyle=orthogonalEdgeStyle;shape=connector;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;strokeColor=default;align=center;verticalAlign=middle;fontFamily=Helvetica;fontSize=11;fontColor=default;labelBackgroundColor=default;endArrow=classic;endSize=4;" parent="1" source="KR_uWyaKQPh9WPraSUBd-61" target="KR_uWyaKQPh9WPraSUBd-64" edge="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="KR_uWyaKQPh9WPraSUBd-61" value="准备异常报告器" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffe6cc;strokeColor=#d79b00;" parent="1" vertex="1">
+          <mxGeometry x="1695.6200000000001" y="1230" width="208.75" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="KR_uWyaKQPh9WPraSUBd-86" value="" style="edgeStyle=orthogonalEdgeStyle;shape=connector;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=default;align=center;verticalAlign=middle;fontFamily=Helvetica;fontSize=11;fontColor=default;labelBackgroundColor=default;endArrow=classic;endSize=4;" parent="1" source="KR_uWyaKQPh9WPraSUBd-64" target="KR_uWyaKQPh9WPraSUBd-85" edge="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="KR_uWyaKQPh9WPraSUBd-108" style="edgeStyle=orthogonalEdgeStyle;shape=connector;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;strokeColor=default;align=center;verticalAlign=middle;fontFamily=Helvetica;fontSize=11;fontColor=default;labelBackgroundColor=default;endArrow=classic;endSize=4;curved=1;" parent="1" source="KR_uWyaKQPh9WPraSUBd-64" target="KR_uWyaKQPh9WPraSUBd-66" edge="1">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="1930" y="1445" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="KR_uWyaKQPh9WPraSUBd-64" value="准备spring上下文环境&lt;br&gt;prepareContext(context, environment, listeners, applicationArguments, printedBanner)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fad9d5;strokeColor=#ae4132;align=left;" parent="1" vertex="1">
+          <mxGeometry x="1670.01" y="1340" width="260" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="KR_uWyaKQPh9WPraSUBd-74" style="edgeStyle=orthogonalEdgeStyle;shape=connector;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;strokeColor=default;align=center;verticalAlign=middle;fontFamily=Helvetica;fontSize=11;fontColor=default;labelBackgroundColor=default;endArrow=classic;endSize=4;" parent="1" source="KR_uWyaKQPh9WPraSUBd-72" target="KR_uWyaKQPh9WPraSUBd-73" edge="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="KR_uWyaKQPh9WPraSUBd-72" value="SpringApplication#prepareContext()" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fad9d5;strokeColor=#ae4132;align=left;" parent="1" vertex="1">
+          <mxGeometry x="2420" y="1270" width="200" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="KR_uWyaKQPh9WPraSUBd-76" style="edgeStyle=orthogonalEdgeStyle;shape=connector;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;strokeColor=default;align=center;verticalAlign=middle;fontFamily=Helvetica;fontSize=11;fontColor=default;labelBackgroundColor=default;endArrow=classic;endSize=4;" parent="1" source="KR_uWyaKQPh9WPraSUBd-73" target="KR_uWyaKQPh9WPraSUBd-75" edge="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="KR_uWyaKQPh9WPraSUBd-73" value="ConfigurableEnvironment environment = getOrCreateEnvironment()" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fad9d5;strokeColor=#ae4132;align=left;" parent="1" vertex="1">
+          <mxGeometry x="2405" y="1350" width="230" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="KR_uWyaKQPh9WPraSUBd-81" style="edgeStyle=orthogonalEdgeStyle;shape=connector;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;strokeColor=default;align=center;verticalAlign=middle;fontFamily=Helvetica;fontSize=11;fontColor=default;labelBackgroundColor=default;endArrow=classic;endSize=4;" parent="1" source="KR_uWyaKQPh9WPraSUBd-75" target="KR_uWyaKQPh9WPraSUBd-80" edge="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="KR_uWyaKQPh9WPraSUBd-75" value="configureEnvironment(environment, applicationArguments.getSourceArgs())" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fad9d5;strokeColor=#ae4132;align=left;" parent="1" vertex="1">
+          <mxGeometry x="2405" y="1430" width="230" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="KR_uWyaKQPh9WPraSUBd-78" value="" style="shape=curlyBracket;whiteSpace=wrap;html=1;rounded=1;flipH=1;labelPosition=right;verticalLabelPosition=middle;align=left;verticalAlign=middle;fontFamily=Helvetica;fontSize=11;fontColor=default;labelBackgroundColor=default;" parent="1" vertex="1">
+          <mxGeometry x="2640" y="1350" width="20" height="120" as="geometry" />
+        </mxCell>
+        <mxCell id="KR_uWyaKQPh9WPraSUBd-79" value="&lt;b&gt;创建ConfigurableEnvironment 对象，并进行配置&lt;/b&gt;" style="text;html=1;align=left;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontFamily=Helvetica;fontSize=11;fontColor=default;labelBackgroundColor=default;" parent="1" vertex="1">
+          <mxGeometry x="2660" y="1395" width="160" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="KR_uWyaKQPh9WPraSUBd-84" style="edgeStyle=orthogonalEdgeStyle;shape=connector;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;strokeColor=default;align=center;verticalAlign=middle;fontFamily=Helvetica;fontSize=11;fontColor=default;labelBackgroundColor=default;endArrow=classic;endSize=4;" parent="1" source="KR_uWyaKQPh9WPraSUBd-80" target="KR_uWyaKQPh9WPraSUBd-83" edge="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="KR_uWyaKQPh9WPraSUBd-80" value="listeners.environmentPrepared(environment)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fad9d5;strokeColor=#ae4132;align=left;" parent="1" vertex="1">
+          <mxGeometry x="2397.5" y="1520" width="245" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="KR_uWyaKQPh9WPraSUBd-82" value="&lt;b&gt;通知 SpringApplicationRunListener 的数组，环境变量已经准备完成&lt;/b&gt;" style="text;html=1;align=left;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontFamily=Helvetica;fontSize=11;fontColor=default;labelBackgroundColor=default;" parent="1" vertex="1">
+          <mxGeometry x="2660" y="1525" width="190" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="KR_uWyaKQPh9WPraSUBd-83" value="return environment" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fad9d5;strokeColor=#ae4132;align=left;" parent="1" vertex="1">
+          <mxGeometry x="2462.5" y="1600" width="115" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="KR_uWyaKQPh9WPraSUBd-89" style="edgeStyle=orthogonalEdgeStyle;shape=connector;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;strokeColor=default;align=center;verticalAlign=middle;fontFamily=Helvetica;fontSize=11;fontColor=default;labelBackgroundColor=default;endArrow=classic;endSize=4;" parent="1" source="KR_uWyaKQPh9WPraSUBd-85" target="KR_uWyaKQPh9WPraSUBd-88" edge="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="KR_uWyaKQPh9WPraSUBd-85" value="refreshContext(context)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fad9d5;strokeColor=#ae4132;align=left;" parent="1" vertex="1">
+          <mxGeometry x="1733.75" y="1460" width="132.49" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="KR_uWyaKQPh9WPraSUBd-87" value="&lt;b style=&quot;&quot;&gt;&lt;font color=&quot;#ae4132&quot;&gt;启动（刷新）Spring 容器&lt;br&gt;调用过程跟Spring一样，很多SpringBoot的核心功能都是在此方法中完成的&lt;/font&gt;&lt;/b&gt;" style="text;html=1;align=left;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontFamily=Helvetica;fontSize=11;fontColor=default;labelBackgroundColor=default;" parent="1" vertex="1">
+          <mxGeometry x="1888.75" y="1455" width="230" height="50" as="geometry" />
+        </mxCell>
+        <mxCell id="KR_uWyaKQPh9WPraSUBd-91" style="edgeStyle=orthogonalEdgeStyle;shape=connector;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;strokeColor=default;align=center;verticalAlign=middle;fontFamily=Helvetica;fontSize=11;fontColor=default;labelBackgroundColor=default;endArrow=classic;endSize=4;" parent="1" source="KR_uWyaKQPh9WPraSUBd-88" target="KR_uWyaKQPh9WPraSUBd-90" edge="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="KR_uWyaKQPh9WPraSUBd-88" value="空方法，留作扩展用&lt;br&gt;afterRefresh(context,applicationArguments)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fad9d5;strokeColor=#ae4132;align=left;" parent="1" vertex="1">
+          <mxGeometry x="1681.25" y="1550" width="237.49" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="KR_uWyaKQPh9WPraSUBd-94" style="edgeStyle=orthogonalEdgeStyle;shape=connector;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;strokeColor=default;align=center;verticalAlign=middle;fontFamily=Helvetica;fontSize=11;fontColor=default;labelBackgroundColor=default;endArrow=classic;endSize=4;" parent="1" source="KR_uWyaKQPh9WPraSUBd-90" target="KR_uWyaKQPh9WPraSUBd-92" edge="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="KR_uWyaKQPh9WPraSUBd-90" value="stopWatch.stop()" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fad9d5;strokeColor=#ae4132;align=left;" parent="1" vertex="1">
+          <mxGeometry x="1750.6299999999999" y="1635" width="98.73" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="KR_uWyaKQPh9WPraSUBd-96" style="edgeStyle=orthogonalEdgeStyle;shape=connector;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;strokeColor=default;align=center;verticalAlign=middle;fontFamily=Helvetica;fontSize=11;fontColor=default;labelBackgroundColor=default;endArrow=classic;endSize=4;" parent="1" source="KR_uWyaKQPh9WPraSUBd-92" target="KR_uWyaKQPh9WPraSUBd-95" edge="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="KR_uWyaKQPh9WPraSUBd-92" value="listeners.started(context)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fad9d5;strokeColor=#ae4132;align=left;" parent="1" vertex="1">
+          <mxGeometry x="1730.65" y="1725" width="139.35" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="KR_uWyaKQPh9WPraSUBd-93" value="&lt;font color=&quot;#ae4132&quot;&gt;&lt;b&gt;通知 SpringApplicationRunListener 的数组，Spring 容器启动完成。&lt;/b&gt;&lt;/font&gt;" style="text;html=1;align=left;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontFamily=Helvetica;fontSize=11;fontColor=default;labelBackgroundColor=default;" parent="1" vertex="1">
+          <mxGeometry x="1888.75" y="1720" width="230" height="50" as="geometry" />
+        </mxCell>
+        <mxCell id="KR_uWyaKQPh9WPraSUBd-99" style="edgeStyle=orthogonalEdgeStyle;shape=connector;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;strokeColor=default;align=center;verticalAlign=middle;fontFamily=Helvetica;fontSize=11;fontColor=default;labelBackgroundColor=default;endArrow=classic;endSize=4;" parent="1" source="KR_uWyaKQPh9WPraSUBd-95" target="KR_uWyaKQPh9WPraSUBd-98" edge="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="KR_uWyaKQPh9WPraSUBd-95" value="callRunners(context,applicationArguments)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fad9d5;strokeColor=#ae4132;align=left;" parent="1" vertex="1">
+          <mxGeometry x="1682.8200000000002" y="1820" width="234.35" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="KR_uWyaKQPh9WPraSUBd-97" value="&lt;font color=&quot;#ae4132&quot;&gt;&lt;b&gt;调用 ApplicationRunner 或者 CommandLineRunner 的运行方法&lt;/b&gt;&lt;/font&gt;" style="text;html=1;align=left;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontFamily=Helvetica;fontSize=11;fontColor=default;labelBackgroundColor=default;" parent="1" vertex="1">
+          <mxGeometry x="1925" y="1815" width="181.26" height="50" as="geometry" />
+        </mxCell>
+        <mxCell id="KR_uWyaKQPh9WPraSUBd-102" style="edgeStyle=orthogonalEdgeStyle;shape=connector;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;strokeColor=default;align=center;verticalAlign=middle;fontFamily=Helvetica;fontSize=11;fontColor=default;labelBackgroundColor=default;endArrow=classic;endSize=4;" parent="1" source="KR_uWyaKQPh9WPraSUBd-98" target="KR_uWyaKQPh9WPraSUBd-101" edge="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="KR_uWyaKQPh9WPraSUBd-98" value="listeners.running(context)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fad9d5;strokeColor=#ae4132;align=left;" parent="1" vertex="1">
+          <mxGeometry x="1725.64" y="1920" width="148.75" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="KR_uWyaKQPh9WPraSUBd-100" value="&lt;font color=&quot;#ae4132&quot;&gt;&lt;b&gt;通知 SpringApplicationRunListener 的数组，Spring 容器运行中&lt;/b&gt;&lt;/font&gt;" style="text;html=1;align=left;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontFamily=Helvetica;fontSize=11;fontColor=default;labelBackgroundColor=default;" parent="1" vertex="1">
+          <mxGeometry x="1900" y="1915" width="230" height="50" as="geometry" />
+        </mxCell>
+        <mxCell id="KR_uWyaKQPh9WPraSUBd-101" value="return context" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fad9d5;strokeColor=#ae4132;align=left;" parent="1" vertex="1">
+          <mxGeometry x="1757.81" y="2010" width="84.38" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="KR_uWyaKQPh9WPraSUBd-105" value="" style="rounded=0;whiteSpace=wrap;html=1;fontFamily=Helvetica;fontSize=11;fontColor=default;labelBackgroundColor=default;" parent="1" vertex="1">
+          <mxGeometry x="2250" y="1800" width="590" height="420" as="geometry" />
+        </mxCell>
+        <mxCell id="KR_uWyaKQPh9WPraSUBd-103" value="&lt;font color=&quot;#ae4132&quot;&gt;&lt;b&gt;SpringBoot启动完成&lt;/b&gt;&lt;/font&gt;" style="text;html=1;align=left;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontFamily=Helvetica;fontSize=11;fontColor=default;labelBackgroundColor=default;" parent="1" vertex="1">
+          <mxGeometry x="1900" y="2000" width="105.63" height="50" as="geometry" />
+        </mxCell>
+        <mxCell id="KR_uWyaKQPh9WPraSUBd-106" style="edgeStyle=orthogonalEdgeStyle;shape=connector;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.593;entryDx=0;entryDy=0;entryPerimeter=0;strokeColor=default;align=center;verticalAlign=middle;fontFamily=Helvetica;fontSize=11;fontColor=default;labelBackgroundColor=default;endArrow=classic;endSize=4;curved=1;" parent="1" source="KR_uWyaKQPh9WPraSUBd-85" target="KR_uWyaKQPh9WPraSUBd-105" edge="1">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="2150" y="1480" />
+              <mxPoint x="2150" y="2049" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="KR_uWyaKQPh9WPraSUBd-110" value="tomcat配置" style="rounded=1;whiteSpace=wrap;html=1;fontFamily=Helvetica;fontSize=11;labelBackgroundColor=none;fillColor=#e6d0de;strokeColor=#996185;gradientColor=#d5739d;" parent="1" vertex="1">
+          <mxGeometry x="2307.5" y="1910" width="90" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="KR_uWyaKQPh9WPraSUBd-112" value="" style="shape=flexArrow;endArrow=classic;html=1;rounded=0;strokeColor=default;align=center;verticalAlign=middle;fontFamily=Helvetica;fontSize=11;fontColor=default;labelBackgroundColor=default;edgeStyle=orthogonalEdgeStyle;endSize=4;" parent="1" edge="1">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="2307.5" y="1900" as="sourcePoint" />
+            <mxPoint x="2417.5" y="1900" as="targetPoint" />
+            <Array as="points">
+              <mxPoint x="2327.5" y="1900" />
+              <mxPoint x="2327.5" y="1900" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="jziTBsbl2-JhWiknNOoM-2" value="自动装配" style="rounded=1;whiteSpace=wrap;html=1;fontFamily=Helvetica;fontSize=11;labelBackgroundColor=none;fillColor=#e6d0de;strokeColor=#996185;gradientColor=#d5739d;" vertex="1" parent="1">
+          <mxGeometry x="2307.5" y="1860" width="90" height="30" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>

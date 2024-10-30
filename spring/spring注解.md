@@ -1714,9 +1714,13 @@ Spring Boot中@ComponentScan和@EnableAutoConfiguration的区别
 
 现在让我们看看这两个注释之间的区别。
 
+
+
 ### 3、他们有何不同
 
 这些注解之间的区别在于@ComponentScan 扫描Spring 组件，而**@EnableAutoConfiguration用于自动配置Spring Boot应用程序中类路径中存在的 bean**。
+
+
 
 #### 3.1、 *@ComponentScan*
 
@@ -1735,7 +1739,9 @@ public class EmployeeApplication {
 }
 ```
 
-**或者，Spring 也可以从指定的包开始扫描，我们可以使用basePackageClasses()或basePackages() 定义。****如果未指定包，则它将声明@ComponentScan**注释的类**的包视为起始包**：**
+**或者，Spring 也可以从指定的包开始扫描，我们可以使用basePackageClasses()或basePackages() 定义。如果不指定，则默认Spring框架实现会从声明@ComponentScan所在类的package进行扫描。**
+
+>注：所以SpringBoot的启动类最好是放在root package下，因为默认不指定basePackages。
 
 ```java
 package com.baeldung.annotations.componentscanautoconfigure;
