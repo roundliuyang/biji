@@ -1,6 +1,6 @@
 <mxfile host="Electron" agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) draw.io/24.7.8 Chrome/128.0.6613.36 Electron/32.0.1 Safari/537.36" version="24.7.8">
   <diagram name="第 1 页" id="XZWzCI4i1hdiua9vW87o">
-    <mxGraphModel dx="1434" dy="884" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="9000" pageHeight="7920" math="0" shadow="0">
+    <mxGraphModel dx="1687" dy="1040" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="9000" pageHeight="7920" math="0" shadow="0">
       <root>
         <mxCell id="0" />
         <mxCell id="1" parent="0" />
@@ -306,10 +306,10 @@
         <mxCell id="J-gym2NMwZznqss6Bf6E-88" value="&lt;font color=&quot;#23445d&quot;&gt;&lt;b&gt;存在二级缓存&lt;/b&gt;&lt;/font&gt;" style="text;html=1;align=left;verticalAlign=middle;whiteSpace=wrap;rounded=0;" parent="1" vertex="1">
           <mxGeometry x="4500.01" y="4120" width="80" height="40" as="geometry" />
         </mxCell>
-        <mxCell id="J-gym2NMwZznqss6Bf6E-94" style="edgeStyle=orthogonalEdgeStyle;shape=connector;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;strokeColor=default;align=center;verticalAlign=middle;fontFamily=Helvetica;fontSize=11;fontColor=default;labelBackgroundColor=default;endArrow=classic;endSize=4;" parent="1" source="J-gym2NMwZznqss6Bf6E-89" target="J-gym2NMwZznqss6Bf6E-93" edge="1">
+        <mxCell id="J-gym2NMwZznqss6Bf6E-99" style="edgeStyle=orthogonalEdgeStyle;shape=connector;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;strokeColor=default;align=center;verticalAlign=middle;fontFamily=Helvetica;fontSize=11;fontColor=default;labelBackgroundColor=default;endArrow=classic;endSize=4;" parent="1" source="J-gym2NMwZznqss6Bf6E-89" target="J-gym2NMwZznqss6Bf6E-96" edge="1">
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
-        <mxCell id="J-gym2NMwZznqss6Bf6E-99" style="edgeStyle=orthogonalEdgeStyle;shape=connector;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;strokeColor=default;align=center;verticalAlign=middle;fontFamily=Helvetica;fontSize=11;fontColor=default;labelBackgroundColor=default;endArrow=classic;endSize=4;" parent="1" source="J-gym2NMwZznqss6Bf6E-89" target="J-gym2NMwZznqss6Bf6E-96" edge="1">
+        <mxCell id="Dsrpf8YV87_hv3m3V2OX-2" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;" edge="1" parent="1" source="J-gym2NMwZznqss6Bf6E-89" target="Dsrpf8YV87_hv3m3V2OX-1">
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
         <mxCell id="J-gym2NMwZznqss6Bf6E-89" value="delegate.query" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#bac8d3;strokeColor=#23445d;" parent="1" vertex="1">
@@ -319,7 +319,7 @@
           <mxGeometry x="4550.01" y="4250" width="220" height="40" as="geometry" />
         </mxCell>
         <mxCell id="J-gym2NMwZznqss6Bf6E-93" value="返回查询结果" style="ellipse;whiteSpace=wrap;html=1;fontFamily=Helvetica;fontSize=11;labelBackgroundColor=default;fillColor=#bac8d3;strokeColor=#23445d;" parent="1" vertex="1">
-          <mxGeometry x="4426.26" y="4370" width="107.5" height="50" as="geometry" />
+          <mxGeometry x="4426.26" y="4530" width="107.5" height="50" as="geometry" />
         </mxCell>
         <mxCell id="J-gym2NMwZznqss6Bf6E-102" style="edgeStyle=orthogonalEdgeStyle;shape=connector;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;strokeColor=#91CA16;align=center;verticalAlign=middle;fontFamily=Helvetica;fontSize=11;fontColor=default;labelBackgroundColor=default;endArrow=classic;endSize=4;" parent="1" source="J-gym2NMwZznqss6Bf6E-95" target="J-gym2NMwZznqss6Bf6E-101" edge="1">
           <mxGeometry relative="1" as="geometry" />
@@ -1106,6 +1106,12 @@
         </mxCell>
         <mxCell id="NI72QsshAqMCzc0sDCq7-48" value="根据标签确定SqlCommandType(共6种类型，还有UNKNON和FLUS)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f0a30a;strokeColor=#BD7000;fontColor=#000000;" parent="1" vertex="1">
           <mxGeometry x="4255" y="3220" width="205" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="Dsrpf8YV87_hv3m3V2OX-3" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;" edge="1" parent="1" source="Dsrpf8YV87_hv3m3V2OX-1" target="J-gym2NMwZznqss6Bf6E-93">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="Dsrpf8YV87_hv3m3V2OX-1" value="二级缓存处理？？？" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#bac8d3;strokeColor=#23445d;" vertex="1" parent="1">
+          <mxGeometry x="4410.01" y="4420" width="140" height="40" as="geometry" />
         </mxCell>
       </root>
     </mxGraphModel>
