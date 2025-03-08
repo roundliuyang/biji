@@ -2,25 +2,25 @@
 
 refer:https://www.baeldung.com/maven-dependencymanagement-vs-dependencies-tags
 
-## 1. Overview
+## 概述
 
-In this tutorial, we will review two important [Maven](https://www.baeldung.com/maven-guide) tags — *dependencyManagement* and *dependencies*.
+在本教程中，我们将回顾两个重要的[Maven](https://www.baeldung.com/maven-guide)标签 — *dependencyManagement* 和 *dependency*。
 
-**These features are especially useful for multi-module projects.**
+**这些功能对于多模块项目特别有用。**
 
-We'll review the similarities and differences of the two tags, and we'll also look at some common mistakes that developers make when using them that can cause confusion.
+我们将回顾这两个标签的相同点和不同点，并研究开发人员在使用它们时可能犯的一些常见错误，这些错误可能会导致混淆。
 
+## 使用方法
 
-
-## 2. Usage
-
-In general, we use the *dependencyManagement* tag to avoid repeating the *version* and *scope* tags when we define our dependencies in the *dependencies* tag. In this way, the required dependency is declared in a central POM file.
+通常，我们使用 `dependencyManagement` 标签来避免在 `dependencies` 标签中重复定义 `version` 和 `scope` 标签。这样，所需的依赖可以在一个中央 POM 文件中统一声明。
 
 
 
-### 2.1. *dependencyManagement*
+### dependencyManagement
 
-This tag consists of a *dependencies* tag which itself might contain multiple *dependency* tags. Each *dependency* is supposed to have at least three main tags: *groupId*, *artifactId,* and *version*. Let's see an example:
+这个标签包含一个 `dependencies` 标签，而 `dependencies` 标签本身可能包含多个 `dependency` 标签。
+ 每个 `dependency` 都应至少包含三个主要标签：`groupId`、`artifactId` 和 `version`。
+ 让我们来看一个示例：
 
 ```xml
 <dependencyManagement>
@@ -34,15 +34,16 @@ This tag consists of a *dependencies* tag which itself might contain multiple *d
 </dependencyManagement>
 ```
 
-The above code just declares the new artifact *commons-lang3*, but it doesn't really add it to the project dependency resource list.
+上面的代码只是声明了新的 `commons-lang3` 组件，但并没有真正将其添加到项目的依赖资源列表中。
 
 
 
-### 2.2. *dependencies*
+### *dependencies*
 
-This tag contains a list of *dependency* tags. Each *dependency* is supposed to have at least two main tags, which are *groupId* and *artifactId.*
+此标签包含一个 `dependency` 标签列表。
+ 每个 `dependency` 至少应包含两个主要标签：`groupId` 和 `artifactId`。
 
-Let's see a quick example:
+让我们来看一个简单的示例：
 
 ```xml
 <dependencies>
@@ -54,7 +55,7 @@ Let's see a quick example:
 </dependencies>
 ```
 
-**The version and scope tags can be inherited implicitly if we have used the dependencyManagement tag before in the POM file**:
+如果我们在 POM 文件中使用了 `dependencyManagement` 标签，那么 `version` 和 `scope` 标签可以被隐式继承。
 
 ```java
 <dependencies>
@@ -67,13 +68,14 @@ Let's see a quick example:
 
 
 
-## 3. Similarities
+## 相似之处
 
-Both of these tags aim to declare some third-party or sub-module dependency. They complement each other.
+这两个标签的作用都是声明某些第三方或子模块的依赖关系，它们是互补的。
 
-In fact, we usually define the *dependencyManagement* tag once, preceding the *dependencies* tag. This is used in order to declare the dependencies in the POM file. **This declaration is just an announcement, and it doesn't really add the dependency to the project.**
+实际上，我们通常会先定义 `dependencyManagement` 标签，然后再定义 `dependencies` 标签。这是为了在 POM 文件中声明依赖项。
+ 这种声明只是一个公告，并不会真正将依赖添加到项目中。
 
-Let's see a sample for adding the JUnit library dependency:
+让我们来看一个添加 JUnit 库依赖的示例：
 
 ```xml
 <dependencyManagement>
@@ -88,9 +90,9 @@ Let's see a sample for adding the JUnit library dependency:
 </dependencyManagement>
 ```
 
-As we can see in the above code, there is a *dependencyManagement* tag that itself contains another *dependencies* tag.
+正如我们在上面的代码中看到的，`dependencyManagement` 标签本身包含了一个 `dependencies` 标签。
 
-Now, let's see the other side of the code, which adds the actual dependency to the project:
+现在，让我们看看代码的另一部分，它将实际的依赖添加到项目中：
 
 ```xml
 <dependencies>
@@ -101,33 +103,34 @@ Now, let's see the other side of the code, which adds the actual dependency to t
 </dependencies>
 ```
 
-So, the current tag is very similar to the previous one. Both of them would define a list of dependencies. Of course, there are small differences which we will cover soon.
+因此，当前的标签与之前的标签非常相似，它们都用于定义依赖列表。 当然，它们之间存在一些细微的区别，我们很快会进行介绍。
 
-The same *groupId* and *artifactId* tags are repeated in both code snippets, and there is a meaningful correlation between them: Both of them refer to the same artifact.
+在这两个代码片段中，`groupId` 和 `artifactId` 标签是相同的，并且它们之间存在重要的关联：它们都指向同一个 artifact。
 
-As we can see, there is not any *version* tag present in our later *dependency* tag. Surprisingly, it's valid syntax, and it can be parsed and compiled without any problem. The reason can be guessed easily: It will use the version declared by *dependencyManagement*.
-
-
-
-## 4. Differences
-
-### **4.1. Structural Difference**
-
-**As we covered earlier, the main structural difference between these two tags is the logic of inheritance.** We define the version in the *dependencyManagement* tag, and then we can use the mentioned version without specifying it in the next *dependencies* tag.
+正如我们所见，在后面的依赖标签中并没有 `version` 标签。 令人惊讶的是，这仍然是合法的语法，并且可以被解析和编译，而不会出现任何问题。 原因很容易猜到：它会使用 `dependencyManagement` 中声明的版本。
 
 
 
-### **4.2. Behavioral Difference**
+## 不同之处
 
-**dependencyManagement is just a declaration, and it does not really add a dependency.** The declared *dependencies* in this section must be later used by the *dependencies* tag. It is just the *dependencies* tag that causes real dependency to happen. In the above sample, the *dependencyManagement* tag will not add the *junit* library into any scope. It is just a declaration for the future *dependencies* tag.
+### 结构差异
+
+正如我们之前提到的，这两个标签之间的主要结构差异在于**继承逻辑**。
+ 我们在 `dependencyManagement` 标签中定义 `version`，然后在后续的 `dependencies` 标签中使用该版本时，就可以**省略显式指定 `version`**。
 
 
 
-## 5. Real-World Example
+### 行为差异
 
-Nearly all Maven-based open-source projects use this mechanism.
+`dependencyManagement` **只是一个声明**，它并不会真正添加依赖。在 `dependencyManagement` 中声明的依赖，必须**在后续的 `dependencies` 标签中使用**，否则不会生效。真正让依赖生效的**是 `dependencies` 标签**。 在上面的示例中，`dependencyManagement` **不会**将 `junit` 库添加到任何作用域，它只是为未来的 `dependencies` 标签提供一个**版本声明**。
 
-Let's see an example from [the Maven project](https://github.com/apache/maven/blob/master/pom.xml) itself. We see the *hamcrest-core* dependency, which exists in the Maven project. It's declared first in the *dependencyManagement* tag, and then it is imported by the main *dependencies* tag:
+
+
+## 现实世界的示例
+
+几乎所有基于 Maven 的开源项目都使用这种机制。
+
+让我们来看一个来自 Maven 项目的示例。我们可以看到 `hamcrest-core` 依赖项，它存在于 Maven 项目中。它首先在 `dependencyManagement` 标签中声明，然后通过主 `dependencies` 标签导入：
 
 ```xml
 <dependencyManagement>
@@ -152,21 +155,21 @@ Let's see an example from [the Maven project](https://github.com/apache/maven/bl
 
 
 
-## 6. Common Use Cases
+## 常见使用场景
 
-A very common use case for this feature is a multi-module project.
+这个功能的一个非常常见的使用场景是多模块项目。
 
-Imagine we have a big project which consists of different modules. Each module has its own dependencies, and each developer might use a different version for the used dependencies. Then it could lead to a mesh of different artifact versions, which can also cause difficult and hard-to-resolve conflicts.
+假设我们有一个大型项目，由不同的模块组成。每个模块都有自己的依赖项，且每个开发人员可能使用不同版本的依赖项。这可能会导致不同的组件版本相互交织，进而引发难以解决的冲突。
 
-**The easy solution for this problem is definitely using the dependencyManagement tag in the root POM file (usually called the “parent”) and then using the dependencies in the child's POM files (sub-modules) and even the parent module itself (if applicable).**
+解决这个问题的简单方法是，在根 POM 文件（通常称为“父级”）中使用 `dependencyManagement` 标签，然后在子模块的 POM 文件（即子模块）中使用依赖项，甚至在父模块本身（如果适用）中也可以使用。
 
-If we have a single module, does it make sense to use this feature or not? Although this is very useful in multi-module environments, it can also be a rule of thumb to obey it as a best practice even in a single-module project. This helps the project readability and also makes it ready to extend to a multi-module project.
+如果我们只有一个模块，是否有必要使用这个功能呢？虽然在多模块环境中非常有用，但即便在单模块项目中，遵循这种最佳实践也可以作为一种经验法则。这不仅有助于提升项目的可读性，还使其为未来扩展为多模块项目做好准备。
 
-## 7. Common Mistakes
+## 常见错误
 
-One common mistake is defining a dependency just in the *dependencyManagement* section and not including it in the *dependencies* tag. In this case, we will encounter compile or runtime errors, depending on the mentioned *scope*.
+一个常见的错误是仅在 `dependencyManagement` 部分定义依赖，而没有将其包含在 `dependencies` 标签中。在这种情况下，根据所提到的作用域，我们可能会遇到编译或运行时错误。
 
-Let's see an example:
+让我们来看一个示例：
 
 ```xml
 <dependencyManagement>
@@ -181,7 +184,7 @@ Let's see an example:
 </dependencyManagement>
 ```
 
-Imagine the above POM code snippet. Then suppose we're going to use this library in a sub-module source file:
+假设上述的 POM 代码片段。然后假设我们将在一个子模块的源文件中使用这个库：
 
 ```java
 import org.apache.commons.lang3.StringUtils;
@@ -194,14 +197,14 @@ public class Main {
 }
 ```
 
-This code will not compile because of the missing library. The compiler complains about an error:
+这段代码将无法编译，因为缺少该库。编译器会抱怨出现以下错误：
 
 ```properties
 [ERROR] Failed to execute goal compile (default-compile) on project sample-module: Compilation failure
 [ERROR] ~/sample-module/src/main/java/com/baeldung/Main.java:[3,32] package org.apache.commons.lang3 does not exist
 ```
 
-To avoid this error, it's enough to add the below *dependencies* tag to the sub-module POM file:
+为了避免这个错误，只需在子模块的 POM 文件中添加以下 `dependencies` 标签：
 
 ```xml
 <dependencies>
