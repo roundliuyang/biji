@@ -104,6 +104,226 @@
 
 
 
+## spring-boot-test
+
+
+
+### spring-boot-test2.2.14.BUILD-SNAPSHOT
+
+```xml
+<dependencies>
+    <!-- Spring Boot 核心依赖 -->
+    <dependency>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot</artifactId>
+    </dependency>
+
+    <!-- JSON 处理库 -->
+    <dependency>
+        <groupId>com.fasterxml.jackson.core</groupId>
+        <artifactId>jackson-databind</artifactId>
+        <optional>true</optional> <!-- Jackson JSON 解析库 -->
+    </dependency>
+    <dependency>
+        <groupId>com.google.code.gson</groupId>
+        <artifactId>gson</artifactId>
+        <optional>true</optional> <!-- Google Gson 解析库 -->
+    </dependency>
+    <dependency>
+        <groupId>com.jayway.jsonpath</groupId>
+        <artifactId>json-path</artifactId>
+        <optional>true</optional> <!-- JsonPath 解析 JSON 数据 -->
+    </dependency>
+
+    <!-- Reactor Netty，支持 WebFlux -->
+    <dependency>
+        <groupId>io.projectreactor.netty</groupId>
+        <artifactId>reactor-netty</artifactId>
+        <optional>true</optional>
+    </dependency>
+
+    <!-- Jakarta 相关 API -->
+    <dependency>
+        <groupId>jakarta.json.bind</groupId>
+        <artifactId>jakarta.json.bind-api</artifactId>
+        <optional>true</optional> <!-- Jakarta JSON 绑定 API -->
+    </dependency>
+    <dependency>
+        <groupId>jakarta.servlet</groupId>
+        <artifactId>jakarta.servlet-api</artifactId>
+        <optional>true</optional> <!-- Jakarta Servlet API -->
+    </dependency>
+
+    <!-- HTTP 客户端 -->
+    <dependency>
+        <groupId>org.apache.httpcomponents</groupId>
+        <artifactId>httpclient</artifactId>
+        <optional>true</optional> <!-- Apache HttpClient -->
+    </dependency>
+
+    <!-- 单元测试框架 -->
+    <dependency>
+        <groupId>junit</groupId>
+        <artifactId>junit</artifactId>
+        <optional>true</optional> <!-- JUnit 4 -->
+        <exclusions>
+            <exclusion>
+                <groupId>org.hamcrest</groupId>
+                <artifactId>hamcrest-core</artifactId>
+            </exclusion>
+        </exclusions>
+    </dependency>
+    <dependency>
+        <groupId>org.junit.jupiter</groupId>
+        <artifactId>junit-jupiter-api</artifactId>
+        <optional>true</optional> <!-- JUnit 5 -->
+    </dependency>
+    <dependency>
+        <groupId>org.assertj</groupId>
+        <artifactId>assertj-core</artifactId>
+        <optional>true</optional> <!-- AssertJ 断言库 -->
+    </dependency>
+    <dependency>
+        <groupId>org.mockito</groupId>
+        <artifactId>mockito-core</artifactId>
+        <optional>true</optional> <!-- Mockito 单元测试框架 -->
+    </dependency>
+    <dependency>
+        <groupId>org.skyscreamer</groupId>
+        <artifactId>jsonassert</artifactId>
+        <optional>true</optional> <!-- JSON 断言工具 -->
+    </dependency>
+
+    <!-- Selenium 相关 -->
+    <dependency>
+        <groupId>org.seleniumhq.selenium</groupId>
+        <artifactId>htmlunit-driver</artifactId>
+        <optional>true</optional> <!-- Selenium HTMLUnit WebDriver -->
+    </dependency>
+    <dependency>
+        <groupId>org.seleniumhq.selenium</groupId>
+        <artifactId>selenium-api</artifactId>
+        <optional>true</optional> <!-- Selenium API -->
+    </dependency>
+
+    <!-- Spring Web 相关 -->
+    <dependency>
+        <groupId>org.springframework</groupId>
+        <artifactId>spring-test</artifactId>
+        <optional>true</optional> <!-- Spring 测试支持 -->
+    </dependency>
+    <dependency>
+        <groupId>org.springframework</groupId>
+        <artifactId>spring-web</artifactId>
+        <optional>true</optional> <!-- Spring Web (MVC) -->
+    </dependency>
+    <dependency>
+        <groupId>org.springframework</groupId>
+        <artifactId>spring-webflux</artifactId>
+        <optional>true</optional> <!-- Spring WebFlux (Reactive Web) -->
+    </dependency>
+
+    <!-- HTMLUnit -->
+    <dependency>
+        <groupId>net.sourceforge.htmlunit</groupId>
+        <artifactId>htmlunit</artifactId>
+        <optional>true</optional> <!-- HTMLUnit 浏览器模拟 -->
+    </dependency>
+
+    <!-- Kotlin 相关 -->
+    <dependency>
+        <groupId>org.jetbrains.kotlin</groupId>
+        <artifactId>kotlin-stdlib</artifactId>
+        <optional>true</optional> <!-- Kotlin 标准库 -->
+    </dependency>
+    <dependency>
+        <groupId>org.jetbrains.kotlin</groupId>
+        <artifactId>kotlin-reflect</artifactId>
+        <optional>true</optional> <!-- Kotlin 反射支持 -->
+    </dependency>
+
+    <!-- 测试相关依赖 -->
+    <dependency>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-test-support</artifactId>
+        <scope>test</scope> <!-- Spring Boot 测试支持 -->
+    </dependency>
+    <dependency>
+        <groupId>ch.qos.logback</groupId>
+        <artifactId>logback-classic</artifactId>
+        <scope>test</scope> <!-- Logback 日志框架 -->
+    </dependency>
+    <dependency>
+        <groupId>io.mockk</groupId>
+        <artifactId>mockk</artifactId>
+        <scope>test</scope> <!-- MockK (Kotlin Mock 库) -->
+    </dependency>
+    <dependency>
+        <groupId>jakarta.json</groupId>
+        <artifactId>jakarta.json-api</artifactId>
+        <scope>test</scope> <!-- Jakarta JSON API -->
+    </dependency>
+    <dependency>
+        <groupId>org.apache.tomcat.embed</groupId>
+        <artifactId>tomcat-embed-core</artifactId>
+        <scope>test</scope> <!-- 嵌入式 Tomcat -->
+    </dependency>
+    <dependency>
+        <groupId>org.codehaus.groovy</groupId>
+        <artifactId>groovy</artifactId>
+        <scope>test</scope> <!-- Groovy 语言 -->
+    </dependency>
+    <dependency>
+        <groupId>org.codehaus.groovy</groupId>
+        <artifactId>groovy-xml</artifactId>
+        <optional>true</optional>
+        <scope>test</scope> <!-- Groovy XML 处理 -->
+    </dependency>
+    <dependency>
+        <groupId>org.apache.johnzon</groupId>
+        <artifactId>johnzon-jsonb</artifactId>
+        <scope>test</scope> <!-- Johnzon JSON-B 解析 -->
+    </dependency>
+    <dependency>
+        <groupId>org.slf4j</groupId>
+        <artifactId>slf4j-api</artifactId>
+        <scope>test</scope> <!-- SLF4J 日志 API -->
+    </dependency>
+    <dependency>
+        <groupId>org.spockframework</groupId>
+        <artifactId>spock-core</artifactId>
+        <scope>test</scope> <!-- Spock 测试框架 -->
+    </dependency>
+    <dependency>
+        <groupId>org.springframework</groupId>
+        <artifactId>spring-webmvc</artifactId>
+        <scope>test</scope> <!-- Spring MVC -->
+    </dependency>
+    <dependency>
+        <groupId>org.testng</groupId>
+        <artifactId>testng</artifactId>
+        <scope>test</scope> <!-- TestNG 测试框架 -->
+    </dependency>
+</dependencies>
+```
+
+
+
+### spring-boot-test2.7.9
+
+```xml
+  <dependencies>
+    <dependency>
+      <groupId>org.springframework.boot</groupId>
+      <artifactId>spring-boot</artifactId>
+      <version>2.7.9</version>
+      <scope>compile</scope>
+    </dependency>
+  </dependencies>
+```
+
+
+
 ## SpringBoot启动器
 
 以下是 Spring Boot 在 `org.springframework.boot` 组下提供的应用启动器：
@@ -233,6 +453,10 @@ Starter for using Spring Data JPA with Hibernate
 
  Starter for testing Spring Boot applications with libraries including JUnit Jupiter, Hamcrest and Mockito
 
+
+
+#### 2.2.14.BUILD-SNAPSHOT
+
 ```xml
 <dependencies>
     <!-- Spring Boot 核心 Starter，提供基本的 Spring Boot 运行环境 -->
@@ -339,6 +563,132 @@ Starter for using Spring Data JPA with Hibernate
         </exclusions>
     </dependency>
 </dependencies>
+```
 
+
+
+#### 2.7.9
+
+```xml
+<dependencies>
+    <!-- Spring Boot 基础依赖，提供 Spring Boot 的核心功能 -->
+    <dependency>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-starter</artifactId>
+        <version>2.7.9</version>
+        <scope>compile</scope>
+    </dependency>
+
+    <!-- Spring Boot 测试支持，用于编写和运行测试 -->
+    <dependency>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-test</artifactId>
+        <version>2.7.9</version>
+        <scope>compile</scope>
+    </dependency>
+
+    <!-- Spring Boot 自动化测试配置，简化测试环境的设置 -->
+    <dependency>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-test-autoconfigure</artifactId>
+        <version>2.7.9</version>
+        <scope>compile</scope>
+    </dependency>
+
+    <!-- JSONPath 解析库，用于解析 JSON 数据 -->
+    <dependency>
+        <groupId>com.jayway.jsonpath</groupId>
+        <artifactId>json-path</artifactId>
+        <version>2.7.0</version>
+        <scope>compile</scope>
+    </dependency>
+
+    <!-- Jakarta XML 绑定 API (JAXB)，用于处理 XML 序列化和反序列化 -->
+    <dependency>
+        <groupId>jakarta.xml.bind</groupId>
+        <artifactId>jakarta.xml.bind-api</artifactId>
+        <version>2.3.3</version>
+        <scope>compile</scope>
+    </dependency>
+
+    <!-- AssertJ 断言库，提供流畅的测试断言语法 -->
+    <dependency>
+        <groupId>org.assertj</groupId>
+        <artifactId>assertj-core</artifactId>
+        <version>3.22.0</version>
+        <scope>compile</scope>
+    </dependency>
+
+    <!-- Hamcrest 断言库，提供灵活的匹配器用于测试 -->
+    <dependency>
+        <groupId>org.hamcrest</groupId>
+        <artifactId>hamcrest</artifactId>
+        <version>2.2</version>
+        <scope>compile</scope>
+    </dependency>
+
+    <!-- JUnit 5 (Jupiter) 测试框架 -->
+    <dependency>
+        <groupId>org.junit.jupiter</groupId>
+        <artifactId>junit-jupiter</artifactId>
+        <version>5.8.2</version>
+        <scope>compile</scope>
+    </dependency>
+
+    <!-- Mockito 核心库，用于模拟对象进行单元测试 -->
+    <dependency>
+        <groupId>org.mockito</groupId>
+        <artifactId>mockito-core</artifactId>
+        <version>4.5.1</version>
+        <scope>compile</scope>
+    </dependency>
+
+    <!-- Mockito 与 JUnit 5 的整合支持 -->
+    <dependency>
+        <groupId>org.mockito</groupId>
+        <artifactId>mockito-junit-jupiter</artifactId>
+        <version>4.5.1</version>
+        <scope>compile</scope>
+    </dependency>
+
+    <!-- JSON 断言库，用于比较 JSON 数据结构 -->
+    <dependency>
+        <groupId>org.skyscreamer</groupId>
+        <artifactId>jsonassert</artifactId>
+        <version>1.5.1</version>
+        <scope>compile</scope>
+    </dependency>
+
+    <!-- Spring 核心库，提供 Spring 运行时的基础功能 -->
+    <dependency>
+        <groupId>org.springframework</groupId>
+        <artifactId>spring-core</artifactId>
+        <version>5.3.25</version>
+        <scope>compile</scope>
+    </dependency>
+
+    <!-- Spring Test，提供 Spring 相关的测试支持 -->
+    <dependency>
+        <groupId>org.springframework</groupId>
+        <artifactId>spring-test</artifactId>
+        <version>5.3.25</version>
+        <scope>compile</scope>
+    </dependency>
+
+    <!-- XMLUnit，提供 XML 结构比较和验证功能 -->
+    <dependency>
+        <groupId>org.xmlunit</groupId>
+        <artifactId>xmlunit-core</artifactId>
+        <version>2.9.1</version>
+        <scope>compile</scope>
+        <exclusions>
+            <!-- 排除 JAXB API，避免依赖冲突 -->
+            <exclusion>
+                <artifactId>jaxb-api</artifactId>
+                <groupId>javax.xml.bind</groupId>
+            </exclusion>
+        </exclusions>
+    </dependency>
+</dependencies>
 ```
 
