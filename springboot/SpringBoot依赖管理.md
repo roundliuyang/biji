@@ -4,6 +4,24 @@
 
 
 
+## 检查 Spring Boot 版本
+
+运行以下 Maven 命令，查看最终的 Spring Boot 版本：
+
+```
+mvn dependency:tree | grep spring-boot
+```
+
+**使用 Windows 自带 `findstr`**
+
+在 **CMD（命令提示符）** 运行：
+
+```
+mvn dependency:tree | findstr "spring-boot"
+```
+
+
+
 ## spring-boot-starter-parent
 
 ```xml

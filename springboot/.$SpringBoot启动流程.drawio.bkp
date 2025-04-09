@@ -1,6 +1,6 @@
 <mxfile host="Electron" agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) draw.io/24.7.8 Chrome/128.0.6613.36 Electron/32.0.1 Safari/537.36" version="24.7.8">
   <diagram name="第 1 页" id="JM-k6H0gmeoRxtbq_64H">
-    <mxGraphModel dx="1395" dy="737" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="9000" pageHeight="7920" math="0" shadow="0">
+    <mxGraphModel dx="1434" dy="884" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="9000" pageHeight="7920" math="0" shadow="0">
       <root>
         <mxCell id="0" />
         <mxCell id="1" parent="0" />
@@ -205,8 +205,8 @@
         <mxCell id="KR_uWyaKQPh9WPraSUBd-53" value="加载系统参数" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffe6cc;strokeColor=#d79b00;" parent="1" vertex="1">
           <mxGeometry x="2130" y="1010" width="90" height="40" as="geometry" />
         </mxCell>
-        <mxCell id="KR_uWyaKQPh9WPraSUBd-55" value="&lt;b&gt;listeners.environmentPrepared(environment)&lt;/b&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffe6cc;strokeColor=#d79b00;" parent="1" vertex="1">
-          <mxGeometry x="2250" y="1010" width="310" height="40" as="geometry" />
+        <mxCell id="KR_uWyaKQPh9WPraSUBd-55" value="设置环境监听器集合" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffe6cc;strokeColor=#d79b00;" parent="1" vertex="1">
+          <mxGeometry x="2250" y="1010" width="110" height="40" as="geometry" />
         </mxCell>
         <mxCell id="KR_uWyaKQPh9WPraSUBd-60" style="edgeStyle=orthogonalEdgeStyle;shape=connector;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;strokeColor=default;align=center;verticalAlign=middle;fontFamily=Helvetica;fontSize=11;fontColor=default;labelBackgroundColor=default;endArrow=classic;endSize=4;" parent="1" source="KR_uWyaKQPh9WPraSUBd-57" target="KR_uWyaKQPh9WPraSUBd-59" edge="1">
           <mxGeometry relative="1" as="geometry" />
@@ -356,11 +356,8 @@
             </Array>
           </mxGeometry>
         </mxCell>
-        <mxCell id="jziTBsbl2-JhWiknNOoM-2" value="自动装配" style="rounded=1;whiteSpace=wrap;html=1;fontFamily=Helvetica;fontSize=11;labelBackgroundColor=none;fillColor=#e6d0de;strokeColor=#996185;gradientColor=#d5739d;" parent="1" vertex="1">
+        <mxCell id="jziTBsbl2-JhWiknNOoM-2" value="自动装配" style="rounded=1;whiteSpace=wrap;html=1;fontFamily=Helvetica;fontSize=11;labelBackgroundColor=none;fillColor=#e6d0de;strokeColor=#996185;gradientColor=#d5739d;" vertex="1" parent="1">
           <mxGeometry x="2307.5" y="1860" width="90" height="30" as="geometry" />
-        </mxCell>
-        <mxCell id="weFLNp_s13mD9Bt3IF9_-2" value="&lt;font color=&quot;#d79b00&quot;&gt;&lt;b&gt;发布事件（ApplicationEnvironmentPreparedEvent）&lt;/b&gt;&lt;/font&gt;" style="text;html=1;align=left;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontFamily=Helvetica;fontSize=11;fontColor=default;labelBackgroundColor=default;" vertex="1" parent="1">
-          <mxGeometry x="2265" y="1050" width="280" height="30" as="geometry" />
         </mxCell>
       </root>
     </mxGraphModel>

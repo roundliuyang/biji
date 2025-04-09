@@ -2236,9 +2236,70 @@ git push -u origin master
 
 
 
+## git 同步上游仓库
+
+### 分支
+
+```shell
+关联远程库
+首先将你的本地项目git clone 到本地；
+输入以下命令
+git remote add upstream 上游仓库名称.git
+git remote -v 查看设置
+
+同步上游服务的分支提交到你fork的服务
+从源分支拉取最新代码
+git fetch upstream
+从remote上取一个新的branch到本地
+git checkout -b 分支名 upstream/分支名
+更新到你 fork 的分支上
+git push origin 分支名
+
+合并上游分支提交到你fork的服务
+从源分支拉取最新的代码
+git fetch upstream
+合并本地分支和源分支
+git merge upstream/分支名
+提交到fork分支
+git push origin 分支名
+```
 
 
 
 
 
-  
+#### tag
+
+**基于上游仓库的 tag 创建本地分支**
+
+1. **拉取上游仓库的最新 tag**（如果之前没有获取）：
+
+   ```
+   git fetch upstream --tags
+   ```
+
+2. **基于 tag 创建本地分支**：
+
+   ```
+   git checkout -b 分支名 tags/标签名
+   ```
+
+   例如：
+
+   ```
+   git checkout -b feature-v1.2.3 tags/v1.2.3
+   ```
+
+   这样会基于 `v1.2.3` 这个 tag 创建 `feature-v1.2.3` 分支。
+
+3. **将该分支推送到你 fork 的仓库**：
+
+   ```
+   git push origin 分支名
+   ```
+
+   例如：
+
+   ```
+   git push origin feature-v1.2.3
+   ```
