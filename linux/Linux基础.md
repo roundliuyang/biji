@@ -1967,3 +1967,134 @@ supervisorctl restart xxxx
 
 
 
+
+
+## 常用的操作
+
+
+
+### 查看日志
+
+
+
+#### 基本查看命令
+
+`cat`：一次性全部显示文件内容（不适合大文件）
+
+```bash
+cat filename.log
+```
+
+`less` / `more`：分页查看文件内容，可向上翻页
+
+```bash
+less filename.log    # 推荐，支持 / 搜索
+more filename.log    # 类似，但功能不如 less 强
+```
+
+`tail`：查看文件尾部（适合看最新日志）
+
+```bash
+tail filename.log                # 默认显示最后 10 行  
+tail -n 100 filename.log         # 显示最后 100 行  
+tail -f filename.log             # 实时查看新追加的日志（很常用）
+```
+
+`head`：查看文件头部
+
+```bash
+head filename.log
+```
+
+
+
+#### 文件中查找内容
+
+在 `less` 中，可以使用 `/` 搜索：
+
+```bash
+less filename.log
+```
+
+然后输入：
+
+```bash
+/关键字        ← 回车开始查找
+n             ← 查找下一个匹配项
+N             ← 查找上一个匹配项
+```
+
+ **按 `q` 键即可退出查看界面。**
+
+
+
+#### grep：按关键词查找
+
+```bash
+grep "错误" filename.log               # 查找含“错误”的行
+grep -i "error" filename.log          # 忽略大小写
+grep -n "error" filename.log          # 显示匹配的行号
+grep -v "DEBUG" filename.log          # 排除包含 DEBUG 的行
+grep -A 3 -B 2 "Exception" filename.log  # 匹配行上下文：前2行和后3行
+```
+
+
+
+#### **awk：结构化处理文本**
+
+假设日志格式是：
+
+```yaml
+2025-04-13 12:00:00 INFO Something happened
+```
+
+你可以按字段处理：
+
+```bash
+awk '{print $1, $2}' filename.log      # 打印前两列（日期 时间）
+awk '$3 == "ERROR" {print}' filename.log  # 打印第三列是 ERROR 的行
+```
+
+
+
+
+
+#### 内容太大，内存放不下怎么办
+
+- **不要用 `cat` 或 `vi` 打开大文件！**
+
+- 使用 `less`：它是分页加载，不会一次性加载到内存。
+
+- 使用 `grep` + `head` 限制输出：
+
+  ```bash
+  grep "关键字" filename.log | head -n 100
+  ```
+
+- 使用 `split` 拆分大文件：
+
+  ```bash
+  split -b 100M filename.log part_  # 按 100MB 拆分成多个文件 part_aa, part_ab...
+  ```
+
+- 或者用 `sed` 截取指定行范围：
+
+  ```bash
+  sed -n '1000,2000p' filename.log    # 查看第1000到2000行
+  ```
+
+
+
+#### 小技巧
+
+快速找最近几天的日志：
+
+```bash
+grep "2025-04-13" filename.log | less
+```
+
+排序最多的错误类型：
+
+```bash
+grep "ERROR" filename.log | awk '{print $5}' | sort | uniq -c | sort -nr
+```
