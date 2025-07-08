@@ -318,7 +318,7 @@ public static void forceAutoProxyCreatorToExposeProxy(BeanDefinitionRegistry reg
 ## 1.3 创建AOP代理
 
 上面我们通过自定义配置完成了对**AnnotationAwareAspectJAutoProxyCreator**类型的自动注册，我们先看这个AnnotationAspectJAutoProxyCreator类的层次结构：
-![AnnotationAwareAspectJAutoProxyCreator-c0f322f8](../../并发编程/5、Spring源码-AOP_files/AnnotationAwareAspectJAutoProxyCreator-c0f322f8.png)
+![AnnotationAwareAspectJAutoProxyCreator-c0f322f8](./5、Spring源码-AOP.assets/AnnotationAwareAspectJAutoProxyCreator-c0f322f8.png)
 
 在类的层级中，我们看到**AnnotationAwareAspectJAutoProxyCreator实现了BeanPostProcessor接口**，而实现BeanPostProcessor后，当Spring加载这个Bean时会在实例化前调用其postProcessAfterInitialization方法，我们对于AOP逻辑的分析也由此开始。
 
