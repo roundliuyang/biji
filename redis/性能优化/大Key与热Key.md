@@ -12,8 +12,6 @@
 
 ### 大Key和热Key的定义
 
-
-
 **大Key**
 
 通常以Key的大小和Key中成员的数量来综合判定，例如：
@@ -37,8 +35,6 @@
 
 
 ### **大Key和热Key引发的问题**
-
-
 
 **大Key**
 
@@ -82,13 +78,7 @@ Redis提供多种方案帮助您轻松找出大Key与热Key。
 
 **通过redis-cli的bigkeys和hotkeys参数查找大Key和热Key**
 
-
-
-
-
 ### **优化大Key与热Key**
-
-
 
 **大Key**
 

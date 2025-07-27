@@ -65,7 +65,7 @@
  */
 class ProductNameSeoModel{
     private Long skuId;
-    private List<String> selectKeyWordList; // 已选搜索词列表
+    private List<String> selectKeyWordList; // 已选搜索词列表  
     private Integer approvalStatus; //sg商品审核状态
     private Long bgCategoryId; // 末级后台类目id
     private List<Integer> manageStatusList; // 经营状态列表
@@ -73,7 +73,9 @@ class ProductNameSeoModel{
 }
 ```
 
-
+>selectKeyWordList:来自 topic 消息队列：dts（监听商品运营配置变更）
+>
+>availableKeywordList:来自商品搜索词mysql表根据skuid聚合而来
 
 
 
@@ -368,7 +370,7 @@ CREATE TABLE product_search_terms (
 
 
 
-
+ 
 
 
 
